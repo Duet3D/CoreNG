@@ -100,6 +100,7 @@ void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 			afec_ch_set_config(GetAfec(channel), GetAfecChannel(channel), &cfg);
 			afec_channel_set_analog_offset(GetAfec(channel), GetAfecChannel(channel), 2048);	// need this to get the full ADC range
 			afec_channel_enable(GetAfec(channel), GetAfecChannel(channel));
+			afec_start_calibration(GetAfec(channel));					// do automatic calibration
 #endif
 		}
 		else

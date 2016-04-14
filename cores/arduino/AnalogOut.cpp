@@ -45,6 +45,10 @@ static bool AnalogWriteDac(const PinDescription& pinDesc, uint32_t ulValue)
 		dacc_reset(DACC_INTERFACE);
 		// Half word transfer mode
 		dacc_set_transfer_mode(DACC_INTERFACE, 0);
+#if SAM4E
+		// The data sheet says we must also set this bit when using a peripheral clock frequency >100MHz
+		DACC->DACC_MR |= DACC_MR_CLKDIV_DIV_4;
+#endif
 
 #if (SAM3S) || (SAM3XA)
 		/* Power save:
@@ -70,8 +74,8 @@ static bool AnalogWriteDac(const PinDescription& pinDesc, uint32_t ulValue)
 		dacc_enable_channel(DACC_INTERFACE, chDACC);
 	}
 
-	// Write user value
-	dacc_write_conversion_data(DACC_INTERFACE, ulValue);
+	// Write user value - need to convert it from 8 to 12 bit resolution
+	dacc_write_conversion_data(DACC_INTERFACE, ulValue << (DACC_RESOLUTION - 8));
 	while ((dacc_get_interrupt_status(DACC_INTERFACE) & DACC_ISR_EOC) == 0) {}
 	return true;
 }
