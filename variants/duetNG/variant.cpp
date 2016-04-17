@@ -46,7 +46,7 @@ extern const PinDescription g_APinDescription[]=
   { PIOA, PIO_PA4A_TWCK0,      ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // TWCK0
 
   // 5-6 UART 1
-  { PIOA, PIO_PA5C_URXD1,      ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // URXD1
+  { PIOA, PIO_PA5C_URXD1,      ID_PIOA, PIO_PERIPH_C, PIO_PULLUP,   PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // URXD1
   { PIOA, PIO_PA6C_UTXD1,      ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,   				NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // UTXD1
 
   // 7-8
@@ -54,7 +54,7 @@ extern const PinDescription g_APinDescription[]=
   { PIOA, PIO_PA8,   		   ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,   				NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SD/LCD/Encoder
 
   // 9-10 UART 0
-  { PIOA, PIO_PA9A_URXD0,      ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,   				NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // URXD0 PanelDue Dout
+  { PIOA, PIO_PA9A_URXD0,      ID_PIOA, PIO_PERIPH_A, PIO_PULLUP,   PIN_ATTR_DIGITAL,   				NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // URXD0 PanelDue Dout
   { PIOA, PIO_PA10A_UTXD0,     ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL, 					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // UTXD0 PanelDue Din
 
   // 11-14 high speed SPI
@@ -72,7 +72,7 @@ extern const PinDescription g_APinDescription[]=
   { PIOA, PIO_PA20B_PWML1,     ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_PWM),     NO_ADC, PWM_CH1,	 NOT_ON_TIMER }, // Heater 1
 
   // 21-23 SPI bus 1
-  { PIOA, PIO_PA21A_RXD1,      ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI bus 1 MISO
+  { PIOA, PIO_PA21A_RXD1,      ID_PIOA, PIO_PERIPH_A, PIO_PULLUP,   PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI bus 1 MISO
   { PIOA, PIO_PA22A_TXD1,      ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI bus 1 MOSI
   { PIOA, PIO_PA23A_SCK1,      ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI bus 1 SPCK
 
@@ -89,7 +89,7 @@ extern const PinDescription g_APinDescription[]=
   // PB15-31 not present on chip
 
   // 26-27 SPI bus 0
-  { PIOB, PIO_PB0C_RXD0,       ID_PIOB, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI0 MISO
+  { PIOB, PIO_PB0C_RXD0,       ID_PIOB, PIO_PERIPH_C, PIO_PULLUP,   PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI0 MISO
   { PIOB, PIO_PB1C_TXD0,       ID_PIOB, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI0 MOSI
 
   // 28-29
@@ -221,6 +221,7 @@ RingBuffer tx_buffer2;
 UARTClass Serial(UART0, UART0_IRQn, ID_UART0, &rx_buffer1, &tx_buffer1);
 void serialEvent() __attribute__((weak));
 void serialEvent() { }
+
 UARTClass Serial1(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2);
 void serialEvent1() __attribute__((weak));
 void serialEvent1() { }

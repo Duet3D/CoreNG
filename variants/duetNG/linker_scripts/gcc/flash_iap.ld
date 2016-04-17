@@ -34,11 +34,9 @@ SEARCH_DIR(.)
 /* Memory Spaces Definitions */
 MEMORY
 {
-	/* IAP binaries lie at the end of the Flash bank, so we adjust this */
-	rom (rx)    : ORIGIN = 0x000F0000, LENGTH = 0x00010000 /* Flash, 64K */
-	sram0 (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00010000 /* sram0, 64K */
-	sram1 (rwx) : ORIGIN = 0x20080000, LENGTH = 0x00008000 /* sram1, 32K */
-	ram (rwx)   : ORIGIN = 0x20070000, LENGTH = 0x00018000 /* sram, 96K */
+	/* IAP binaries lie at the end of the Flash memory, so we adjust this */
+	rom (rx)  : ORIGIN = 0x00470000, LENGTH = 0x00010000
+	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00020000
 }
 
 /* Section Definitions */
