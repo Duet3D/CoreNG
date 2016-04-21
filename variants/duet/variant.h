@@ -97,7 +97,6 @@ extern "C"{
  */
 #define SPI_INTERFACES_COUNT 1
 
-#define SPI_INTERFACE        SPI0
 #define SPI_INTERFACE_ID     ID_SPI0
 #define APIN_SPI_SS0         (77u)
 #define APIN_SPI_SS1         (87u)

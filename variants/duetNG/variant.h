@@ -76,15 +76,20 @@ extern "C"{
 /*
  * SPI Interfaces
  */
-#define SPI_INTERFACES_COUNT 1
 
-#define SPI_INTERFACE		SPI0
 #define SPI_INTERFACE_ID	ID_SPI
-#define SPI_CHANNELS_NUM	4
 #define APIN_SPI_MOSI		(13u)
 #define APIN_SPI_MISO		(12u)
 #define APIN_SPI_SCK		(14u)
 #define APIN_SPI_SS0		(11u)
+
+#define APIN_USART0_MOSI	(27u)
+#define APIN_USART0_MISO	(26u)
+#define APIN_USART0_SCK		(30u)
+
+#define APIN_USART1_MOSI	(22u)
+#define APIN_USART1_MISO	(21u)
+#define APIN_USART1_SCK		(23u)
 
 /*
  * Wire Interfaces

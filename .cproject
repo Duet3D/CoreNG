@@ -88,6 +88,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/efc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pio}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pmc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/spi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/utils}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/clock}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/ioport}&quot;"/>
@@ -108,18 +109,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.643116128" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1000374027" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.1607569156" name="/" resourcePath="asf/common/drivers/nvm">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1960256767" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release" unusedChildren="">
-							<option id="cdt.managedbuild.option.gnu.cross.prefix.247642039.926126654" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.247642039"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1331950428.899793171" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.1331950428"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1838345742" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.597788140"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1840604163" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.975309532"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.641827522" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.1294480107"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1758529358" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1446941494"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.375366326" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.597234958"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1441108827" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.643116128"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -215,6 +204,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/efc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pio}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pmc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/spi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/utils}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/clock}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/ioport}&quot;"/>
@@ -237,20 +227,8 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.2103404603" name="/" resourcePath="asf/common/drivers/nvm">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1920182505" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release" unusedChildren="">
-							<option id="cdt.managedbuild.option.gnu.cross.prefix.542555289.1194867718" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.542555289"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.317148025.2129705380" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.317148025"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1659054126" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.326515188"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.205241351" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1042598993"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1465548860" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.1984929218"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1679625854" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1414305257"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.212803542" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.1891518724"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1537612916" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.176734971"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
-						<entry excluding="asf/common/drivers/nvm|asf/common/services/clock/sam3s|asf/common/services/clock/sam3x|asf/common/services/clock/sam4s|asf/common/services/usb/class/composite|asf/common/services/usb/class/dfu_flip|asf/common/services/usb/class/hid|asf/common/services/usb/class/msc|asf/common/services/usb/class/phdc|asf/common/services/usb/class/aoa|asf/common/services/serial|asf/common/services/spi|asf/common/services/delay|asf/common/services/fifo|asf/common/services/crc32|asf/common/services/adp|asf/common/utils/stdio|asf/common/utils/osprintf|asf/common/utils/membag|asf/sam/components/ethernet_phy|asf/sam/drivers/acc|asf/sam/drivers/aes|asf/sam/drivers/crccu|asf/sam/drivers/adc|asf/sam/drivers/emac|asf/sam/drivers/trng|asf/sam/drivers/uotghs|asf/sam/drivers/xdmac|asf/sam/utils/cmsis/samv70|asf/sam/utils/cmsis/sams70|asf/sam/utils/cmsis/same70|asf/sam/utils/cmsis/sam4s|asf/sam/utils/cmsis/sam4n|asf/sam/utils/cmsis/sam4l|asf/sam/utils/cmsis/sam4cp|asf/sam/utils/cmsis/sam4cm32|asf/sam/utils/cmsis/sam4cm|asf/sam/utils/cmsis/samv71|asf/sam/utils/cmsis/sam4c|asf/sam/utils/cmsis/sam3x|asf/sam/utils/cmsis/sam3u|asf/sam/utils/cmsis/sam3s8|asf/sam/utils/cmsis/sam3s|asf/sam/utils/cmsis/sam3n|libraries/SPI|libraries/HID|variants/duet" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="asf/common/services/spi|asf/common/drivers/nvm|asf/common/services/clock/sam3s|asf/common/services/clock/sam3x|asf/common/services/clock/sam4s|asf/common/services/usb/class/composite|asf/common/services/usb/class/dfu_flip|asf/common/services/usb/class/hid|asf/common/services/usb/class/msc|asf/common/services/usb/class/phdc|asf/common/services/usb/class/aoa|asf/common/services/serial|asf/common/services/delay|asf/common/services/fifo|asf/common/services/crc32|asf/common/services/adp|asf/common/utils/stdio|asf/common/utils/osprintf|asf/common/utils/membag|asf/sam/components/ethernet_phy|asf/sam/drivers/acc|asf/sam/drivers/aes|asf/sam/drivers/crccu|asf/sam/drivers/adc|asf/sam/drivers/emac|asf/sam/drivers/trng|asf/sam/drivers/uotghs|asf/sam/drivers/xdmac|asf/sam/utils/cmsis/samv70|asf/sam/utils/cmsis/sams70|asf/sam/utils/cmsis/same70|asf/sam/utils/cmsis/sam4s|asf/sam/utils/cmsis/sam4n|asf/sam/utils/cmsis/sam4l|asf/sam/utils/cmsis/sam4cp|asf/sam/utils/cmsis/sam4cm32|asf/sam/utils/cmsis/sam4cm|asf/sam/utils/cmsis/samv71|asf/sam/utils/cmsis/sam4c|asf/sam/utils/cmsis/sam3x|asf/sam/utils/cmsis/sam3u|asf/sam/utils/cmsis/sam3s8|asf/sam/utils/cmsis/sam3s|asf/sam/utils/cmsis/sam3n|libraries/SPI|libraries/HID|variants/duet" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
