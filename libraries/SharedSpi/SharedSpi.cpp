@@ -164,6 +164,9 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
 {
 	static bool init_comms = true;
 
+	pinMode(device->csPin, OUTPUT);
+	digitalWrite(device->csPin, HIGH);
+
 	if (init_comms)
 	{
 #if SAM4E
@@ -242,34 +245,35 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
  * \param baud_rate Baud rate for communication with slave device in Hz.
  * \param sel_id    Board specific select id.
  */
-void sspi_master_setup_device(const struct sspi_device *device, uint8_t spiMode, uint32_t baud_rate)
+void sspi_master_setup_device(const struct sspi_device *device)
 {
 #if SAM4E
-	USART_SSPI->US_CR = US_CR_RSTRX | US_CR_RSTTX;	// reset transmitter and receiver
+	USART_SSPI->US_CR = US_CR_RXDIS | US_CR_TXDIS;			// disable transmitter and receiver
+	USART_SSPI->US_BRGR = SystemCoreClock/device->clockFrequency;
 	uint32_t mr = US_MR_USART_MODE_SPI_MASTER
 					| US_MR_USCLKS_MCK
 					| US_MR_CHRL_8_BIT
 					| US_MR_CHMODE_NORMAL
 					| US_MR_CLKO;
-	if (spiMode & 2)
+	if (device->spiMode & 2)
 	{
 		mr |= US_MR_CPOL;
 	}
-	if (spiMode & 1)
+	if ((device->spiMode & 1) == 0)							// the bit is called CPHA but is actually NPCHA
 	{
 		mr |= US_MR_CPHA;
 	}
 	USART_SSPI->US_MR = mr;
-	USART_SSPI->US_BRGR = SystemCoreClock/baud_rate;
-	USART_SSPI->US_CR = US_CR_RXEN | US_CR_TXEN;	// enable transmitter and receiver
+	USART_SSPI->US_CR = US_CR_RSTRX | US_CR_RSTTX;			// reset transmitter and receiver (required - see datasheet)
+	USART_SSPI->US_CR = US_CR_RXEN | US_CR_TXEN;			// enable transmitter and receiver
 #else
 	spi_reset(SSPI);
 	spi_set_master_mode(SSPI);
 	spi_set_bits_per_transfer(SSPI, device->id, device->bits);
-	int16_t baud_div = spi_calc_baudrate_div(baud_rate, SystemCoreClock);
+	int16_t baud_div = spi_calc_baudrate_div(device->clockFrequency, SystemCoreClock);
 	spi_set_baudrate_div(SSPI, device->id, baud_div);
-	spi_set_clock_polarity(SSPI, device->id, spiMode >> 1);
-	spi_set_clock_phase(SSPI, device->id, ((spiMode & 0x1) ^ 0x1));
+	spi_set_clock_polarity(SSPI, device->id, device->spiMode >> 1);
+	spi_set_clock_phase(SSPI, device->id, ((device->spiMode & 0x1) ^ 0x1));
 	spi_enable(SSPI);
 #endif
 }
@@ -329,25 +333,24 @@ void sspi_deselect_device(const struct sspi_device *device)
  *
  * \pre SPI device must be selected with spi_select_device() first.
  */
-spi_status_t sspi_transceive_packet(uint8_t *tx_data, uint8_t *rx_data, size_t len)
+spi_status_t sspi_transceive_packet(const uint8_t *tx_data, uint8_t *rx_data, size_t len)
 {
 	for (uint32_t i = 0; i < len; ++i)
 	{
+		uint32_t dOut = (tx_data == nullptr) ? 0x000000FF : (uint32_t)*tx_data++;
 		if (waitForTxReady())
 		{
 			return SPI_ERROR_TIMEOUT;
 		}
 
 		// Write to transmit register
-		uint32_t dOut = (tx_data == nullptr) ? 0x000000FF : (uint32_t)tx_data[i];
+#if SAM4E
+		USART_SSPI->US_THR = dOut;
+#else
 		if (i + 1 == len)
 		{
 			dOut |= SPI_TDR_LASTXFER;
 		}
-
-#if SAM4E
-		USART_SSPI->US_THR = dOut;
-#else
 		SSPI->SPI_TDR = dOut;
 #endif
 		// Wait for receive register
@@ -365,7 +368,7 @@ spi_status_t sspi_transceive_packet(uint8_t *tx_data, uint8_t *rx_data, size_t l
 #endif
 		if (rx_data != nullptr)
 		{
-			rx_data[i] = dIn;
+			*rx_data++ = dIn;
 		}
 	}
 
@@ -382,7 +385,7 @@ spi_status_t sspi_transceive_packet(uint8_t *tx_data, uint8_t *rx_data, size_t l
  *
  * \pre SPI device must be selected with spi_select_device() first.
  */
-spi_status_t sspi_transceive_packet16(uint16_t *tx_data, uint16_t *rx_data, size_t len)
+spi_status_t sspi_transceive_packet16(const uint16_t *tx_data, uint16_t *rx_data, size_t len)
 {
 	for (uint32_t i = 0; i < len; ++i)
 	{
