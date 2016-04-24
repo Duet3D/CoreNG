@@ -78,7 +78,7 @@ extern const PinDescription g_APinDescription[]=
 
   // 24-25
   { PIOA, PIO_PA24,            ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI bus 0 CS5
-  { PIOD, PIO_PA25,            ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI bus 0 CS6
+  { PIOA, PIO_PA25,            ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI bus 0 CS6
 
   // PA26-31 are used by HSMCI
 

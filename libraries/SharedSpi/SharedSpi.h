@@ -57,9 +57,11 @@
 struct sspi_device {
 	uint8_t csPin;
 	uint8_t bits;
+	uint8_t spiMode;
 #ifndef DUET_NG
 	uint8_t id;
 #endif
+	uint32_t clockFrequency;
 };
 
 #ifdef __cplusplus
@@ -92,7 +94,7 @@ extern void sspi_master_init(struct sspi_device *device, uint32_t bits);
  * \param baud_rate Baud rate for communication with slave device in Hz.
  * \param sel_id    Board specific select id.
  */
-extern void sspi_master_setup_device(const struct sspi_device *device, uint8_t spiMode, uint32_t baud_rate);
+extern void sspi_master_setup_device(const struct sspi_device *device);
 
 /**
  * \brief Select the given device on the SPI bus.
@@ -124,7 +126,7 @@ extern void sspi_deselect_device(const struct sspi_device *device);
  *
  * \pre SPI device must be selected with spi_select_device() first.
  */
-spi_status_t sspi_transceive_packet(uint8_t *tx_data, uint8_t *rx_data, size_t len);
+spi_status_t sspi_transceive_packet(const uint8_t *tx_data, uint8_t *rx_data, size_t len);
 
 #if SAM3XA
 /**
@@ -136,7 +138,7 @@ spi_status_t sspi_transceive_packet(uint8_t *tx_data, uint8_t *rx_data, size_t l
  *
  * \pre SPI device must be selected with spi_select_device() first and in 16-bit data mode.
  */
-spi_status_t sspi_transceive_packet16(uint16_t *tx_data, uint16_t *rx_data, size_t len);
+spi_status_t sspi_transceive_packet16(const uint16_t *tx_data, uint16_t *rx_data, size_t len);
 #endif
 
 #if defined(USE_SAM3X_DMAC)
