@@ -335,6 +335,20 @@ void hsmci_init(void)
 	HSMCI->HSMCI_CR = HSMCI_CR_MCIEN | HSMCI_CR_PWSEN;
 }
 
+#if 1	// dc42 changes
+
+static hsmciIdleFunc_t hsmciIdleFunc = NULL;
+
+// Set the idle function and return the old one
+hsmciIdleFunc_t hsmci_set_idle_func(hsmciIdleFunc_t p)
+{
+	hsmciIdleFunc_t ret = hsmciIdleFunc;
+	hsmciIdleFunc = p;
+	return ret;
+}
+
+#endif
+
 uint8_t hsmci_get_bus_width(uint8_t slot)
 {
 	switch (slot) {
@@ -628,6 +642,7 @@ bool hsmci_write_word(uint32_t value)
 }
 
 #ifdef HSMCI_SR_DMADONE
+
 bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 {
 	uint32_t cfg, nb_data;
@@ -690,6 +705,12 @@ bool hsmci_wait_end_of_read_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI
 	do {
+#if 1	// dc42 changes
+		if (hsmciIdleFunc != NULL)
+		{
+			hsmciIdleFunc();
+		}
+#endif
 		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
@@ -773,6 +794,12 @@ bool hsmci_wait_end_of_write_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
 	do {
+#if 1	// dc42 changes
+		if (hsmciIdleFunc != NULL)
+		{
+			hsmciIdleFunc();
+		}
+#endif
 		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
@@ -831,6 +858,12 @@ bool hsmci_wait_end_of_read_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
 	do {
+#if 1	// dc42 changes
+		if (hsmciIdleFunc != NULL)
+		{
+			hsmciIdleFunc();
+		}
+#endif
 		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
@@ -849,6 +882,12 @@ bool hsmci_wait_end_of_read_blocks(void)
 	// It is the last transfer, then wait command completed
 	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
 	do {
+#if 1	// dc42 changes
+		if (hsmciIdleFunc != NULL)
+		{
+			hsmciIdleFunc();
+		}
+#endif
 		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
@@ -894,6 +933,12 @@ bool hsmci_wait_end_of_write_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
 	do {
+#if 1	// dc42 changes
+		if (hsmciIdleFunc != NULL)
+		{
+			hsmciIdleFunc();
+		}
+#endif
 		sr = HSMCI->HSMCI_SR;
 		if (sr &
 				(HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
@@ -913,6 +958,12 @@ bool hsmci_wait_end_of_write_blocks(void)
 	// It is the last transfer, then wait command completed
 	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
 	do {
+#if 1	// dc42 changes
+		if (hsmciIdleFunc != NULL)
+		{
+			hsmciIdleFunc();
+		}
+#endif
 		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {

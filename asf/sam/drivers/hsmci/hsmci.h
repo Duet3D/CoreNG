@@ -69,6 +69,13 @@ extern "C" {
  */
 void hsmci_init(void);
 
+#if 1	// dc42 changes
+typedef void (*hsmciIdleFunc_t)();
+
+// Set the idle function and return the old one
+hsmciIdleFunc_t hsmci_set_idle_func(hsmciIdleFunc_t);
+#endif
+
 /** \brief Return the maximum bus width of a slot
  *
  * \param slot     Selected slot
