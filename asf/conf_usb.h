@@ -16,8 +16,8 @@
  */
 
 //! Device definition (mandatory)
-#define  USB_DEVICE_VENDOR_ID             0x2341
-#define  USB_DEVICE_PRODUCT_ID            0x003e
+#define  USB_DEVICE_VENDOR_ID             0x03EB			// Atmel VID
+#define  USB_DEVICE_PRODUCT_ID            0x2404			// Atmel PID for CDC applications
 #define  USB_DEVICE_MAJOR_VERSION         1
 #define  USB_DEVICE_MINOR_VERSION         0
 #define  USB_DEVICE_POWER                 100 // Consumption on Vbus line (mA)
