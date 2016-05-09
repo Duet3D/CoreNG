@@ -20,36 +20,22 @@
 #include "usart/usart.h"		// On Duet NG the general SPI channel is on a USART
 
 #define USART_SSPI	USART1		//TODO change to USART0 for the second prototype
-#define SSPI_ID		ID_USART1	//TODO change to USTART0
+#define ID_SSPI		ID_USART1	//TODO change to USART0
 
 #else
 
-/**
- * \brief Max number when the chip selects are connected to a 4- to 16-bit decoder.
- */
-# define MAX_NUM_WITH_DECODER 0x10
+// We have to tell the SAM3X which NPCS output we are using, even though we use other pins for CS
+// We choose NPCS3 because on the Duet, it is not physically connected
+#define PERIPHERAL_CHANNEL_ID		3
+#define PERIPHERAL_CHANNEL_CS_PIN	APIN_SPI_SS3
 
-/**
- * \brief Max number when the chip selects are directly connected to peripheral device.
- */
-# define MAX_NUM_WITHOUT_DECODER 0x04
-
-/**
- * \brief Max number when the chip selects are directly connected to peripheral device.
- */
-# define NONE_CHIP_SELECT_ID 0x0f
-
-/**
- * \brief The default chip select id.
- */
-# define DEFAULT_CHIP_ID 1
 
 /** Time-out value (number of attempts). */
 #define SPI_TIMEOUT       15000
 
 // Which SPI channel we use
-# define SSPI	SPI0
-
+# define SSPI		SPI0
+# define ID_SSPI	ID_SPI0
 #endif
 
 // Lock for the SPI subsystem
@@ -159,7 +145,7 @@ static inline bool waitForRxReady()
 #endif
 }
 
-// Set up the GSPI subsystem
+// Set up the Shared SPI subsystem
 void sspi_master_init(struct sspi_device *device, uint32_t bits)
 {
 	static bool init_comms = true;
@@ -175,7 +161,7 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
 		ConfigurePin(g_APinDescription[APIN_USART1_MOSI]);
 		ConfigurePin(g_APinDescription[APIN_USART1_MISO]);
 
-		pmc_enable_periph_clk(SSPI_ID);
+		pmc_enable_periph_clk(ID_SSPI);
 
 		// Set USART0 in SPI master mode
 		USART_SSPI->US_IDR = ~0u;
@@ -191,17 +177,11 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
 		ConfigurePin(g_APinDescription[APIN_SPI_MOSI]);
 		ConfigurePin(g_APinDescription[APIN_SPI_MISO]);
 
-		pmc_enable_periph_clk(SPI_INTERFACE_ID);
+		pmc_enable_periph_clk(ID_SSPI);
 
-		spi_reset(SSPI);
-
-		// set master mode, peripheral select, disable fault detection
-		spi_set_master_mode(SSPI);
-		spi_disable_mode_fault_detect(SSPI);
-		spi_disable_loopback(SSPI);
-		spi_set_peripheral_chip_select_value(SSPI, DEFAULT_CHIP_ID);
-		spi_set_fixed_peripheral_select(SSPI);
-		spi_disable_peripheral_select_decode(SSPI);
+		SSPI->SPI_CR = SPI_CR_SPIDIS;
+	    SSPI->SPI_CR = SPI_CR_SWRST;
+	    SSPI->SPI_MR = SPI_MR_MSTR | SPI_MR_MODFDIS;
 
 # if defined(USE_SAM3X_DMAC)
 	pmc_enable_periph_clk(ID_DMAC);
@@ -216,17 +196,17 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
 
 #if SAM4E
 	// On USARTs we only support 8-bit transfers. 5, 6, 7 and 9 are also available.
-	device->bits = US_MR_CHRL_8_BIT;
+	device->bitsPerTransferControl = US_MR_CHRL_8_BIT;
 #else
-	// For now we only support 8 and 16 bit modes. 11-15 bit modes are also available.
+	// On SPI we only support 8 and 16 bit modes. 11-15 bit modes are also available.
 	switch (bits)
 	{
 	case 8:
 	default:
-		device->bits = SPI_CSR_BITS_8_BIT;
+		device->bitsPerTransferControl = SPI_CSR_BITS_8_BIT;
 		break;
 	case 16:
-		device->bits = SPI_CSR_BITS_16_BIT;
+		device->bitsPerTransferControl = SPI_CSR_BITS_16_BIT;
 		break;
 	}
 #endif
@@ -268,12 +248,22 @@ void sspi_master_setup_device(const struct sspi_device *device)
 	USART_SSPI->US_CR = US_CR_RXEN | US_CR_TXEN;			// enable transmitter and receiver
 #else
 	spi_reset(SSPI);
-	spi_set_master_mode(SSPI);
-	spi_set_bits_per_transfer(SSPI, device->id, device->bits);
-	int16_t baud_div = spi_calc_baudrate_div(device->clockFrequency, SystemCoreClock);
-	spi_set_baudrate_div(SSPI, device->id, baud_div);
-	spi_set_clock_polarity(SSPI, device->id, device->spiMode >> 1);
-	spi_set_clock_phase(SSPI, device->id, ((device->spiMode & 0x1) ^ 0x1));
+    SSPI->SPI_MR = SPI_MR_MSTR | SPI_MR_MODFDIS;
+
+	// Set SPI mode, clock frequency, CS not active after transfer, delay between transfers
+	uint16_t baud_div = (uint16_t)spi_calc_baudrate_div(device->clockFrequency, SystemCoreClock);
+	uint32_t csr = SPI_CSR_SCBR(baud_div)				// Baud rate
+					| device->bitsPerTransferControl	// Transfer bit width
+					| SPI_CSR_DLYBCT(0);      			// Transfer delay
+	if ((device->spiMode & 0x01) == 0)
+	{
+		csr |= SPI_CSR_NCPHA;
+	}
+	if (device->spiMode & 0x02)
+	{
+		csr |= SPI_CSR_CPOL;
+	}
+	SSPI->SPI_CSR[PERIPHERAL_CHANNEL_ID] = csr;
 	spi_enable(SSPI);
 #endif
 }
@@ -289,10 +279,7 @@ void sspi_master_setup_device(const struct sspi_device *device)
 void sspi_select_device(const struct sspi_device *device)
 {
 #if SAM3XA
-	if (device->id < MAX_NUM_WITHOUT_DECODER)
-	{
-		spi_set_peripheral_chip_select_value(SSPI, (~(1 << device->id)));
-	}
+	spi_set_peripheral_chip_select_value(SSPI, spi_get_pcs(PERIPHERAL_CHANNEL_ID));
 #endif
 
 	// Enable the CS line
@@ -311,14 +298,6 @@ void sspi_select_device(const struct sspi_device *device)
 void sspi_deselect_device(const struct sspi_device *device)
 {
 	waitForTxEmpty();
-
-#if SAM3XA
-	// Last transfer, so de-assert the current NPCS if CSAAT is set.
-	spi_set_lastxfer(SSPI);
-
-	// Assert all lines; no peripheral is selected.
-	spi_set_peripheral_chip_select_value(SSPI, NONE_CHIP_SELECT_ID);
-#endif
 
 	// Disable the CS line
 	digitalWrite(device->csPin, HIGH);
