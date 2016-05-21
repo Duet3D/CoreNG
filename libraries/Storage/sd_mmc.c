@@ -49,7 +49,7 @@
 #include "sd_mmc.h"
 #include "conf_sd_mmc.h"
 
-#include "Arduino.h"		// for digitalRead() and pinMode()
+#include "Core.h"		// for digitalRead() and pinMode()
 
 #ifdef FREERTOS_USED
 #include "FreeRTOS.h"

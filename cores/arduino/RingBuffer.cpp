@@ -21,23 +21,35 @@
 
 RingBuffer::RingBuffer( void )
 {
-    memset( (void *)_aucBuffer, 0, SERIAL_BUFFER_SIZE ) ;
+    memset((void *)_aucBuffer, 0, SERIAL_BUFFER_SIZE) ;
     _iHead=0 ;
     _iTail=0 ;
 }
 
-void RingBuffer::store_char( uint8_t c )
+// Store a block of data. Returns the number of bytes actually stored, which may be less than the number requested.
+size_t RingBuffer::storeBlock(const uint8_t *data, size_t len)
 {
-  int i = (uint32_t)(_iHead + 1) % SERIAL_BUFFER_SIZE ;
-
-  // if we should be storing the received character into the location
-  // just before the tail (meaning that the head would advance to the
-  // current location of the tail), we're about to overflow the buffer
-  // and so we don't write the character or advance the head.
-  if ( i != _iTail )
-  {
-    _aucBuffer[_iHead] = c ;
-    _iHead = i ;
-  }
+	const size_t room = roomLeft();
+	if (room < len)
+	{
+		len = room;
+	}
+	if (len != 0)
+	{
+		const size_t roomToEnd = SERIAL_BUFFER_SIZE - _iHead;
+		if (roomToEnd <= len)
+		{
+			memcpy((void*)(_aucBuffer + _iHead), data, roomToEnd);
+			memcpy((void*)_aucBuffer, data + roomToEnd, len - roomToEnd);
+			_iHead = len - roomToEnd;
+		}
+		else
+		{
+			memcpy((void*)(_aucBuffer + _iHead), data, len);
+			_iHead += len;
+		}
+	}
+	return len;
 }
 
+// End

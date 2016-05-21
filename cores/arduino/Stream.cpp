@@ -20,7 +20,7 @@
  parsing functions based on TextFinder library by Michael Margolis
  */
 
-#include "Arduino.h"
+#include "Core.h"
 #include "Stream.h"
 
 #define PARSE_TIMEOUT 1000  // default number of milli-seconds to wait
@@ -139,27 +139,37 @@ long Stream::parseInt(char skipChar)
 {
   boolean isNegative = false;
   long value = 0;
-  int c;
 
-  c = peekNextDigit();
+  int c = peekNextDigit();
   // ignore non numeric leading characters
   if(c < 0)
+  {
     return 0; // zero returned if timeout
+  }
 
-  do{
-    if(c == skipChar)
-      ; // ignore this charactor
-    else if(c == '-')
+  do
+  {
+    if (c == skipChar)
+    {
+      // ignore this charactor
+    }
+    else if (c == '-')
+    {
       isNegative = true;
-    else if(c >= '0' && c <= '9')        // is c a digit?
+    }
+    else if (c >= '0' && c <= '9')        // is c a digit?
+    {
       value = value * 10 + c - '0';
+    }
     read();  // consume the character we got with peek
     c = timedPeek();
   }
   while( (c >= '0' && c <= '9') || c == skipChar );
 
-  if(isNegative)
+  if (isNegative)
+  {
     value = -value;
+  }
   return value;
 }
 
@@ -172,41 +182,59 @@ float Stream::parseFloat()
 
 // as above but the given skipChar is ignored
 // this allows format characters (typically commas) in values to be ignored
-float Stream::parseFloat(char skipChar){
+float Stream::parseFloat(char skipChar)
+{
   boolean isNegative = false;
   boolean isFraction = false;
   long value = 0;
-  int c;
   float fraction = 1.0;
 
-  c = peekNextDigit();
+  int c = peekNextDigit();
     // ignore non numeric leading characters
-  if(c < 0)
+  if (c < 0)
+  {
     return 0; // zero returned if timeout
+  }
 
-  do{
-    if(c == skipChar)
-      ; // ignore
-    else if(c == '-')
+  do
+  {
+    if (c == skipChar)
+    {
+      // ignore
+    }
+    else if (c == '-')
+    {
       isNegative = true;
+    }
     else if (c == '.')
+    {
       isFraction = true;
-    else if(c >= '0' && c <= '9')  {      // is c a digit?
+    }
+    else if (c >= '0' && c <= '9')      // is c a digit?
+    {
       value = value * 10 + c - '0';
-      if(isFraction)
+      if (isFraction)
+      {
          fraction *= 0.1;
+      }
     }
     read();  // consume the character we got with peek
     c = timedPeek();
   }
-  while( (c >= '0' && c <= '9')  || c == '.' || c == skipChar );
+  while( (c >= '0' && c <= '9') || c == '.' || c == skipChar );
 
-  if(isNegative)
+  if (isNegative)
+  {
     value = -value;
-  if(isFraction)
+  }
+  if (isFraction)
+  {
     return value * fraction;
+  }
   else
+  {
     return value;
+  }
 }
 
 // read characters from stream into buffer
@@ -217,7 +245,8 @@ float Stream::parseFloat(char skipChar){
 size_t Stream::readBytes(char *buffer, size_t length)
 {
   size_t count = 0;
-  while (count < length) {
+  while (count < length)
+  {
     int c = timedRead();
     if (c < 0) break;
     *buffer++ = (char)c;

@@ -37,7 +37,7 @@
  *        Headers
  *----------------------------------------------------------------------------*/
 
-#include "Arduino.h"
+#include "Core.h"
 
 #ifdef __cplusplus
 #include "UARTClass.h"

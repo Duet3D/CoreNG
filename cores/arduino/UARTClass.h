@@ -55,7 +55,9 @@ class UARTClass : public HardwareSerial
     int peek(void);
     int read(void);
     void flush(void);
-    size_t write(const uint8_t c);
+    size_t write(const uint8_t c) override;
+    size_t write(const uint8_t *buffer, size_t size) override;
+
     using Print::write; // pull in write(str) and write(buf, size) from Print
     size_t canWrite( void ) const override;	//***** DC42 added for Duet
 

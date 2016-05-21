@@ -52,3 +52,4 @@ void USARTClass::begin(const uint32_t dwBaudRate, const USARTModes config)
   init(dwBaudRate, modeReg);
 }
 
+// End

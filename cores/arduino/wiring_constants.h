@@ -23,15 +23,9 @@
 extern "C"{
 #endif // __cplusplus
 
-//#define HIGH 0x1
-//#define LOW  0x0
-
 #define INPUT 0x0
 #define OUTPUT 0x1
 #define INPUT_PULLUP 0x2
-
-//#define true 0x1
-//#define false 0x0
 
 #define PI 3.1415926535897932384626433832795
 #define HALF_PI 1.5707963267948966192313216916398
@@ -57,25 +51,9 @@ enum BitOrder {
 #define DEFAULT 1
 #define EXTERNAL 0
 
-// undefine stdlib's abs if encountered
-#ifdef abs
-#undef abs
-#endif // abs
-
-#ifndef min
-#define min(a,b) ((a)<(b)?(a):(b))
-#endif // min
-
-#ifndef max
-#define max(a,b) ((a)>(b)?(a):(b))
-#endif // max
-
-#define abs(x) ((x)>0?(x):-(x))
-#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 #define round(x)     ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
 #define radians(deg) ((deg)*DEG_TO_RAD)
 #define degrees(rad) ((rad)*RAD_TO_DEG)
-#define sq(x) ((x)*(x))
 
 #define interrupts() __enable_irq()
 #define noInterrupts() __disable_irq()
@@ -87,8 +65,6 @@ enum BitOrder {
 #define bitSet(value, bit) ((value) |= (1UL << (bit)))
 #define bitClear(value, bit) ((value) &= ~(1UL << (bit)))
 #define bitWrite(value, bit, bitvalue) (bitvalue ? bitSet(value, bit) : bitClear(value, bit))
-
-typedef unsigned int word;
 
 #define bit(b) (1UL << (b))
 

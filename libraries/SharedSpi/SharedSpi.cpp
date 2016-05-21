@@ -11,7 +11,7 @@
  */
 
 #include "SharedSpi.h"
-#include "Arduino.h"
+#include "Core.h"
 #include "compiler.h"
 #include "variant.h"
 
@@ -69,19 +69,12 @@ void sspi_release()
 // Wait for transmitter ready returning true if timed out
 static inline bool waitForTxReady()
 {
+	uint32_t timeout = SPI_TIMEOUT;
 #if SAM4E
-	uint32_t timeout = SPI_TIMEOUT;
 	while (!usart_is_tx_ready(USART_SSPI))
-	{
-		if (--timeout == 0)
-		{
-			return true;
-		}
-	}
-	return false;
 #else
-	uint32_t timeout = SPI_TIMEOUT;
 	while (!spi_is_tx_ready(SSPI))
+#endif
 	{
 		if (--timeout == 0)
 		{
@@ -89,26 +82,17 @@ static inline bool waitForTxReady()
 		}
 	}
 	return false;
-#endif
 }
 
 // Wait for transmitter empty returning true if timed out
 static inline bool waitForTxEmpty()
 {
+	uint32_t timeout = SPI_TIMEOUT;
 #if SAM4E
-	uint32_t timeout = SPI_TIMEOUT;
 	while (!usart_is_tx_empty(USART_SSPI))
-	{
-		if (!timeout--)
-		{
-			return true;
-		}
-	}
-	return false;
-
 #else
-	uint32_t timeout = SPI_TIMEOUT;
-	while (!spi_is_tx_empty(SSPI))
+		while (!spi_is_tx_empty(SSPI))
+#endif
 	{
 		if (!timeout--)
 		{
@@ -116,25 +100,17 @@ static inline bool waitForTxEmpty()
 		}
 	}
 	return false;
-#endif
 }
 
 // Wait for receive data available returning true if timed out
 static inline bool waitForRxReady()
 {
+	uint32_t timeout = SPI_TIMEOUT;
 #if SAM4E
-	uint32_t timeout = SPI_TIMEOUT;
 	while (!usart_is_rx_ready(USART_SSPI))
-	{
-		if (--timeout == 0)
-		{
-			return true;
-		}
-	}
-	return false;
 #else
-	uint32_t timeout = SPI_TIMEOUT;
 	while (!spi_is_rx_ready(SSPI))
+#endif
 	{
 		if (--timeout == 0)
 		{
@@ -142,7 +118,6 @@ static inline bool waitForRxReady()
 		}
 	}
 	return false;
-#endif
 }
 
 // Set up the Shared SPI subsystem

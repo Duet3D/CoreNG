@@ -16,10 +16,10 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include <Core.h>
 #include <cstdlib>
 #include <cstdint>
 
-#include "Arduino.h"
 #include "WMath.h"
 
 #if SAM3XA
@@ -71,16 +71,6 @@ extern int32_t random(int32_t howsmall, int32_t howbig)
 extern int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max)
 {
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-extern uint16_t makeWord(uint16_t w)
-{
-	return w ;
-}
-
-extern uint16_t makeWord(uint8_t h, uint8_t l)
-{
-	return (h << 8) | l ;
 }
 
 // End

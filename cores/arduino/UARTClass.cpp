@@ -62,7 +62,8 @@ void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg)
   _pUart->UART_MR = modeReg;
 
   // Configure baudrate (asynchronous, no oversampling)
-  _pUart->UART_BRGR = (SystemCoreClock / dwBaudRate) >> 4;
+  const uint32_t br16 = dwBaudRate * 16;
+  _pUart->UART_BRGR = (SystemCoreClock + (br16/2) - 1) / br16;
 
   // Configure interrupts
   _pUart->UART_IDR = 0xFFFFFFFF;
@@ -105,21 +106,26 @@ uint32_t UARTClass::getInterruptPriority()
 
 int UARTClass::available( void )
 {
-  return (uint32_t)(SERIAL_BUFFER_SIZE + _rx_buffer->_iHead - _rx_buffer->_iTail) % SERIAL_BUFFER_SIZE;
+  return (SERIAL_BUFFER_SIZE + _rx_buffer->_iHead - _rx_buffer->_iTail) % SERIAL_BUFFER_SIZE;
 }
 
 int UARTClass::availableForWrite(void)
 {
-  int head = _tx_buffer->_iHead;
-  int tail = _tx_buffer->_iTail;
-  if (head >= tail) return SERIAL_BUFFER_SIZE - 1 - head + tail;
+  size_t head = _tx_buffer->_iHead;
+  size_t tail = _tx_buffer->_iTail;
+  if (head >= tail)
+  {
+	  return SERIAL_BUFFER_SIZE - 1 - head + tail;
+  }
   return tail - head - 1;
 }
 
 int UARTClass::peek( void )
 {
   if ( _rx_buffer->_iHead == _rx_buffer->_iTail )
+  {
     return -1;
+  }
 
   return _rx_buffer->_aucBuffer[_rx_buffer->_iTail];
 }
@@ -128,10 +134,12 @@ int UARTClass::read( void )
 {
   // if the head isn't ahead of the tail, we don't have any characters
   if ( _rx_buffer->_iHead == _rx_buffer->_iTail )
+  {
     return -1;
+  }
 
   uint8_t uc = _rx_buffer->_aucBuffer[_rx_buffer->_iTail];
-  _rx_buffer->_iTail = (unsigned int)(_rx_buffer->_iTail + 1) % SERIAL_BUFFER_SIZE;
+  _rx_buffer->_iTail = (_rx_buffer->_iTail + 1) % SERIAL_BUFFER_SIZE;
   return uc;
 }
 
@@ -150,12 +158,12 @@ size_t UARTClass::write( const uint8_t uc_data )
       (_tx_buffer->_iTail != _tx_buffer->_iHead))
   {
     // If busy we buffer
-    int l = (_tx_buffer->_iHead + 1) % SERIAL_BUFFER_SIZE;
-    while (_tx_buffer->_iTail == l)
+    size_t hn = (_tx_buffer->_iHead + 1) % SERIAL_BUFFER_SIZE;
+    while (_tx_buffer->_iTail == hn)
       ; // Spin locks if we're about to overwrite the buffer. This continues once the data is sent
 
     _tx_buffer->_aucBuffer[_tx_buffer->_iHead] = uc_data;
-    _tx_buffer->_iHead = l;
+    _tx_buffer->_iHead = hn;
     // Make sure TX interrupt is enabled
     _pUart->UART_IER = UART_IER_TXRDY;
   }
@@ -167,25 +175,41 @@ size_t UARTClass::write( const uint8_t uc_data )
   return 1;
 }
 
-size_t UARTClass::canWrite( void ) const //***** DC42 added for Duet
+size_t UARTClass::write(const uint8_t *buffer, size_t size)
 {
-  return (_pUart->UART_SR & UART_SR_TXRDY) ? 1 : 0;
+	size_t ret = size;
+	while (size != 0)
+	{
+		size_t written = _tx_buffer->storeBlock(buffer, size);
+	    _pUart->UART_IER = UART_IER_TXRDY;
+		buffer += written;
+		size -= written;
+	}
+	return ret;
 }
 
-void UARTClass::IrqHandler( void )
+size_t UARTClass::canWrite() const
+{
+	return _tx_buffer->roomLeft();		// we may also be able to write 1 more byte direct to the UART, but this is close enough
+}
+
+void UARTClass::IrqHandler()
 {
   uint32_t status = _pUart->UART_SR;
 
   // Did we receive data?
-  if ((status & UART_SR_RXRDY) == UART_SR_RXRDY)
+  if ((status & UART_SR_RXRDY) != 0)
+  {
     _rx_buffer->store_char(_pUart->UART_RHR);
+  }
 
   // Do we need to keep sending data?
-  if ((status & UART_SR_TXRDY) == UART_SR_TXRDY) 
+  if ((status & UART_SR_TXRDY) != 0)
   {
-    if (_tx_buffer->_iTail != _tx_buffer->_iHead) {
+    if (_tx_buffer->_iTail != _tx_buffer->_iHead)
+    {
       _pUart->UART_THR = _tx_buffer->_aucBuffer[_tx_buffer->_iTail];
-      _tx_buffer->_iTail = (unsigned int)(_tx_buffer->_iTail + 1) % SERIAL_BUFFER_SIZE;
+      _tx_buffer->_iTail = (_tx_buffer->_iTail + 1) % SERIAL_BUFFER_SIZE;
     }
     else
     {
@@ -195,7 +219,7 @@ void UARTClass::IrqHandler( void )
   }
 
   // Acknowledge errors
-  if ((status & UART_SR_OVRE) == UART_SR_OVRE || (status & UART_SR_FRAME) == UART_SR_FRAME)
+  if ((status & (UART_SR_OVRE | UART_SR_FRAME)) != 0)
   {
     // TODO: error reporting outside ISR
     _pUart->UART_CR |= UART_CR_RSTSTA;

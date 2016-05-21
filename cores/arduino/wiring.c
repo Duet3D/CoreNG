@@ -16,7 +16,7 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "Arduino.h"
+#include "Core.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -57,7 +57,7 @@ uint32_t micros( void )
         count2  = g_ms_ticks;
     } while ((pend != pend2) || (count != count2) || (ticks < ticks2));
 
-    return ((count+pend) * 1000) + (((SysTick->LOAD  - ticks)*(1048576/(F_CPU/1000000)))>>20) ; 
+    return ((count+pend) * 1000) + (((SysTick->LOAD  - ticks)*(1048576/(VARIANT_MCK/1000000)))>>20) ;
     // this is an optimization to turn a runtime division into two compile-time divisions and 
     // a runtime multiplication and shift, saving a few cycles
 }

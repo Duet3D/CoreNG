@@ -31,14 +31,85 @@ extern uint32_t trueRandom();
 
 #ifdef __cplusplus
 }
+
 extern int32_t random(int32_t);
 extern int32_t random(int32_t, int32_t);
 extern int32_t map(int32_t, int32_t, int32_t, int32_t, int32_t);
 
-extern uint16_t makeWord(uint16_t w) ;
-extern uint16_t makeWord(uint8_t h, uint8_t l) ;
-
-#define word(...) makeWord(__VA_ARGS__)
+// std::min and std::max don't seem to work with this variant of gcc, so define our own ones here
+// We use these only with primitive types, so pass them directly instead of by const reference
+#ifdef min
+#undef min
 #endif
+
+#ifdef max
+#undef max
+#endif
+
+template<class X> inline X min(X _a, X _b)
+{
+	return (_a < _b) ? _a : _b;
+}
+
+template<class X> inline X max(X _a, X _b)
+{
+	return (_a > _b) ? _a : _b;
+}
+
+// Specialisations for float and double to handle NANs properly
+template<> inline float min(float _a, float _b)
+{
+	return (isnan(_a) || _a < _b) ? _a : _b;
+}
+
+template<> inline float max(float _a, float _b)
+{
+	return (isnan(_a) || _a > _b) ? _a : _b;
+}
+
+template<> inline double min(double _a, double _b)
+{
+	return (isnan(_a) || _a < _b) ? _a : _b;
+}
+
+template<> inline double max(double _a, double _b)
+{
+	return (isnan(_a) || _a > _b) ? _a : _b;
+}
+
+inline float fsquare(float arg)
+{
+	return arg * arg;
+}
+
+inline uint64_t isquare64(int32_t arg)
+{
+	return (uint64_t)((int64_t)arg * arg);
+}
+
+inline uint64_t isquare64(uint32_t arg)
+{
+	return (uint64_t)arg * arg;
+}
+
+inline void swap(float& a, float& b)
+{
+	float temp = a;
+	a = b;
+	b = temp;
+}
+
+template<class T> inline float constrain(T val, T vmin, T vmax)
+{
+	return max<T>(vmin, min<T>(val, vmax));
+}
+
+#endif
+
+// Macro to give us the number of elements in an array
+#define ARRAY_SIZE(_x)	(sizeof(_x)/sizeof(_x[0]))
+
+// Macro to give us the highest valid index into an array i.e. one less than the size
+#define ARRAY_UPB(_x)	(ARRAY_SIZE(_x) - 1)
 
 #endif /* _WIRING_MATH_ */

@@ -16,11 +16,7 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "Arduino.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "Core.h"
 
 extern "C" void pinModeDuet(uint32_t ulPin, uint32_t ulMode, uint32_t debounceCutoff)
 {
@@ -132,8 +128,4 @@ extern "C" void setPullup(uint32_t ulPin, bool en)
 	}
 }
 
-
-#ifdef __cplusplus
-}
-#endif
-
+// End
