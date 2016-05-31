@@ -164,7 +164,7 @@ uint32_t sd_mmc_get_capacity(uint8_t slot);
  *
  * \param slot     Card slot
  *
- * \return true, if write portected
+ * \return true, if write protected
  */
 bool sd_mmc_is_write_protected(uint8_t slot);
 

@@ -209,6 +209,11 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block);
  */
 bool hsmci_wait_end_of_write_blocks(void);
 
+#if 1	//dc42
+// Get the speed of the HSMCI clock for reporting purposes, in bytes/sec
+uint32_t hsmci_get_speed();
+#endif
+
 //! @}
 
 #ifdef __cplusplus

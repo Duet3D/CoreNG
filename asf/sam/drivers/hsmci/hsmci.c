@@ -217,6 +217,22 @@ static void hsmci_set_speed(uint32_t speed, uint32_t mck)
 
 }
 
+#if 1	//dc42
+// Get the speed of the HSMCI clock for reporting purposes, in bytes/sec
+uint32_t hsmci_get_speed()
+{
+#if SAM4E
+	const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
+	const uint32_t clkodd = ((HSMCI->HSMCI_MR & HSMCI_MR_CLKODD) != 0) ? 1 : 0;
+	const uint32_t hsmciClock = sysclk_get_cpu_hz()/((2 * clkdiv) + clkodd + 2);
+#else
+	const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
+	const uint32_t hsmciClock =  sysclk_get_cpu_hz()/((2 * clkdiv) + 2);
+#endif
+	return hsmciClock/2;		// HSMCI interface is 4 bits wide, so divide by 2 to get bytes/sec
+}
+#endif
+
 /** \brief Wait the end of busy signal on data line
  *
  * \return true if success, otherwise false
