@@ -62,30 +62,15 @@ uint32_t micros( void )
     // a runtime multiplication and shift, saving a few cycles
 }
 
-// original function:
-// uint32_t micros( void )
-// {
-//     uint32_t ticks ;
-//     uint32_t count ;
-// 
-//     SysTick->CTRL;
-//     do {
-//         ticks = SysTick->VAL;
-//         count = GetTickCount();
-//     } while (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk);
-// 
-//     return count * 1000 + (SysTick->LOAD + 1 - ticks) / (SystemCoreClock/1000000) ;
-// }
-
-
 void delay( uint32_t ms )
 {
-    if (ms == 0)
-        return;
-    uint32_t start = g_ms_ticks;
-    do {
-        yield();
-    } while (g_ms_ticks - start < ms);
+    if (ms != 0)
+    {
+		const uint32_t start = g_ms_ticks;
+		do {
+			yield();
+		} while (g_ms_ticks - start < ms);
+    }
 }
 
 #if defined ( __ICCARM__ ) /* IAR Ewarm 5.41+ */

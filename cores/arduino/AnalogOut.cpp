@@ -152,27 +152,27 @@ static bool AnalogWritePwm(const PinDescription& pinDesc, uint32_t ulValue, uint
 const unsigned int numTcChannels = 9;
 
 // Map from timer channel to TC channel number
-static const uint8_t channelToChNo[] = { 0, 0, 1, 1, 2, 2, 0, 0, 1, 1, 2, 2, 0, 0, 1, 1, 2, 2 };
+static const uint8_t channelToChNo[] = { 0, 1, 2, 0, 1, 2, 0, 1, 2 };
 
 // Map from timer channel to TC number
-static Tc *channelToTC[] = { TC0, TC0, TC0, TC0, TC0, TC0,
-							 TC1, TC1, TC1, TC1, TC1, TC1,
-							 TC2, TC2, TC2, TC2, TC2, TC2 };
+static Tc * const channelToTC[] = { TC0, TC0, TC0,
+									TC1, TC1, TC1,
+									TC2, TC2, TC2 };
 
 // Map from timer channel to TIO number
-static const uint8_t channelToId[] = { ID_TC0, ID_TC0, ID_TC1, ID_TC1, ID_TC2, ID_TC2,
-									   ID_TC3, ID_TC3, ID_TC4, ID_TC4, ID_TC5, ID_TC5,
-									   ID_TC6, ID_TC6, ID_TC7, ID_TC7, ID_TC8, ID_TC8};
+static const uint8_t channelToId[] = { ID_TC0, ID_TC1, ID_TC2,
+									   ID_TC3, ID_TC4, ID_TC5,
+									   ID_TC6, ID_TC7, ID_TC8 };
 
-// Current frequency of each channel
+// Current frequency of each TC channel
 static uint16_t TCChanFreq[numTcChannels] = {0};
 
-static void TC_SetCMR_ChannelA(Tc *tc, uint32_t chan, uint32_t v)
+static inline void TC_SetCMR_ChannelA(Tc *tc, uint32_t chan, uint32_t v)
 {
 	tc->TC_CHANNEL[chan].TC_CMR = (tc->TC_CHANNEL[chan].TC_CMR & 0xFFF0FFFF) | v;
 }
 
-static void TC_SetCMR_ChannelB(Tc *tc, uint32_t chan, uint32_t v)
+static inline void TC_SetCMR_ChannelB(Tc *tc, uint32_t chan, uint32_t v)
 {
 	tc->TC_CHANNEL[chan].TC_CMR = (tc->TC_CHANNEL[chan].TC_CMR & 0xF0FFFFFF) | v;
 }
@@ -186,7 +186,7 @@ static bool AnalogWriteTc(const PinDescription& pinDesc, uint32_t ulValue, uint1
 //pre((pinDesc.ulAttribute & PIN_ATTR_TIMER) != 0)
 //pre(VARIANT_MCLK < 130000000)
 {
-	const ETCChannel chan = pinDesc.ulTCChannel;
+	const uint32_t chan = (uint32_t)pinDesc.ulTCChannel >> 1;
 	if (freq == 0)
 	{
 		TCChanFreq[chan] = freq;
@@ -214,14 +214,15 @@ static bool AnalogWriteTc(const PinDescription& pinDesc, uint32_t ulValue, uint1
 							TC_CMR_ACPA_CLEAR | TC_CMR_ACPC_CLEAR |
 							TC_CMR_BCPB_CLEAR | TC_CMR_BCPC_CLEAR);
 			const uint32_t top = (VARIANT_MCK/8)/(uint32_t)freq;	// with 120MHz clock this varies between 228 (@ 65.535kHz) and 15 million (@ 1Hz)
-			tc_write_rc(chTC, chNo, top - 1);
+			// The datasheet doesn't say how the period relates to the RC value, but from measurement it seems that we do not need to subtract one from top
+			tc_write_rc(chTC, chNo, top);
 		}
 
 		// Caution: if the master clock speed exceeds approx. 130MHz or we clock the TC faster than MCLK/8 then the following multiplication may overflow
 		const uint32_t threshold = (ulValue * tc_read_rc(chTC, chNo))/255;
 		if (threshold == 0)
 		{
-			if ((chan & 1) == 0)
+			if (((uint32_t)pinDesc.ulTCChannel & 1) == 0)
 			{
 				tc_write_ra(chTC, chNo, 1);
 				TC_SetCMR_ChannelA(chTC, chNo, TC_CMR_ACPA_CLEAR | TC_CMR_ACPC_CLEAR);
@@ -235,7 +236,7 @@ static bool AnalogWriteTc(const PinDescription& pinDesc, uint32_t ulValue, uint1
 		}
 		else
 		{
-			if ((chan & 1) == 0)
+			if (((uint32_t)pinDesc.ulTCChannel & 1) == 0)
 			{
 				tc_write_ra(chTC, chNo, threshold);
 				TC_SetCMR_ChannelA(chTC, chNo, TC_CMR_ACPA_CLEAR | TC_CMR_ACPC_SET);

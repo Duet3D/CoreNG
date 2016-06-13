@@ -26,7 +26,7 @@
 
 #elif defined(__SAM4E8E__)
 
-# define SD_MMC_0_CD_GPIO			53			// logical pin 13
+# define SD_MMC_0_CD_GPIO			53			// logical pin 49
 # define SD_MMC_0_CD_DETECT_VALUE	0
 
 #else

@@ -59,7 +59,7 @@ inline void RingBuffer::store_char(uint8_t c)
 
 inline size_t RingBuffer::roomLeft() const
 {
-	return (_iTail - _iHead - 1) % SERIAL_BUFFER_SIZE;
+	return (_iTail + (SERIAL_BUFFER_SIZE - 1) - _iHead) % SERIAL_BUFFER_SIZE;
 }
 
 #endif /* _RING_BUFFER_ */

@@ -17,10 +17,15 @@
 
 #if SAM4E
 
-#include "usart/usart.h"		// On Duet NG the general SPI channel is on a USART
+# include "usart/usart.h"		// On Duet NG the general SPI channel is on a USART
 
-#define USART_SSPI	USART1		//TODO change to USART0 for the second prototype
-#define ID_SSPI		ID_USART1	//TODO change to USART0
+# ifdef PROTOTYPE_1
+#  define USART_SSPI	USART1
+#  define ID_SSPI		ID_USART1
+# else
+#  define USART_SSPI	USART0
+#  define ID_SSPI		ID_USART0
+# endif
 
 #else
 
@@ -131,11 +136,15 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
 	if (init_comms)
 	{
 #if SAM4E
-		//TODO change the following to USART0 for the second prototype
+# ifdef PROTOTYPE_1
 		ConfigurePin(g_APinDescription[APIN_USART1_SCK]);
 		ConfigurePin(g_APinDescription[APIN_USART1_MOSI]);
 		ConfigurePin(g_APinDescription[APIN_USART1_MISO]);
-
+# else
+		ConfigurePin(g_APinDescription[APIN_USART0_SCK]);
+		ConfigurePin(g_APinDescription[APIN_USART0_MOSI]);
+		ConfigurePin(g_APinDescription[APIN_USART0_MISO]);
+# endif
 		pmc_enable_periph_clk(ID_SSPI);
 
 		// Set USART0 in SPI master mode

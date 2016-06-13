@@ -181,9 +181,9 @@ size_t UARTClass::write(const uint8_t *buffer, size_t size)
 	while (size != 0)
 	{
 		size_t written = _tx_buffer->storeBlock(buffer, size);
-	    _pUart->UART_IER = UART_IER_TXRDY;
 		buffer += written;
 		size -= written;
+	    _pUart->UART_IER = UART_IER_TXRDY;
 	}
 	return ret;
 }
