@@ -36,6 +36,9 @@ bool AnalogInCheckReady(uint32_t channels = 0xFFFFFFFF);
 // Convert a pin number to an AnalogIn channel
 extern AnalogChannelNumber PinToAdcChannel(uint32_t pin);
 
+// Get the temperature measurement channel
+extern AnalogChannelNumber GetTemperatureAdcChannel();
+
 #endif
 
 #endif /* CORES_ARDUINO_ANALOGIN_H_ */

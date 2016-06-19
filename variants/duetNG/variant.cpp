@@ -98,7 +98,7 @@ extern const PinDescription g_APinDescription[]=
 
   // 28-29
   { PIOB, PIO_PB2,             ID_PIOB, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI0 CS1
-  { PIOB, PIO_PB3X1_AFE1_AD1,  ID_PIOB, PIO_INPUT, 	  PIO_DEFAULT,  PIN_ATTR_ANALOG,                    NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // Power fail detect
+  { PIOB, PIO_PB3X1_AFE1_AD1,  ID_PIOB, PIO_INPUT, 	  PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC17,  NOT_ON_PWM,  NOT_ON_TIMER }, // Power fail detect 5V regulator input
 
   // 30 SPI bus 0
   { PIOB, PIO_PB13C_SCK0,      ID_PIOB, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI0 SPCK
@@ -118,7 +118,7 @@ extern const PinDescription g_APinDescription[]=
 #else
   { PIOC, PIO_PC3B_PWML3,  	   ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_PWM),     NO_ADC, PWM_CH3,  	 NOT_ON_TIMER }, // Heater 3
 #endif
-  { PIOC, PIO_PC4X1_AFE1_AD7,  ID_PIOC, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC23,  NOT_ON_PWM,  NOT_ON_TIMER }, // Power fail 2
+  { PIOC, PIO_PC4X1_AFE1_AD7,  ID_PIOC, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC23,  NOT_ON_PWM,  NOT_ON_TIMER }, // Vin power fail detect
   { PIOC, PIO_PC5B_TIOA6,      ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),   NO_ADC, NOT_ON_PWM,  TC2_CHA6     }, // Heater 4
   { PIOC, PIO_PC6,             ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // LCD_E
   { PIOC, PIO_PC7,             ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // ENC_B

@@ -93,6 +93,10 @@ void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 			activeChannels |= (1 << channel);
 #if SAM3XA
 			adc_enable_channel(ADC, GetAdcChannel(channel));
+			if (GetAdcChannel(channel) == ADC_TEMPERATURE_SENSOR)
+			{
+				adc_enable_ts(ADC);
+			}
 #endif
 #if SAM4E
 			afec_ch_config cfg;
@@ -108,6 +112,10 @@ void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 			activeChannels &= ~(1 << channel);
 #if SAM3XA
 			adc_disable_channel(ADC, GetAdcChannel(channel));
+			if (GetAdcChannel(channel) == ADC_TEMPERATURE_SENSOR)
+			{
+				adc_disable_ts(ADC);
+			}
 #endif
 #if SAM4E
 			afec_channel_disable(GetAfec(channel), GetAfecChannel(channel));
@@ -216,6 +224,17 @@ AnalogChannelNumber PinToAdcChannel(uint32_t pin)
 	}
 #endif
 	return g_APinDescription[pin].ulADCChannelNumber;
+}
+
+// Get the temperature measurement channel
+AnalogChannelNumber GetTemperatureAdcChannel()
+{
+#if SAM4E
+	return static_cast<AnalogChannelNumber>(AFEC_TEMPERATURE_SENSOR + 16);		// AFEC1 channel 15
+#endif
+#if SAM3XA
+	return static_cast<AnalogChannelNumber>(ADC_TEMPERATURE_SENSOR);
+#endif
 }
 
 // End
