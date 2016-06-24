@@ -51,7 +51,7 @@ void AnalogInInit()
 {
 #if SAM3XA
 	pmc_enable_periph_clk(ID_ADC);
-	adc_init(ADC, SystemCoreClock, ADC_FREQ_MIN, ADC_STARTUP_TIME_12);	// Reduce clock rate
+	adc_init(ADC, SystemCoreClock, 2000000, ADC_STARTUP_TIME_12);	// 2MHz clock
 	adc_configure_timing(ADC, 3, ADC_SETTLING_TIME_3, 1);			// Add transfer time
 	adc_configure_trigger(ADC, ADC_TRIG_SW, 0);						// Disable hardware trigger
 	adc_disable_interrupt(ADC, 0xFFFFFFFF);							// Disable all ADC interrupts
@@ -146,11 +146,11 @@ AnalogCallback_t AnalogInSetCallback(AnalogCallback_t fn)
 	callbackFn = fn;
 	if (fn == nullptr)
 	{
-		//TODO
+		//TODO disable conversions complete interrupt
 	}
 	else
 	{
-		//TODO
+		//TODO enable conversions complete interrupt
 	}
 	return oldFn;
 }
@@ -230,7 +230,7 @@ AnalogChannelNumber PinToAdcChannel(uint32_t pin)
 AnalogChannelNumber GetTemperatureAdcChannel()
 {
 #if SAM4E
-	return static_cast<AnalogChannelNumber>(AFEC_TEMPERATURE_SENSOR + 16);		// AFEC1 channel 15
+	return static_cast<AnalogChannelNumber>(AFEC_TEMPERATURE_SENSOR);		// AFEC0 channel 15
 #endif
 #if SAM3XA
 	return static_cast<AnalogChannelNumber>(ADC_TEMPERATURE_SENSOR);
