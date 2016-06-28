@@ -23,6 +23,21 @@
 extern "C" {
 #endif
 
+enum PinMode
+{
+	INPUT,				// pin is a digital input
+	INPUT_PULLUP,		// pin is a digital input with pullup enabled
+#if SAM4E
+	INPUT_PULLDOWN,		// pin is a digital input with pulldown enabled
+#else
+	INPUT_PULLDOWN_NOT_AVAILABLE,
+#endif
+	OUTPUT_LOW,			// pin is an output with initial state LOW
+	OUTPUT_HIGH,		// pin is an output with initial state HIGH
+	AIN,				// pin is an analog input, digital input buffer is disabled if possible
+	SPECIAL				// pin is used for the special function defined for it in the variant.cpp file
+};
+
 /**
  * \brief Configures the specified pin to behave either as an input or an output. See the description of digital pins for details.
  *
@@ -30,9 +45,9 @@ extern "C" {
  * \param ulMode Either INPUT or OUTPUT
  * \param debounceCutoff Debounce cutoff frequency (only one can be set per PIO)
  */
-extern void pinModeDuet(uint32_t dwPin, uint32_t dwMode, uint32_t debounceCutoff);
+extern void pinModeDuet(uint32_t dwPin, enum PinMode dwMode, uint32_t debounceCutoff);
 
-inline void pinMode(uint32_t dwPin, uint32_t dwMode)
+inline void pinMode(uint32_t dwPin, enum PinMode dwMode)
 {
 	pinModeDuet(dwPin, dwMode, 0);
 }
@@ -43,30 +58,19 @@ inline void pinMode(uint32_t dwPin, uint32_t dwMode)
  * If the pin has been configured as an OUTPUT with pinMode(), its voltage will be set to the
  * corresponding value: 5V (or 3.3V on 3.3V boards) for HIGH, 0V (ground) for LOW.
  *
- * If the pin is configured as an INPUT, writing a HIGH value with digitalWrite() will enable an internal
- * 100K pullup resistor (see the tutorial on digital pins). Writing LOW will disable the pullup. The pullup
- * resistor is enough to light an LED dimly, so if LEDs appear to work, but very dimly, this is a likely
- * cause. The remedy is to set the pin to an output with the pinMode() function.
- *
- * \note Digital pin PIN_LED is harder to use as a digital input than the other digital pins because it has an LED
- * and resistor attached to it that's soldered to the board on most boards. If you enable its internal 20k pull-up
- * resistor, it will hang at around 1.7 V instead of the expected 5V because the onboard LED and series resistor
- * pull the voltage level down, meaning it always returns LOW. If you must use pin PIN_LED as a digital input, use an
- * external pull down resistor.
- *
  * \param dwPin the pin number
- * \param dwVal HIGH or LOW
+ * \param dwVal true to set the pin HIGH, false to set it LOW
  */
-extern void digitalWrite(uint32_t dwPin, uint32_t dwVal);
+extern void digitalWrite(uint32_t dwPin, bool dwVal);
 
 /**
  * \brief Reads the value from a specified digital pin, either HIGH or LOW.
  *
  * \param ulPin The number of the digital pin you want to read (int)
  *
- * \return HIGH or LOW
+ * \return true for HIGH, false for LOW
  */
-extern int digitalRead(uint32_t ulPin);
+extern bool digitalRead(uint32_t ulPin);
 
 /**
  * \brief Enable or disable the pullup resistor on a pin.

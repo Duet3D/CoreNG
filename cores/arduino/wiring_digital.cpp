@@ -18,7 +18,7 @@
 
 #include "Core.h"
 
-extern "C" void pinModeDuet(uint32_t ulPin, uint32_t ulMode, uint32_t debounceCutoff)
+extern "C" void pinModeDuet(uint32_t ulPin, enum PinMode ulMode, uint32_t debounceCutoff)
 {
 	if (ulPin > MaxPinNumber)
 	{
@@ -35,53 +35,97 @@ extern "C" void pinModeDuet(uint32_t ulPin, uint32_t ulMode, uint32_t debounceCu
 	{
 		case INPUT:
 			/* Enable peripheral for clocking input */
-			pmc_enable_periph_clk(pinDesc.ulPeripheralId) ;
+			pmc_enable_periph_clk(pinDesc.ulPeripheralId);
 			pio_configure(
 					pinDesc.pPort,
 					PIO_INPUT,
 					pinDesc.ulPin,
-					(debounceCutoff == 0) ? 0 : PIO_DEBOUNCE );
+					(debounceCutoff == 0) ? 0 : PIO_DEBOUNCE);
 			if (debounceCutoff != 0)
 			{
 				pio_set_debounce_filter(pinDesc.pPort, pinDesc.ulPin, debounceCutoff);	// enable debounce filer with specified cutoff frequency
 			}
-			break ;
+			break;
 
 		case INPUT_PULLUP:
 			/* Enable peripheral for clocking input */
-			pmc_enable_periph_clk(pinDesc.ulPeripheralId) ;
+			pmc_enable_periph_clk(pinDesc.ulPeripheralId);
 			pio_configure(
 					pinDesc.pPort,
 					PIO_INPUT,
 					pinDesc.ulPin,
-					(debounceCutoff == 0) ? PIO_PULLUP : PIO_PULLUP | PIO_DEBOUNCE );
+					(debounceCutoff == 0) ? PIO_PULLUP : PIO_PULLUP | PIO_DEBOUNCE);
 			if (debounceCutoff != 0)
 			{
 				pio_set_debounce_filter(pinDesc.pPort, pinDesc.ulPin, debounceCutoff);	// enable debounce filer with specified cutoff frequency
 			}
-			break ;
+			break;
 
-		case OUTPUT:
+#if SAM4E
+		case INPUT_PULLDOWN:
+			/* Enable peripheral for clocking input */
+			pmc_enable_periph_clk(pinDesc.ulPeripheralId);
+			pio_pull_down(pinDesc.pPort, pinDesc.ulPin, 1);
 			pio_configure(
 					pinDesc.pPort,
-					PIO_OUTPUT_1,
+					PIO_INPUT,
 					pinDesc.ulPin,
-					pinDesc.ulPinConfiguration ) ;
+					(debounceCutoff == 0) ? 0 : PIO_DEBOUNCE);
+			if (debounceCutoff != 0)
+			{
+				pio_set_debounce_filter(pinDesc.pPort, pinDesc.ulPin, debounceCutoff);	// enable debounce filer with specified cutoff frequency
+			}
+			break;
+#endif
+
+		case OUTPUT_LOW:
+			pio_configure(
+					pinDesc.pPort,
+					PIO_OUTPUT_0,
+					pinDesc.ulPin,
+					pinDesc.ulPinConfiguration);
 
 			/* if all pins are output, disable PIO Controller clocking, reduce power consumption */
 			if (pinDesc.pPort->PIO_OSR == 0xffffffff)
 			{
-				pmc_disable_periph_clk(pinDesc.ulPeripheralId) ;
+				pmc_disable_periph_clk(pinDesc.ulPeripheralId);
 			}
-			break ;
+			break;
+
+		case OUTPUT_HIGH:
+			pio_configure(
+					pinDesc.pPort,
+					PIO_OUTPUT_1,
+					pinDesc.ulPin,
+					pinDesc.ulPinConfiguration);
+
+			/* if all pins are output, disable PIO Controller clocking, reduce power consumption */
+			if (pinDesc.pPort->PIO_OSR == 0xffffffff)
+			{
+				pmc_disable_periph_clk(pinDesc.ulPeripheralId);
+			}
+			break;
+
+		case AIN:
+			pio_pull_up(pinDesc.pPort, pinDesc.ulPin, 0);		// turn off pullup
+#if SAM4E
+			pio_pull_down(pinDesc.pPort, pinDesc.ulPin, 0);		// turn off pulldown
+#endif
+			// Ideally we should record which pins are being used as analog inputs, then we can disable the clock
+			// on any PIO that is being used solely for outputs and ADC inputs. But for now we don't do that.
+			break;
+
+		case SPECIAL:
+			ConfigurePin(pinDesc);
+			break;
 
 		default:
-			break ;
+			break;
 	}
 }
 
 // This has now been optimised to speed it up, so it may no longer be used to enable the pullup resistor on an input pin (use mode INPUT_PULLUP instead).
-extern "C"  void digitalWrite(uint32_t ulPin, uint32_t ulVal)
+extern "C"  void digitalWrite(uint32_t ulPin, bool ulVal)
 {
 	if (ulPin <= MaxPinNumber)
 	{
@@ -100,20 +144,20 @@ extern "C"  void digitalWrite(uint32_t ulPin, uint32_t ulVal)
 	}
 }
 
-extern "C" int digitalRead(uint32_t ulPin)
+extern "C" bool digitalRead(uint32_t ulPin)
 {
 	if (ulPin > MaxPinNumber)
 	{
-		return LOW;
+		return false;
 	}
 
 	const PinDescription& pinDesc = g_APinDescription[ulPin];
 	if (pinDesc.ulPinType == PIO_NOT_A_PIN)
     {
-        return LOW ;
+        return false ;
     }
 
-	return pio_get(pinDesc.pPort, PIO_INPUT, pinDesc.ulPin);
+	return (bool)pio_get(pinDesc.pPort, PIO_INPUT, pinDesc.ulPin);
 }
 
 extern "C" void setPullup(uint32_t ulPin, bool en)

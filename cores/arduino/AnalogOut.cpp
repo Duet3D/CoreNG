@@ -297,8 +297,7 @@ void AnalogWrite(uint32_t ulPin, uint32_t ulValue, uint16_t freq)
 #endif
 
 	// Fall back to digital write
-	pinMode(ulPin, OUTPUT);
-	digitalWrite(ulPin, (ulValue < 128) ? LOW : HIGH);
+	pinMode(ulPin, (ulValue < 128) ? OUTPUT_LOW : OUTPUT_HIGH);
 }
 
 // End

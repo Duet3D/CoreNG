@@ -130,8 +130,7 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
 {
 	static bool init_comms = true;
 
-	pinMode(device->csPin, OUTPUT);
-	digitalWrite(device->csPin, HIGH);
+	pinMode(device->csPin, OUTPUT_HIGH);
 
 	if (init_comms)
 	{

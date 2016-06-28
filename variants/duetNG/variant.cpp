@@ -257,6 +257,7 @@ void serialEventRun(void)
 // ----------------------------------------------------------------------------
 
 extern "C" void __libc_init_array(void);
+extern void UrgentInit();
 
 void ConfigurePin(const PinDescription& pinDesc)
 {
@@ -274,20 +275,12 @@ extern "C" void init( void )
 		while (true);
 	}
 
-	// Initialize C library
+	UrgentInit();			// initialise anything in the main application that can't wait
+
+	// Initialize C library (I think this calls C++ constructors for static data too)
 	__libc_init_array();
 
-	// Disable pull-up on every pin
-	for (size_t i = 0; i <= MaxPinNumber; i++)
-	{
-		setPullup(i, false);
-	}
-
-	// Enable parallel access on PIO output data registers
-//	PIOA->PIO_OWER = 0xFFFFFFFF;
-//	PIOB->PIO_OWER = 0xFFFFFFFF;
-//	PIOC->PIO_OWER = 0xFFFFFFFF;
-//	PIOD->PIO_OWER = 0xFFFFFFFF;
+	// We no longer disable pullups on all pins here, better to leave them enabled until the port is initialised
 
 	// Initialize Serial port U(S)ART pins
 	ConfigurePin(g_APinDescription[APINS_UART0]);

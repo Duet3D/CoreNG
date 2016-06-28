@@ -33,11 +33,11 @@ uint32_t shiftIn( uint32_t ulDataPin, uint32_t ulClockPin, uint32_t ulBitOrder )
 
 		if ( ulBitOrder == LSBFIRST )
         {
-			value |= digitalRead( ulDataPin ) << i ;
+			value |= (digitalRead( ulDataPin ) ? 1 : 0) << i ;
         }
 		else
         {
-			value |= digitalRead( ulDataPin ) << (7 - i) ;
+			value |= (digitalRead( ulDataPin ) ? 1 : 0) << (7 - i) ;
         }
 
 		digitalWrite( ulClockPin, LOW ) ;
