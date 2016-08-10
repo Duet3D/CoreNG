@@ -167,10 +167,10 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
 	    SSPI->SPI_MR = SPI_MR_MSTR | SPI_MR_MODFDIS;
 
 # if defined(USE_SAM3X_DMAC)
-	pmc_enable_periph_clk(ID_DMAC);
-	dmac_disable(DMAC);
-	dmac_set_priority_mode(DMAC, DMAC_GCFG_ARB_CFG_FIXED);
-	dmac_enable(DMAC);
+		pmc_enable_periph_clk(ID_DMAC);
+		dmac_disable(DMAC);
+		dmac_set_priority_mode(DMAC, DMAC_GCFG_ARB_CFG_FIXED);
+		dmac_enable(DMAC);
 # endif
 
 #endif

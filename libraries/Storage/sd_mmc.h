@@ -80,6 +80,7 @@ typedef uint8_t sd_mmc_err_t; //!< Type of return error code
 #define SD_MMC_ERR_COMM         5    //! General communication error
 #define SD_MMC_ERR_PARAM        6    //! Illegal input parameter
 #define SD_MMC_ERR_WP           7    //! Card write protected
+#define SD_MMC_CD_DEBOUNCING	8	 //! Waiting for card to settle after CD
 //! @}
 
 typedef uint8_t card_type_t; //!< Type of card type
@@ -111,7 +112,7 @@ typedef uint8_t card_version_t; //!< Type of card version
 #define CARD_VER_MMC_4     (0x40)    //! MMC version 4
 //! @}
 
-//! This SD MMC stack uses the maximum block size autorized (512 bytes)
+//! This SD MMC stack uses the maximum block size authorized (512 bytes)
 #define SD_MMC_BLOCK_SIZE          512
 
 /**
@@ -167,6 +168,16 @@ uint32_t sd_mmc_get_capacity(uint8_t slot);
  * \return true, if write protected
  */
 bool sd_mmc_is_write_protected(uint8_t slot);
+
+#if 1		// dc42
+
+// Get the Card Detect status, returning true if the CD pin is present and active
+bool sd_mmc_card_detected(uint8_t slot);
+
+// Unmount the card. Must call this to force it to be re-initialised when changing card.
+void sd_mmc_unmount(uint8_t slot);
+
+#endif
 
 /**
  * \brief Initialize the read blocks of data from the card.

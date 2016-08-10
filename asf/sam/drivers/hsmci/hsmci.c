@@ -231,6 +231,17 @@ uint32_t hsmci_get_speed()
 #endif
 	return hsmciClock/2;		// HSMCI interface is 4 bits wide, so divide by 2 to get bytes/sec
 }
+
+static hsmciIdleFunc_t hsmciIdleFunc = NULL;
+
+// Set the idle function and return the old one
+hsmciIdleFunc_t hsmci_set_idle_func(hsmciIdleFunc_t p)
+{
+	hsmciIdleFunc_t ret = hsmciIdleFunc;
+	hsmciIdleFunc = p;
+	return ret;
+}
+
 #endif
 
 /** \brief Wait the end of busy signal on data line
@@ -350,20 +361,6 @@ void hsmci_init(void)
 	// Enable the HSMCI and the Power Saving
 	HSMCI->HSMCI_CR = HSMCI_CR_MCIEN | HSMCI_CR_PWSEN;
 }
-
-#if 1	// dc42 changes
-
-static hsmciIdleFunc_t hsmciIdleFunc = NULL;
-
-// Set the idle function and return the old one
-hsmciIdleFunc_t hsmci_set_idle_func(hsmciIdleFunc_t p)
-{
-	hsmciIdleFunc_t ret = hsmciIdleFunc;
-	hsmciIdleFunc = p;
-	return ret;
-}
-
-#endif
 
 uint8_t hsmci_get_bus_width(uint8_t slot)
 {

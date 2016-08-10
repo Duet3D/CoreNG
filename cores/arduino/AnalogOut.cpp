@@ -29,11 +29,19 @@ extern void AnalogOutInit()
 	// Nothing to do yet
 }
 
+// Convert a float in 0..1 to unsigned integer in 0..N
+static inline uint32_t ConvertRange(float f, uint32_t top)
+pre(0.0 <= ulValue; ulValue <= 1.0)
+post(result <= top)
+{
+	return lround(f * (float)top);
+}
+
 // AnalogWrite to a DAC pin
 // Return true if successful, false if we need to fall back to digitalWrite
-static bool AnalogWriteDac(const PinDescription& pinDesc, uint32_t ulValue)
-//pre(ulValue <= 255)
-//pre((pinDesc.ulAttribute & PIN_ATTR_DAC) != 0)
+static bool AnalogWriteDac(const PinDescription& pinDesc, float ulValue)
+pre(0.0 <= ulValue; ulValue <= 1.0)
+pre((pinDesc.ulAttribute & PIN_ATTR_DAC) != 0)
 {
 	const AnalogChannelNumber channel = pinDesc.ulADCChannelNumber;
 	const uint32_t chDACC = ((channel == DA0) ? 0 : 1);
@@ -75,7 +83,7 @@ static bool AnalogWriteDac(const PinDescription& pinDesc, uint32_t ulValue)
 	}
 
 	// Write user value - need to convert it from 8 to 12 bit resolution
-	dacc_write_conversion_data(DACC_INTERFACE, ulValue << (DACC_RESOLUTION - 8));
+	dacc_write_conversion_data(DACC_INTERFACE, ConvertRange(ulValue, (1 << DACC_RESOLUTION) - 1));
 	while ((dacc_get_interrupt_status(DACC_INTERFACE) & DACC_ISR_EOC) == 0) {}
 	return true;
 }
@@ -93,9 +101,9 @@ static uint16_t PWMChanPeriod[numPwmChannels];
 
 // AnalogWrite to a PWM pin
 // Return true if successful, false if we need to fall back to digitalWrite
-static bool AnalogWritePwm(const PinDescription& pinDesc, uint32_t ulValue, uint16_t freq)
-//pre(ulValue <= 255)
-//pre((pinDesc.ulAttribute & PIN_ATTR_PWM) != 0)
+static bool AnalogWritePwm(const PinDescription& pinDesc, float ulValue, uint16_t freq)
+pre(0.0 <= ulValue; ulValue <= 1.0)
+pre((pinDesc.ulAttribute & PIN_ATTR_PWM) != 0)
 {
 	const uint32_t chan = pinDesc.ulPWMChannel;
 	if (freq == 0)
@@ -119,7 +127,7 @@ static bool AnalogWritePwm(const PinDescription& pinDesc, uint32_t ulValue, uint
 
 		pwm_channel_disable(PWM, chan);
 		bool useFastClock = (freq >= PwmFastClock/65535);
-		uint16_t period = ((useFastClock) ? PwmFastClock : PwmSlowClock)/freq - 1;
+		uint32_t period = ((useFastClock) ? PwmFastClock : PwmSlowClock)/freq;
 		// Setup PWM for this PWM channel
 		pio_configure(pinDesc.pPort,
 				pinDesc.ulPinType,
@@ -129,13 +137,13 @@ static bool AnalogWritePwm(const PinDescription& pinDesc, uint32_t ulValue, uint
 		memset(&channelConfig, 0, sizeof(channelConfig));		// clear unused fields
 		channelConfig.ul_prescaler = (useFastClock) ? PWM_CMR_CPRE_CLKB : PWM_CMR_CPRE_CLKA;
 		channelConfig.ul_period = period;
-		channelConfig.ul_duty = (ulValue * (uint32_t)period)/255;
+		channelConfig.ul_duty = ConvertRange(ulValue, period);
 		channelConfig.channel = chan;
 		pwm_channel_init(PWM, &channelConfig);
 		pwm_channel_enable(PWM, chan);
 
 		PWMChanFreq[chan] = freq;
-		PWMChanPeriod[chan] = period;
+		PWMChanPeriod[chan] = (uint16_t)period;
 	}
 	else
 	{
@@ -143,12 +151,11 @@ static bool AnalogWritePwm(const PinDescription& pinDesc, uint32_t ulValue, uint
 		pwm_channel_t channelConfig;
 		channelConfig.channel = chan;
 		channelConfig.ul_period = (uint32_t)PWMChanPeriod[chan];
-		pwm_channel_update_duty(PWM, &channelConfig, (ulValue * channelConfig.ul_period)/255);
+		pwm_channel_update_duty(PWM, &channelConfig, ConvertRange(ulValue, channelConfig.ul_period));
 	}
 	return true;
 }
 
-#if SAM4E
 const unsigned int numTcChannels = 9;
 
 // Map from timer channel to TC channel number
@@ -181,10 +188,9 @@ static inline void TC_SetCMR_ChannelB(Tc *tc, uint32_t chan, uint32_t v)
 // Return true if successful, false if we need to fall back to digitalWrite
 // WARNING: this will screw up big time if you try to use both the A and B outputs of the same timer at different frequencies.
 // The DuetNG board uses only A outputs, so this is OK.
-static bool AnalogWriteTc(const PinDescription& pinDesc, uint32_t ulValue, uint16_t freq)
-//pre(ulValue <= 255)
-//pre((pinDesc.ulAttribute & PIN_ATTR_TIMER) != 0)
-//pre(VARIANT_MCLK < 130000000)
+static bool AnalogWriteTc(const PinDescription& pinDesc, float ulValue, uint16_t freq)
+pre(0.0 <= ulValue; ulValue <= 1.0)
+pre((pinDesc.ulAttribute & PIN_ATTR_TIMER) != 0)
 {
 	const uint32_t chan = (uint32_t)pinDesc.ulTCChannel >> 1;
 	if (freq == 0)
@@ -218,8 +224,7 @@ static bool AnalogWriteTc(const PinDescription& pinDesc, uint32_t ulValue, uint1
 			tc_write_rc(chTC, chNo, top);
 		}
 
-		// Caution: if the master clock speed exceeds approx. 130MHz or we clock the TC faster than MCLK/8 then the following multiplication may overflow
-		const uint32_t threshold = (ulValue * tc_read_rc(chTC, chNo))/255;
+		const uint32_t threshold = ConvertRange(ulValue, tc_read_rc(chTC, chNo));
 		if (threshold == 0)
 		{
 			if (((uint32_t)pinDesc.ulTCChannel & 1) == 0)
@@ -256,19 +261,16 @@ static bool AnalogWriteTc(const PinDescription& pinDesc, uint32_t ulValue, uint1
 	}
 	return true;
 }
-#endif	// SAM4E
 
 // Analog write to DAC, PWM, TC or plain output pin
-void AnalogWrite(uint32_t ulPin, uint32_t ulValue, uint16_t freq)
+void AnalogOut(uint32_t ulPin, float ulValue, uint16_t freq)
 {
-	if (ulPin > MaxPinNumber)
+	if (ulPin > MaxPinNumber || isnan(ulValue))
 	{
 		return;
 	}
-	if (ulValue > 255)
-	{
-		ulValue = 255;
-	}
+
+	ulValue = constrain<float>(ulValue, 0.0, 1.0);
 
 	const PinDescription& pinDesc = g_APinDescription[ulPin];
 	const uint32_t attr = pinDesc.ulPinAttribute;
@@ -286,7 +288,6 @@ void AnalogWrite(uint32_t ulPin, uint32_t ulValue, uint16_t freq)
 			return;
 		}
 	}
-#if SAM4E
 	else if ((attr & PIN_ATTR_TIMER) != 0)
 	{
 		if (AnalogWriteTc(pinDesc, ulValue, freq))
@@ -294,10 +295,9 @@ void AnalogWrite(uint32_t ulPin, uint32_t ulValue, uint16_t freq)
 			return;
 		}
 	}
-#endif
 
 	// Fall back to digital write
-	pinMode(ulPin, (ulValue < 128) ? OUTPUT_LOW : OUTPUT_HIGH);
+	pinMode(ulPin, (ulValue < 0.5) ? OUTPUT_LOW : OUTPUT_HIGH);
 }
 
 // End

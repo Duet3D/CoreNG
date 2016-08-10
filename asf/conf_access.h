@@ -53,7 +53,13 @@
 #define LUN_0                DISABLE   //!< On-Chip Virtual Memory.
 #define LUN_1                DISABLE   //!< AT45DBX Data Flash.
 #define LUN_2                ENABLE    //!< SD/MMC Card over Slot 0
+
+#if defined(__SAM4E8E__)
+#define LUN_3                ENABLE    //!< SD/MMC Card in slot 1
+#else
 #define LUN_3                DISABLE   //!< Spare
+#endif
+
 #define LUN_4                DISABLE   //!< Spare
 #define LUN_5                DISABLE   //!< Spare
 #define LUN_6                DISABLE   //!< Spare
@@ -110,6 +116,23 @@
 #define Lun_2_mem_2_ram                         sd_mmc_mem_2_ram_0
 #define Lun_2_ram_2_mem                         sd_mmc_ram_2_mem_0
 #define LUN_2_NAME                              "\"SD/MMC Card Slot 0\""
+//! @}
+
+/*! \name LUN 3 Definitions
+ */
+//! @{
+#define SD_MMC_1_MEM                            LUN_3
+#define LUN_ID_SD_MMC_1_MEM                     LUN_ID_3
+#define LUN_3_INCLUDE                           "sd_mmc_mem.h"
+#define Lun_3_test_unit_ready                   sd_mmc_test_unit_ready_1
+#define Lun_3_read_capacity                     sd_mmc_read_capacity_1
+#define Lun_3_wr_protect                        sd_mmc_wr_protect_1
+#define Lun_3_removal                           sd_mmc_removal_1
+#define Lun_3_usb_read_10                       sd_mmc_usb_read_10_1
+#define Lun_3_usb_write_10                      sd_mmc_usb_write_10_1
+#define Lun_3_mem_2_ram                         sd_mmc_mem_2_ram_1
+#define Lun_3_ram_2_mem                         sd_mmc_ram_2_mem_1
+#define LUN_3_NAME                              "\"SD/MMC Card Slot 1\""
 //! @}
 
 /*! \name USB LUNs Definitions

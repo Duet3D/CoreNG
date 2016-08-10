@@ -56,7 +56,7 @@ template<class X> inline X max(X _a, X _b)
 	return (_a > _b) ? _a : _b;
 }
 
-// Specialisations for float and double to handle NANs properly
+// Specialisations for float and double to handle NaNs properly
 template<> inline float min(float _a, float _b)
 {
 	return (isnan(_a) || _a < _b) ? _a : _b;
@@ -99,9 +99,10 @@ inline void swap(float& a, float& b)
 	b = temp;
 }
 
-template<class T> inline float constrain(T val, T vmin, T vmax)
+// Note that constrain<float> will return NaN for a NaN input because of the way we define min<float> and max<float>
+template<class T> inline T constrain(T val, T vmin, T vmax)
 {
-	return max<T>(vmin, min<T>(val, vmax));
+	return max<T>(min<T>(val, vmax), vmin);
 }
 
 #endif

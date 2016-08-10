@@ -26,9 +26,9 @@ extern void AnalogOutInit();
  * \brief Writes an analog value (PWM wave) to a pin.
  *
  * \param ulPin
- * \param ulValue
+ * \param ulValue, will be constrained to be within 0.0 to 1.0 within this function
  * \param freq (optional)
  */
-extern void AnalogWrite(uint32_t ulPin, uint32_t ulValue, uint16_t freq = 1000);
+extern void AnalogOut(uint32_t ulPin, float ulValue, uint16_t freq = 1000);
 
 #endif // ANALOGOUT_H

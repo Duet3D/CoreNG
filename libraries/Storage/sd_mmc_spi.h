@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM HSMCI driver
+ * \brief Common SPI interface for SD/MMC stack
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,30 +44,53 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef HSMCI_H_INCLUDED
-#define HSMCI_H_INCLUDED
+#ifndef SD_MMC_SPI_H_INCLUDED
+#define SD_MMC_SPI_H_INCLUDED
 
 #include "compiler.h"
-#include "../../../../libraries/Storage/sd_mmc_protocol.h"
+#include "sd_mmc_protocol.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * \defgroup sam_drivers_hsmci High Speed MultiMedia Card Interface (HSMCI)
- *
- * This driver interfaces the HSMCI module.
- * It will add functions for SD/MMC card reading, writing and management.
- *
+ * \ingroup sd_mmc_stack_group
+ * \defgroup sd_mmc_stack_spi Common SPI interface for SD/MMC stack
  * @{
  */
+
+//! Type of return error code
+typedef uint8_t sd_mmc_spi_errno_t;
+
+//! \name Return error codes
+//! @{
+#define SD_MMC_SPI_NO_ERR                 0 //! No error
+#define SD_MMC_SPI_ERR                    1 //! General or an unknown error
+#define SD_MMC_SPI_ERR_RESP_TIMEOUT       2 //! Timeout during command
+#define SD_MMC_SPI_ERR_RESP_BUSY_TIMEOUT  3 //! Timeout on busy signal of R1B response
+#define SD_MMC_SPI_ERR_READ_TIMEOUT       4 //! Timeout during read operation
+#define SD_MMC_SPI_ERR_WRITE_TIMEOUT      5 //! Timeout during write operation
+#define SD_MMC_SPI_ERR_RESP_CRC           6 //! Command CRC error
+#define SD_MMC_SPI_ERR_READ_CRC           7 //! CRC error during read operation
+#define SD_MMC_SPI_ERR_WRITE_CRC          8 //! CRC error during write operation
+#define SD_MMC_SPI_ERR_ILLEGAL_COMMAND    9 //! Command not supported
+#define SD_MMC_SPI_ERR_WRITE             10 //! Error during write operation
+#define SD_MMC_SPI_ERR_OUT_OF_RANGE      11 //! Data access out of range
+//! @}
+
+
+/** \brief Return the error code of last function
+ *
+ * \return error code
+ */
+sd_mmc_spi_errno_t sd_mmc_spi_get_errno(void);
 
 /** \brief Initializes the low level driver
  *
  * This enable the clock required and the hardware interface.
  */
-void hsmci_init(void);
+void sd_mmc_spi_init(void);
 
 /** \brief Return the maximum bus width of a slot
  *
@@ -75,13 +98,18 @@ void hsmci_init(void);
  *
  * \return 1, 4 or 8 lines.
  */
-uint8_t hsmci_get_bus_width(uint8_t slot);
+static __inline__ uint8_t sd_mmc_spi_get_bus_width(uint8_t slot) {
+	UNUSED(slot);
+	return 1;
+}
 
 /** \brief Return the high speed capability of the driver
  *
  * \return true, if the high speed is supported
  */
-bool hsmci_is_high_speed_capable(void);
+static __inline__ bool sd_mmc_spi_is_high_speed_capable(void) {
+	return false;
+}
 
 /**
  * \brief Select a slot and initialize it
@@ -91,7 +119,7 @@ bool hsmci_is_high_speed_capable(void);
  * \param bus_width  Bus width to use (1, 4 or 8)
  * \param high_speed true, to enable high speed mode
  */
-void hsmci_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width,
+void sd_mmc_spi_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width,
 		bool high_speed);
 
 /**
@@ -99,12 +127,12 @@ void hsmci_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width,
  *
  * \param slot       Selected slot
  */
-void hsmci_deselect_device(uint8_t slot);
+void sd_mmc_spi_deselect_device(uint8_t slot);
 
 /** \brief Send 74 clock cycles on the line of selected slot
  * Note: It is required after card plug and before card install.
  */
-void hsmci_send_clock(void);
+void sd_mmc_spi_send_clock(void);
 
 /** \brief Send a command on the selected slot
  *
@@ -113,23 +141,21 @@ void hsmci_send_clock(void);
  *
  * \return true if success, otherwise false
  */
-bool hsmci_send_cmd(sdmmc_cmd_def_t cmd, uint32_t arg);
+bool sd_mmc_spi_send_cmd(sdmmc_cmd_def_t cmd, uint32_t arg);
 
 /** \brief Return the 32 bits response of the last command
  *
  * \return 32 bits response
  */
-uint32_t hsmci_get_response(void);
+uint32_t sd_mmc_spi_get_response(void);
+static __inline__ void sd_mmc_spi_get_response_128(uint8_t *resp) {
+	UNUSED(resp);
+	return;
+}
 
-/** \brief Return the 128 bits response of the last command
- *
- * \param response   Pointer on the array to fill with the 128 bits response
- */
-void hsmci_get_response_128(uint8_t* response);
 
-/** \brief Send an ADTC command on the selected slot
- * An ADTC (Addressed Data Transfer Commands) command is used
- * for read/write access.
+/** \brief Send a adtc command on the selected slot
+ * A adtc command is used for read/write access.
  *
  * \param cmd          Command definition
  * \param arg          Argument of the command
@@ -142,17 +168,17 @@ void hsmci_get_response_128(uint8_t* response);
  *
  * \return true if success, otherwise false
  */
-bool hsmci_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size,
-		uint16_t nb_block, bool access_block);
+bool sd_mmc_spi_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg,
+		uint16_t block_size, uint16_t nb_block, bool access_block);
 
-/** \brief Send a command to stop an ADTC command on the selected slot
+/** \brief Send a command to stop a adtc command on the selected slot
  *
  * \param cmd        Command definition
  * \param arg        Argument of the command
  *
  * \return true if success, otherwise false
  */
-bool hsmci_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg);
+bool sd_mmc_spi_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg);
 
 /** \brief Read a word on the line
  *
@@ -160,7 +186,7 @@ bool hsmci_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg);
  *
  * \return true if success, otherwise false
  */
-bool hsmci_read_word(uint32_t* value);
+bool sd_mmc_spi_read_word(uint32_t* value);
 
 /** \brief Write a word on the line
  *
@@ -168,7 +194,7 @@ bool hsmci_read_word(uint32_t* value);
  *
  * \return true if success, otherwise false
  */
-bool hsmci_write_word(uint32_t value);
+bool sd_mmc_spi_write_word(uint32_t value);
 
 /** \brief Start a read blocks transfer on the line
  * Note: The driver will use the DMA available to speed up the transfer.
@@ -178,13 +204,13 @@ bool hsmci_write_word(uint32_t value);
  *
  * \return true if started, otherwise false
  */
-bool hsmci_start_read_blocks(void *dest, uint16_t nb_block);
+bool sd_mmc_spi_start_read_blocks(void *dest, uint16_t nb_block);
 
 /** \brief Wait the end of transfer initiated by mci_start_read_blocks()
  *
  * \return true if success, otherwise false
  */
-bool hsmci_wait_end_of_read_blocks(void);
+bool sd_mmc_spi_wait_end_of_read_blocks(void);
 
 /** \brief Start a write blocks transfer on the line
  * Note: The driver will use the DMA available to speed up the transfer.
@@ -194,30 +220,26 @@ bool hsmci_wait_end_of_read_blocks(void);
  *
  * \return true if started, otherwise false
  */
-bool hsmci_start_write_blocks(const void *src, uint16_t nb_block);
+bool sd_mmc_spi_start_write_blocks(const void *src, uint16_t nb_block);
 
 /** \brief Wait the end of transfer initiated by mci_start_write_blocks()
  *
  * \return true if success, otherwise false
  */
-bool hsmci_wait_end_of_write_blocks(void);
+bool sd_mmc_spi_wait_end_of_write_blocks(void);
 
 #if 1	//dc42
 
-// Get the speed of the HSMCI clock for reporting purposes, in bytes/sec
-uint32_t hsmci_get_speed(void);
-
-typedef void (*hsmciIdleFunc_t)(void);
+typedef void (*spiIdleFunc_t)(void);
 
 // Set the idle function and return the old one
-hsmciIdleFunc_t hsmci_set_idle_func(hsmciIdleFunc_t);
+spiIdleFunc_t sd_mmc_spi_set_idle_func(spiIdleFunc_t);
 
 #endif
-
 //! @}
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* HSMCI_H_INCLUDED */
+#endif /* SD_MMC_SPI_H_INCLUDED */

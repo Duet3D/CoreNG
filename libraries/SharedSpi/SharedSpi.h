@@ -62,7 +62,7 @@ struct sspi_device {
 };
 
 #ifdef __cplusplus
-// Use C linkage because the RAMPS port may need to call these functions from the ASF SD card code
+// Use C linkage because the RADDS port may need to call these functions from the ASF SD card code
 extern "C" {
 #endif
 
@@ -85,11 +85,6 @@ extern void sspi_master_init(struct sspi_device *device, uint32_t bits);
  * whenever that device should be used as current slave device.
  *
  * \param device    Pointer to SPI device struct that should be initialized.
- * \param flags     SPI configuration flags. Common flags for all
- *                  implementations are the SPI modes SPI_MODE_0 ...
- *                  SPI_MODE_3.
- * \param baud_rate Baud rate for communication with slave device in Hz.
- * \param sel_id    Board specific select id.
  */
 extern void sspi_master_setup_device(const struct sspi_device *device);
 
@@ -124,6 +119,18 @@ extern void sspi_deselect_device(const struct sspi_device *device);
  * \pre SPI device must be selected with spi_select_device() first.
  */
 spi_status_t sspi_transceive_packet(const uint8_t *tx_data, uint8_t *rx_data, size_t len);
+
+// Receive a packet
+static inline spi_status_t sspi_read_packet(uint8_t *buf, size_t len)
+{
+	return sspi_transceive_packet(NULL, buf, len);
+}
+
+// Send a packet
+static inline spi_status_t sspi_write_packet(uint8_t *buf, size_t len)
+{
+	return sspi_transceive_packet(buf, NULL, len);
+}
 
 #if SAM3XA
 /**

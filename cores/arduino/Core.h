@@ -17,8 +17,11 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef Arduino_h
-#define Arduino_h
+#ifndef Core_h
+#define Core_h
+
+#include "ecv.h"		// macros for Escher C/C++ Verifier design-by-contract annotations
+#undef yield			// eCv definition clashes with function 'yield' in wiring.c (can use _ecv_yield instead within annotations)
 
 #include <stdint.h>
 #include <stdlib.h>
