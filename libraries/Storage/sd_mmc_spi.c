@@ -47,6 +47,7 @@
 #include <status_codes.h>
 #include <board.h>
 #include <string.h>
+#include "Core.h"
 #include "conf_board.h"
 #include "conf_sd_mmc.h"
 #include "sd_mmc_protocol.h"
@@ -66,7 +67,7 @@
 #include "../SharedSpi/SharedSpi.h"
 
 // Enable debug information for SD/MMC SPI module
-#if 1 //#ifdef SD_MMC_SPI_DEBUG
+#ifdef SD_MMC_SPI_DEBUG
 extern void debugPrintf(const char* fmt, ...);
 #define sd_mmc_spi_debug(...)      debugPrintf(__VA_ARGS__)
 #else
@@ -77,12 +78,7 @@ extern void debugPrintf(const char* fmt, ...);
 static sd_mmc_spi_errno_t sd_mmc_spi_err;
 
 //! Slot array of SPI structures
-static struct sspi_device sd_mmc_spi_devices[SD_MMC_SPI_MEM_CNT] = {
-# define SD_MMC_SPI_CS(slot, unused) \
-		{ .csPin = SD_MMC_SPI_##slot##_CS },
-		MREPEAT(SD_MMC_SPI_MEM_CNT, SD_MMC_SPI_CS, ~)
-# undef SD_MMC_SPI_CS
-};
+static struct sspi_device sd_mmc_spi_devices[SD_MMC_SPI_MEM_CNT];
 
 //! 32 bits response of the last command
 static uint32_t sd_mmc_spi_response_32;
@@ -331,13 +327,14 @@ sd_mmc_spi_errno_t sd_mmc_spi_get_errno(void)
 	return sd_mmc_spi_err;
 }
 
-void sd_mmc_spi_init(void)
+void sd_mmc_spi_init(const Pin csPins[SD_MMC_SPI_MEM_CNT])
 {
 	sd_mmc_spi_err = SD_MMC_SPI_NO_ERR;
 
 	// Initialize SPI interface and enable it
 	for (size_t i = 0; i < SD_MMC_SPI_MEM_CNT; ++i)
 	{
+		sd_mmc_spi_devices[i].csPin = csPins[i];
 		sspi_master_init(&sd_mmc_spi_devices[i], 8);
 	}
 }

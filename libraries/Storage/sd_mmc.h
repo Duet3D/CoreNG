@@ -118,7 +118,7 @@ typedef uint8_t card_version_t; //!< Type of card version
 /**
  * \brief Initialize the SD/MMC stack and low level driver required
  */
-void sd_mmc_init(void);
+void sd_mmc_init(const Pin cdPins[], const Pin wpPins[], const Pin spiCsPins[]);
 
 /** \brief Return the number of slot available
  *

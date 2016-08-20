@@ -18,14 +18,14 @@
 
 #include "Core.h"
 
-extern "C" void pinModeDuet(uint32_t ulPin, enum PinMode ulMode, uint32_t debounceCutoff)
+extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutoff)
 {
-	if (ulPin > MaxPinNumber)
+	if (pin > MaxPinNumber)
 	{
 		return;
 	}
 
-	const PinDescription& pinDesc = g_APinDescription[ulPin];
+	const PinDescription& pinDesc = g_APinDescription[pin];
     if (pinDesc.ulPinType == PIO_NOT_A_PIN)
     {
         return;
@@ -125,11 +125,11 @@ extern "C" void pinModeDuet(uint32_t ulPin, enum PinMode ulMode, uint32_t deboun
 }
 
 // This has now been optimised to speed it up, so it may no longer be used to enable the pullup resistor on an input pin (use mode INPUT_PULLUP instead).
-extern "C"  void digitalWrite(uint32_t ulPin, bool ulVal)
+extern "C"  void digitalWrite(Pin pin, bool ulVal)
 {
-	if (ulPin <= MaxPinNumber)
+	if (pin <= MaxPinNumber)
 	{
-		const PinDescription& pinDesc = g_APinDescription[ulPin];
+		const PinDescription& pinDesc = g_APinDescription[pin];
 		if (pinDesc.ulPinType != PIO_NOT_A_PIN)
 		{
 			if (ulVal)		// we make use of the fact that LOW is zero and HIGH is nonzero
@@ -144,30 +144,30 @@ extern "C"  void digitalWrite(uint32_t ulPin, bool ulVal)
 	}
 }
 
-extern "C" bool digitalRead(uint32_t ulPin)
+extern "C" bool digitalRead(Pin pin)
 {
-	if (ulPin > MaxPinNumber)
+	if (pin > MaxPinNumber)
 	{
 		return false;
 	}
 
-	const PinDescription& pinDesc = g_APinDescription[ulPin];
+	const PinDescription& pinDesc = g_APinDescription[pin];
 	if (pinDesc.ulPinType == PIO_NOT_A_PIN)
     {
-        return false ;
+        return false;
     }
 
 	return (bool)pio_get(pinDesc.pPort, PIO_INPUT, pinDesc.ulPin);
 }
 
-extern "C" void setPullup(uint32_t ulPin, bool en)
+extern "C" void setPullup(Pin pin, bool en)
 {
-	if (ulPin <= MaxPinNumber)
+	if (pin <= MaxPinNumber)
 	{
-		const PinDescription& pinDesc = g_APinDescription[ulPin];
+		const PinDescription& pinDesc = g_APinDescription[pin];
 		if (pinDesc.ulPinType != PIO_NOT_A_PIN)
 		{
-			pio_pull_up(g_APinDescription[ulPin].pPort, g_APinDescription[ulPin].ulPin, (uint32_t)en) ;
+			pio_pull_up(pinDesc.pPort, pinDesc.ulPin, (uint32_t)en) ;
 		}
 	}
 }

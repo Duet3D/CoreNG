@@ -48,6 +48,7 @@
 
 #if (SD_MMC_0_MEM == ENABLE) || (SD_MMC_1_MEM == ENABLE)
 
+#include "Core.h"
 #include "sd_mmc.h"
 #include "sd_mmc_mem.h"
 

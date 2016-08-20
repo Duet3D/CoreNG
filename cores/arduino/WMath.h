@@ -32,6 +32,8 @@ extern uint32_t trueRandom();
 #ifdef __cplusplus
 }
 
+#include <cmath>
+
 extern int32_t random(int32_t);
 extern int32_t random(int32_t, int32_t);
 extern int32_t map(int32_t, int32_t, int32_t, int32_t, int32_t);
@@ -59,22 +61,22 @@ template<class X> inline X max(X _a, X _b)
 // Specialisations for float and double to handle NaNs properly
 template<> inline float min(float _a, float _b)
 {
-	return (isnan(_a) || _a < _b) ? _a : _b;
+	return (std::isnan(_a) || _a < _b) ? _a : _b;
 }
 
 template<> inline float max(float _a, float _b)
 {
-	return (isnan(_a) || _a > _b) ? _a : _b;
+	return (std::isnan(_a) || _a > _b) ? _a : _b;
 }
 
 template<> inline double min(double _a, double _b)
 {
-	return (isnan(_a) || _a < _b) ? _a : _b;
+	return (std::isnan(_a) || _a < _b) ? _a : _b;
 }
 
 template<> inline double max(double _a, double _b)
 {
-	return (isnan(_a) || _a > _b) ? _a : _b;
+	return (std::isnan(_a) || _a > _b) ? _a : _b;
 }
 
 inline float fsquare(float arg)

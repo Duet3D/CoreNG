@@ -10,8 +10,8 @@
  *
  */
 
-#include "SharedSpi.h"
 #include "Core.h"
+#include "SharedSpi.h"
 #include "compiler.h"
 #include "variant.h"
 

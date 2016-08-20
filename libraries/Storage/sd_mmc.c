@@ -44,6 +44,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+#include "Core.h"
 #include <string.h>
 #include "sd_mmc_protocol.h"
 #include "sd_mmc.h"
@@ -65,7 +66,7 @@
  */
 
 // Enable debug information for SD/MMC module
-#if 1 //#ifdef SD_MMC_DEBUG
+#ifdef SD_MMC_DEBUG
 extern void debugPrintf(const char* fmt, ...);
 #  define sd_mmc_debug(...)      debugPrintf(__VA_ARGS__)
 #else
@@ -177,50 +178,22 @@ enum card_state {
 //! SD/MMC card information structure
 struct sd_mmc_card {
 	const struct DriverInterface const *iface;	// Pointer to driver interface functions
-	uint32_t clock;            //!< Card access clock
-	uint32_t capacity;         //!< Card capacity in KBytes
-	const int cd_gpio;         //!< Card detect pin number, or -1 if none present
-	const int wp_gpio;         //!< Card write protection pin number, or -1 if none present
-	uint16_t rca;              //!< Relative card address
-	enum card_state state;     //!< Card state
-	card_type_t type;          //!< Card type
-	card_version_t version;    //!< Card version
-	const uint8_t slot;		   // Slot number within the driver
-	uint8_t bus_width;         //!< Number of DATA lines on bus (MCI only)
-	uint8_t csd[CSD_REG_BSIZE];//!< CSD register
-	uint8_t high_speed;        //!< High speed card (1)
+	uint32_t clock;				//!< Card access clock
+	uint32_t capacity;			//!< Card capacity in KBytes
+	Pin cd_gpio;         		//!< Card detect pin number, or -1 if none present
+	Pin wp_gpio;				//!< Card write protection pin number, or -1 if none present
+	uint16_t rca;				//!< Relative card address
+	enum card_state state;		//!< Card state
+	card_type_t type;			//!< Card type
+	card_version_t version;		//!< Card version
+	uint8_t slot;				// Slot number within the driver
+	uint8_t bus_width;			//!< Number of DATA lines on bus (MCI only)
+	uint8_t csd[CSD_REG_BSIZE];	//!< CSD register
+	uint8_t high_speed;			//!< High speed card (1)
 };
 
 //! SD/MMC card list
-static struct sd_mmc_card sd_mmc_cards[SD_MMC_MEM_CNT] =
-{
-	{
-#if SD_MMC_HSMCI_MEM_CNT > 0
-		.iface = &hsmciInterface,
-#else
-		.iface = &spiInterface,
-#endif
-		.cd_gpio = SD_MMC_0_CD_GPIO,
-		.wp_gpio = SD_MMC_0_WP_GPIO,
-		.slot = 0
-	},
-#if SD_MMC_MEM_CNT > 1
-	{
-# if SD_MMC_HSMCI_MEM_CNT > 1
-		.iface = &hsmciInterface,
-# else
-		.iface = &spiInterface,
-# endif
-		.cd_gpio = SD_MMC_1_CD_GPIO,
-		.wp_gpio = SD_MMC_1_WP_GPIO,
-# if SD_MMC_HSMCI_MEM_CNT == 0 || SD_MMC_HSMCI_MEM_CNT > 1
-		.slot = 1
-# else
-		.slot = 0
-# endif
-	},
-#endif
-};
+static struct sd_mmc_card sd_mmc_cards[SD_MMC_MEM_CNT];
 
 //! Index of current slot selected
 static uint8_t sd_mmc_slot_sel;
@@ -1378,7 +1351,7 @@ static sd_mmc_err_t sd_mmc_select_slot(uint8_t slot)
 	}
 	Assert(sd_mmc_nb_block_remaining == 0);
 
-	if (sd_mmc_cards[slot].cd_gpio >= 0) {
+	if (sd_mmc_cards[slot].cd_gpio != NoPin) {
 		//! Card Detect pins
 		if (digitalRead(sd_mmc_cards[slot].cd_gpio) != SD_MMC_CD_DETECT_VALUE) {
 			if (sd_mmc_cards[slot].state == SD_MMC_CARD_STATE_DEBOUNCE) {
@@ -1800,18 +1773,31 @@ static bool sd_mmc_mci_install_mmc(void)
 //-------------------------------------------------------------------
 //--------------------- PUBLIC FUNCTIONS ----------------------------
 
-void sd_mmc_init(void)
+void sd_mmc_init(const Pin cdPins[], const Pin wpPins[], const Pin spiCsPins[])
 {
-	for (uint8_t slot = 0; slot < SD_MMC_MEM_CNT; slot++) {
+	for (uint8_t slot = 0; slot < SD_MMC_MEM_CNT; slot++)
+	{
 		struct sd_mmc_card *card = &sd_mmc_cards[slot];
 		card->state = SD_MMC_CARD_STATE_NO_CARD;
-		if (card->cd_gpio >= 0)
+		card->cd_gpio = cdPins[slot];
+		card->wp_gpio = wpPins[slot];
+		if (card->cd_gpio != NoPin)
 		{
 			pinMode(card->cd_gpio, INPUT_PULLUP);
 		}
-		if (card->wp_gpio >= 0)
+		if (card->wp_gpio != NoPin)
 		{
 			pinMode(card->wp_gpio, INPUT_PULLUP);
+		}
+		if (slot < SD_MMC_HSMCI_MEM_CNT)
+		{
+			card->iface = &hsmciInterface;
+			card->slot = slot;
+		}
+		else
+		{
+			card->iface = &spiInterface;
+			card->slot = slot - SD_MMC_HSMCI_MEM_CNT;
 		}
 	}
 	sd_mmc_slot_sel = 0xFF;					// No slot selected
@@ -1821,7 +1807,7 @@ void sd_mmc_init(void)
 #endif
 
 #if SD_MMC_SPI_MEM_CNT != 0
-	sd_mmc_spi_init();
+	sd_mmc_spi_init(spiCsPins);
 #endif
 }
 
@@ -1887,13 +1873,13 @@ uint32_t sd_mmc_get_capacity(uint8_t slot)
 
 bool sd_mmc_is_write_protected(uint8_t slot)
 {
-	return sd_mmc_cards[slot].wp_gpio >= 0 && digitalRead(sd_mmc_cards[slot].wp_gpio) == SD_MMC_WP_DETECT_VALUE;
+	return sd_mmc_cards[slot].wp_gpio != NoPin && digitalRead(sd_mmc_cards[slot].wp_gpio) == SD_MMC_WP_DETECT_VALUE;
 }
 
 // Get the Card Detect status, returning true if the CD pin is present and active
 bool sd_mmc_card_detected(uint8_t slot)
 {
-	return sd_mmc_cards[slot].cd_gpio >= 0 && digitalRead(sd_mmc_cards[slot].cd_gpio) == SD_MMC_CD_DETECT_VALUE;
+	return sd_mmc_cards[slot].cd_gpio != NoPin && digitalRead(sd_mmc_cards[slot].cd_gpio) == SD_MMC_CD_DETECT_VALUE;
 }
 
 // Unmount the card. Must call this to force it to be re-initialised when changing card.

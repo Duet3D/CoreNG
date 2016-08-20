@@ -45,11 +45,11 @@ enum PinMode
  * \param ulMode Either INPUT or OUTPUT
  * \param debounceCutoff Debounce cutoff frequency (only one can be set per PIO)
  */
-extern void pinModeDuet(uint32_t dwPin, enum PinMode dwMode, uint32_t debounceCutoff);
+extern void pinModeDuet(Pin pin, enum PinMode dwMode, uint32_t debounceCutoff);
 
-inline void pinMode(uint32_t dwPin, enum PinMode dwMode)
+inline void pinMode(Pin pin, enum PinMode dwMode)
 {
-	pinModeDuet(dwPin, dwMode, 0);
+	pinModeDuet(pin, dwMode, 0);
 }
 
 /**
@@ -61,7 +61,7 @@ inline void pinMode(uint32_t dwPin, enum PinMode dwMode)
  * \param dwPin the pin number
  * \param dwVal true to set the pin HIGH, false to set it LOW
  */
-extern void digitalWrite(uint32_t dwPin, bool dwVal);
+extern void digitalWrite(Pin pin, bool dwVal);
 
 /**
  * \brief Reads the value from a specified digital pin, either HIGH or LOW.
@@ -70,7 +70,7 @@ extern void digitalWrite(uint32_t dwPin, bool dwVal);
  *
  * \return true for HIGH, false for LOW
  */
-extern bool digitalRead(uint32_t ulPin);
+extern bool digitalRead(Pin pin);
 
 /**
  * \brief Enable or disable the pullup resistor on a pin.
@@ -79,7 +79,7 @@ extern bool digitalRead(uint32_t ulPin);
  *
  * \param en Whether to enable (true) or disable (false) the pullup resistor
  */
-extern void setPullup(uint32_t ulPin, bool en);
+extern void setPullup(Pin pin, bool en);
 
 #ifdef __cplusplus
 }
@@ -88,30 +88,10 @@ extern void setPullup(uint32_t ulPin, bool en);
 // The remaining functionality is only available to C++ clients
 #ifdef __cplusplus
 
-inline const PinDescription& GetPinDescription(uint32_t ulPin)
+inline const PinDescription& GetPinDescription(Pin pin)
 {
-	return g_APinDescription[ulPin];
+	return g_APinDescription[pin];
 }
-
-// Class to give fast access to digital output pins for stepping
-class OutputPin
-{
-	Pio *pPort;
-	uint32_t ulPin;
-public:
-	explicit OutputPin(unsigned int pin)
-	{
-		const PinDescription& pinDesc = GetPinDescription(pin);
-		pPort = pinDesc.pPort;
-		ulPin = pinDesc.ulPin;
-	}
-
-	OutputPin() : pPort(PIOC), ulPin(1 << 31) {}	// default constructor needed for array init - accesses PC31 which isn't on the package, so safe
-
-	void SetHigh() const { pPort->PIO_SODR = ulPin; }
-
-	void SetLow() const { pPort->PIO_CODR = ulPin; }
-};
 
 #endif
 

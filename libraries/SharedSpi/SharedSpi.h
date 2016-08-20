@@ -55,7 +55,7 @@
 
 //! \brief Polled SPI device definition.
 struct sspi_device {
-	uint8_t csPin;
+	Pin csPin;
 	uint8_t bitsPerTransferControl;
 	uint8_t spiMode;
 	uint32_t clockFrequency;

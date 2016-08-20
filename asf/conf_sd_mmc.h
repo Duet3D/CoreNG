@@ -61,19 +61,23 @@
  * The GPIO and MCI/HSMCI connections of the SD/MMC Connector must be added
  * in board.h file.
  */
-//! @{
+
 #include "board.h"
 
-#ifndef SD_MMC_HSMCI_MEM_CNT
-# warning The GPIO and HSMCI connections of the SD/MMC connector must be added in the board.h file.
-#endif
-//! @}
+// SD card configuration for Duet and Duet WiFi
+#define SD_MMC_ENABLE
+#define CONF_BOARD_SD_MMC_HSMCI		1			// Enable HSMCI
+#define SD_MMC_HSMCI_MEM_CNT		1			// Number of HSMCI card slots supported
+#define SD_MMC_HSMCI_SLOT_0_SIZE	4			// HSMCI bus width
+#define SD_MMC_SPI_MEM_CNT			1			// Number of SPI card slots supported
 
-extern void delay(uint32_t ms);				// in core
-inline void delay_ms(uint32_t ms)
-{
-	delay(ms);
-}
+#define SD_MMC_CD_DETECT_VALUE		false
+#define SD_MMC_WP_DETECT_VALUE		false
+
+#define SD_MMC_MEM_CNT				(SD_MMC_HSMCI_MEM_CNT + SD_MMC_SPI_MEM_CNT)
+
+#define ACCESS_MEM_TO_RAM_ENABLED
+
 
 #endif /* CONF_SD_MMC_H_INCLUDED */
 

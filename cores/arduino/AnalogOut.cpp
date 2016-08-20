@@ -263,16 +263,16 @@ pre((pinDesc.ulAttribute & PIN_ATTR_TIMER) != 0)
 }
 
 // Analog write to DAC, PWM, TC or plain output pin
-void AnalogOut(uint32_t ulPin, float ulValue, uint16_t freq)
+void AnalogOut(Pin pin, float ulValue, uint16_t freq)
 {
-	if (ulPin > MaxPinNumber || isnan(ulValue))
+	if (pin > MaxPinNumber || std::isnan(ulValue))
 	{
 		return;
 	}
 
 	ulValue = constrain<float>(ulValue, 0.0, 1.0);
 
-	const PinDescription& pinDesc = g_APinDescription[ulPin];
+	const PinDescription& pinDesc = g_APinDescription[pin];
 	const uint32_t attr = pinDesc.ulPinAttribute;
 	if ((attr & PIN_ATTR_DAC) != 0)
 	{
@@ -297,7 +297,7 @@ void AnalogOut(uint32_t ulPin, float ulValue, uint16_t freq)
 	}
 
 	// Fall back to digital write
-	pinMode(ulPin, (ulValue < 0.5) ? OUTPUT_LOW : OUTPUT_HIGH);
+	pinMode(pin, (ulValue < 0.5) ? OUTPUT_LOW : OUTPUT_HIGH);
 }
 
 // End

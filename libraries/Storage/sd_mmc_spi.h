@@ -90,7 +90,7 @@ sd_mmc_spi_errno_t sd_mmc_spi_get_errno(void);
  *
  * This enable the clock required and the hardware interface.
  */
-void sd_mmc_spi_init(void);
+void sd_mmc_spi_init(const Pin csPins[SD_MMC_SPI_MEM_CNT]);
 
 /** \brief Return the maximum bus width of a slot
  *
