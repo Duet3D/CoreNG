@@ -356,12 +356,14 @@ void sd_mmc_spi_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width, b
 	dev->clockFrequency = clock;
 	sspi_master_setup_device(dev);
 	sspi_select_device(dev);
+	delayMicroseconds(1);
 }
 
 void sd_mmc_spi_deselect_device(uint8_t slot)
 {
 	sd_mmc_spi_err = SD_MMC_SPI_NO_ERR;
 	sspi_deselect_device(&sd_mmc_spi_devices[slot]);
+	delayMicroseconds(1);
 }
 
 void sd_mmc_spi_send_clock(void)

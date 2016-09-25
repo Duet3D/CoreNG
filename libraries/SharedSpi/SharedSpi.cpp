@@ -202,11 +202,6 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
  * whenever that device should be used as current slave device.
  *
  * \param device    Pointer to SPI device struct that should be initialized.
- * \param flags     SPI configuration flags. Common flags for all
- *                  implementations are the SPI modes SPI_MODE_0 ...
- *                  SPI_MODE_3.
- * \param baud_rate Baud rate for communication with slave device in Hz.
- * \param sel_id    Board specific select id.
  */
 void sspi_master_setup_device(const struct sspi_device *device)
 {

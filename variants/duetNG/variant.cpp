@@ -120,7 +120,7 @@ extern const PinDescription g_APinDescription[]=
 #endif
   { PIOC, PIO_PC4X1_AFE1_AD7,  ID_PIOC, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC23,  NOT_ON_PWM,  NOT_ON_TIMER }, // Vin power fail detect
   { PIOC, PIO_PC5B_TIOA6,      ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),   NO_ADC, NOT_ON_PWM,  TC2_CHA6     }, // Heater 4
-  { PIOC, PIO_PC6,             ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // LCD_E
+  { PIOC, PIO_PC6,             ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // TMC2660 EN
   { PIOC, PIO_PC7,             ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // ENC_B
 
   // 40-47
