@@ -18,20 +18,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-extern "C" {
-#include <string.h>
-}
-
+#include <cstring>
 #include "Wire.h"
 #include "twi/twi.h"
-
-//# define TWI_ConfigureSlave		twi_slave_init
-//# define TWI_EnableIt			twi_enable_interrupt
-//# define TWI_StartRead			twi_start_read
-//# define TWI_ReadByte			twi_read_byte
-//# define TWI_WriteByte			twi_write_byte
-//# define TWI_GetStatus			twi_get_interrupt_status
-//# define TWI_DisableIt			twi_disable_interrupt		// caution: this also does a dummy status read, not present in the original
 
 /**
  * \brief Configures a TWI peripheral to operate in master mode, at the given
@@ -51,7 +40,7 @@ static void TWI_ConfigureMaster(Twi* pTwi, uint32_t dwTwCk, uint32_t dwMCk)
 }
 
 /**
- * \brief Check if a byte have been receiced from TWI.
+ * \brief Check if a byte have been received from TWI.
  * \param pTwi  Pointer to an Twi instance.
  * \return 1 if a byte has been received and can be read on the given TWI
  * peripheral; otherwise, returns 0. This function resets the status register.
@@ -73,7 +62,7 @@ inline uint8_t TWI_ByteSent(Twi *pTwi)
 }
 
 /**
- * \brief Check if current transmission is complet.
+ * \brief Check if current transmission is complete.
  * \param pTwi  Pointer to an Twi instance.
  * \return  1 if the current transmission is complete (the STOP has been sent);
  * otherwise returns 0.
@@ -194,29 +183,45 @@ static inline bool TWI_FailedAcknowledge(Twi *pTwi) {
 static inline bool TWI_WaitTransferComplete(Twi *_twi, uint32_t _timeout) {
 	while (!TWI_TransferComplete(_twi)) {
 		if (TWI_FailedAcknowledge(_twi))
+		{
 			return false;
+		}
 		if (--_timeout == 0)
+		{
 			return false;
+		}
 	}
 	return true;
 }
 
-static inline bool TWI_WaitByteSent(Twi *_twi, uint32_t _timeout) {
-	while (!TWI_ByteSent(_twi)) {
+static inline bool TWI_WaitByteSent(Twi *_twi, uint32_t _timeout)
+{
+	while (!TWI_ByteSent(_twi))
+	{
 		if (TWI_FailedAcknowledge(_twi))
+		{
 			return false;
+		}
 		if (--_timeout == 0)
+		{
 			return false;
+		}
 	}
 	return true;
 }
 
-static inline bool TWI_WaitByteReceived(Twi *_twi, uint32_t _timeout) {
-	while (!TWI_ByteReceived(_twi)) {
+static inline bool TWI_WaitByteReceived(Twi *_twi, uint32_t _timeout)
+{
+	while (!TWI_ByteReceived(_twi))
+	{
 		if (TWI_FailedAcknowledge(_twi))
+		{
 			return false;
+		}
 		if (--_timeout == 0)
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -262,8 +267,10 @@ void TwoWire::begin(void) {
 }
 
 void TwoWire::begin(uint8_t address) {
-	if (onBeginCallback)
+	if (onBeginCallback != nullptr)
+	{
 		onBeginCallback();
+	}
 
 	// Disable PDC channel
 	twi->TWI_PTCR = UART_PTCR_RXTDIS | UART_PTCR_TXTDIS;
@@ -274,13 +281,11 @@ void TwoWire::begin(uint8_t address) {
 	//| TWI_IER_RXRDY | TWI_IER_TXRDY	| TWI_IER_TXCOMP);
 }
 
-void TwoWire::begin(int address) {
-	begin((uint8_t) address);
-}
-
-uint8_t TwoWire::requestFrom(uint8_t address, uint8_t quantity, uint8_t sendStop) {
+uint8_t TwoWire::requestFrom(uint8_t address, uint8_t quantity) {
 	if (quantity > BUFFER_LENGTH)
+	{
 		quantity = BUFFER_LENGTH;
+	}
 
 	// perform blocking read into buffer
 	int readed = 0;
@@ -288,7 +293,9 @@ uint8_t TwoWire::requestFrom(uint8_t address, uint8_t quantity, uint8_t sendStop
 	do {
 		// Stop condition must be set during the reception of last byte
 		if (readed + 1 == quantity)
+		{
 			TWI_SendSTOPCondition( twi);
+		}
 
 		TWI_WaitByteReceived(twi, RECV_TIMEOUT);
 		rxBuffer[readed++] = twi_read_byte(twi);
@@ -300,18 +307,6 @@ uint8_t TwoWire::requestFrom(uint8_t address, uint8_t quantity, uint8_t sendStop
 	rxBufferLength = readed;
 
 	return readed;
-}
-
-uint8_t TwoWire::requestFrom(uint8_t address, uint8_t quantity) {
-	return requestFrom((uint8_t) address, (uint8_t) quantity, (uint8_t) true);
-}
-
-uint8_t TwoWire::requestFrom(int address, int quantity) {
-	return requestFrom((uint8_t) address, (uint8_t) quantity, (uint8_t) true);
-}
-
-uint8_t TwoWire::requestFrom(int address, int quantity, int sendStop) {
-	return requestFrom((uint8_t) address, (uint8_t) quantity, (uint8_t) sendStop);
 }
 
 void TwoWire::beginTransmission(uint8_t address) {
@@ -369,12 +364,16 @@ uint8_t TwoWire::endTransmission(void)
 size_t TwoWire::write(uint8_t data) {
 	if (status == MASTER_SEND) {
 		if (txBufferLength >= BUFFER_LENGTH)
+		{
 			return 0;
+		}
 		txBuffer[txBufferLength++] = data;
 		return 1;
 	} else {
 		if (srvBufferLength >= BUFFER_LENGTH)
+		{
 			return 0;
+		}
 		srvBuffer[srvBufferLength++] = data;
 		return 1;
 	}
@@ -384,13 +383,17 @@ size_t TwoWire::write(const uint8_t *data, size_t quantity) {
 	if (status == MASTER_SEND) {
 		for (size_t i = 0; i < quantity; ++i) {
 			if (txBufferLength >= BUFFER_LENGTH)
+			{
 				return i;
+			}
 			txBuffer[txBufferLength++] = data[i];
 		}
 	} else {
 		for (size_t i = 0; i < quantity; ++i) {
 			if (srvBufferLength >= BUFFER_LENGTH)
+			{
 				return i;
+			}
 			srvBuffer[srvBufferLength++] = data[i];
 		}
 	}
@@ -403,13 +406,17 @@ int TwoWire::available(void) {
 
 int TwoWire::read(void) {
 	if (rxBufferIndex < rxBufferLength)
+	{
 		return rxBuffer[rxBufferIndex++];
+	}
 	return -1;
 }
 
 int TwoWire::peek(void) {
 	if (rxBufferIndex < rxBufferLength)
+	{
 		return rxBuffer[rxBufferIndex];
+	}
 	return -1;
 }
 
@@ -480,7 +487,9 @@ void TwoWire::onService(void) {
 	if (status == SLAVE_RECV) {
 		if (TWI_STATUS_RXRDY(sr)) {
 			if (srvBufferLength < BUFFER_LENGTH)
+			{
 				srvBuffer[srvBufferLength++] = twi_read_byte(twi);
+			}
 		}
 	}
 
@@ -488,7 +497,9 @@ void TwoWire::onService(void) {
 		if (TWI_STATUS_TXRDY(sr) && !TWI_STATUS_NACK(sr)) {
 			uint8_t c = 'x';
 			if (srvBufferIndex < srvBufferLength)
+			{
 				c = srvBuffer[srvBufferIndex++];
+			}
 			twi_write_byte(twi, c);
 		}
 	}
@@ -531,3 +542,5 @@ void WIRE1_ISR_HANDLER(void) {
 	Wire1.onService();
 }
 #endif
+
+// End
