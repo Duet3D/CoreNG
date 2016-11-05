@@ -36,6 +36,10 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 		case INPUT:
 			/* Enable peripheral for clocking input */
 			pmc_enable_periph_clk(pinDesc.ulPeripheralId);
+			pio_pull_up(pinDesc.pPort, pinDesc.ulPin, 0);		// turn off pullup
+#if SAM4E
+			pio_pull_down(pinDesc.pPort, pinDesc.ulPin, 0);		// turn off pulldown
+#endif
 			pio_configure(
 					pinDesc.pPort,
 					PIO_INPUT,
@@ -50,6 +54,9 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 		case INPUT_PULLUP:
 			/* Enable peripheral for clocking input */
 			pmc_enable_periph_clk(pinDesc.ulPeripheralId);
+#if SAM4E
+			pio_pull_down(pinDesc.pPort, pinDesc.ulPin, 0);		// turn off pulldown
+#endif
 			pio_configure(
 					pinDesc.pPort,
 					PIO_INPUT,
@@ -65,6 +72,7 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 		case INPUT_PULLDOWN:
 			/* Enable peripheral for clocking input */
 			pmc_enable_periph_clk(pinDesc.ulPeripheralId);
+			pio_pull_up(pinDesc.pPort, pinDesc.ulPin, 0);
 			pio_pull_down(pinDesc.pPort, pinDesc.ulPin, 1);
 			pio_configure(
 					pinDesc.pPort,
@@ -103,6 +111,13 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 			if (pinDesc.pPort->PIO_OSR == 0xffffffff)
 			{
 				pmc_disable_periph_clk(pinDesc.ulPeripheralId);
+			}
+			break;
+
+		case OUTPUT_PWM:
+			if ((pinDesc.ulPinAttribute & (PIN_ATTR_PWM | PIN_ATTR_TIMER)) != 0)
+			{
+				AnalogOut(pin, 0, 0);							// set it to zero frequency to force re-initialisation on next AnalogOut call
 			}
 			break;
 

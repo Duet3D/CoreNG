@@ -5,7 +5,7 @@
 
 #include "RTCDue.h"
 #include "sam/drivers/rtc/rtc.h"
-
+#include <cstring>
 
 void RTCDue::Init()
 {
@@ -32,13 +32,14 @@ time_t RTCDue::GetDateTime()
 	rtc_get_date(RTC, &year, &month, &day, &week);
 
 	struct tm timeInfo;
+	memset(&timeInfo, 0, sizeof(tm));
 	timeInfo.tm_sec = second;
 	timeInfo.tm_min = minute;
 	timeInfo.tm_hour = hour;
 	timeInfo.tm_mday = day;
 	timeInfo.tm_mon = month - 1;
 	timeInfo.tm_year = year - 1900;
-	timeInfo.tm_isdst = -1;
+	timeInfo.tm_isdst = 0;
 	return mktime(&timeInfo);
 }
 
@@ -63,14 +64,14 @@ static uint32_t calculate_week(uint32_t ul_year, uint32_t ul_month, uint32_t ul_
 
 bool RTCDue::SetDate(time_t date)
 {
-	struct tm *timeInfo = localtime(&date);
+	const struct tm * const timeInfo = gmtime(&date);
 	const uint32_t week = calculate_week(timeInfo->tm_year + 1900, timeInfo->tm_mon + 1, timeInfo->tm_mday);
 	return rtc_set_date(RTC, timeInfo->tm_year + 1900, timeInfo->tm_mon + 1, timeInfo->tm_mday, week) == 0;
 }
 
 bool RTCDue::SetTime(time_t time)
 {
-	struct tm *timeInfo = localtime(&time);
+	const struct tm * const timeInfo = gmtime(&time);
 	return rtc_set_time(RTC, timeInfo->tm_hour, timeInfo->tm_min, timeInfo->tm_sec) == 0;
 }
 

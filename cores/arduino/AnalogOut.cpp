@@ -41,7 +41,7 @@ post(result <= top)
 // Return true if successful, false if we need to fall back to digitalWrite
 static bool AnalogWriteDac(const PinDescription& pinDesc, float ulValue)
 pre(0.0 <= ulValue; ulValue <= 1.0)
-pre((pinDesc.ulAttribute & PIN_ATTR_DAC) != 0)
+pre((pinDesc.ulPinAttribute & PIN_ATTR_DAC) != 0)
 {
 	const AnalogChannelNumber channel = pinDesc.ulADCChannelNumber;
 	const uint32_t chDACC = ((channel == DA0) ? 0 : 1);
@@ -103,7 +103,7 @@ static uint16_t PWMChanPeriod[numPwmChannels];
 // Return true if successful, false if we need to fall back to digitalWrite
 static bool AnalogWritePwm(const PinDescription& pinDesc, float ulValue, uint16_t freq)
 pre(0.0 <= ulValue; ulValue <= 1.0)
-pre((pinDesc.ulAttribute & PIN_ATTR_PWM) != 0)
+pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 {
 	const uint32_t chan = pinDesc.ulPWMChannel;
 	if (freq == 0)
@@ -190,7 +190,7 @@ static inline void TC_SetCMR_ChannelB(Tc *tc, uint32_t chan, uint32_t v)
 // The DuetNG board uses only A outputs, so this is OK.
 static bool AnalogWriteTc(const PinDescription& pinDesc, float ulValue, uint16_t freq)
 pre(0.0 <= ulValue; ulValue <= 1.0)
-pre((pinDesc.ulAttribute & PIN_ATTR_TIMER) != 0)
+pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)
 {
 	const uint32_t chan = (uint32_t)pinDesc.ulTCChannel >> 1;
 	if (freq == 0)
@@ -263,6 +263,8 @@ pre((pinDesc.ulAttribute & PIN_ATTR_TIMER) != 0)
 }
 
 // Analog write to DAC, PWM, TC or plain output pin
+// Setting the frequency of a TC or PWM pin to zero resets it so that the next call to AnalogOut with a non-zero frequency
+// will re-initialise it. The pinMode function relies on this.
 void AnalogOut(Pin pin, float ulValue, uint16_t freq)
 {
 	if (pin > MaxPinNumber || std::isnan(ulValue))
