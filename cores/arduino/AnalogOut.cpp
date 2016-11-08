@@ -184,6 +184,11 @@ static inline void TC_SetCMR_ChannelB(Tc *tc, uint32_t chan, uint32_t v)
 	tc->TC_CHANNEL[chan].TC_CMR = (tc->TC_CHANNEL[chan].TC_CMR & 0xF0FFFFFF) | v;
 }
 
+static inline void TC_WriteCCR(Tc *tc, uint32_t chan, uint32_t v)
+{
+	tc->TC_CHANNEL[chan].TC_CCR = v;
+}
+
 // AnalogWrite to a TC pin
 // Return true if successful, false if we need to fall back to digitalWrite
 // WARNING: this will screw up big time if you try to use both the A and B outputs of the same timer at different frequencies.
@@ -202,7 +207,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)
 	{
 		Tc * const chTC = channelToTC[chan];
 		const uint32_t chNo = channelToChNo[chan];
-		bool doInit = (TCChanFreq[chan] != freq);
+		const bool doInit = (TCChanFreq[chan] != freq);
 
 		if (doInit)
 		{
@@ -213,15 +218,24 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)
 
 			// Set up the timer mode and top count
 			tc_init(chTC, chNo,
-							TC_CMR_TCCLKS_TIMER_CLOCK2 |		// clock is MCLK/8 to save a little power and avoid overflow later on
-							TC_CMR_WAVE |         				// Waveform mode
-							TC_CMR_WAVSEL_UP_RC | 				// Counter running up and reset when equals to RC
-							TC_CMR_EEVT_XC0 |     				// Set external events from XC0 (this setup TIOB as output)
+							TC_CMR_TCCLKS_TIMER_CLOCK2 |			// clock is MCLK/8 to save a little power and avoid overflow later on
+							TC_CMR_WAVE |         					// Waveform mode
+							TC_CMR_WAVSEL_UP_RC | 					// Counter running up and reset when equals to RC
+							TC_CMR_EEVT_XC0 |     					// Set external events from XC0 (this setup TIOB as output)
 							TC_CMR_ACPA_CLEAR | TC_CMR_ACPC_CLEAR |
-							TC_CMR_BCPB_CLEAR | TC_CMR_BCPC_CLEAR);
+							TC_CMR_BCPB_CLEAR | TC_CMR_BCPC_CLEAR |
+							TC_CMR_ASWTRG_SET | TC_CMR_BSWTRG_SET);	// Software trigger will let us set the output high
 			const uint32_t top = (VARIANT_MCK/8)/(uint32_t)freq;	// with 120MHz clock this varies between 228 (@ 65.535kHz) and 15 million (@ 1Hz)
 			// The datasheet doesn't say how the period relates to the RC value, but from measurement it seems that we do not need to subtract one from top
 			tc_write_rc(chTC, chNo, top);
+
+			// When using TC channels to do PWM control of heaters with active low outputs on the Duet WiFi, if we don't take precautions
+			// then we get a glitch straight after initialising the channel, because the compare output starts in the low state.
+			// To avoid that, set the output high here if 100% (or nearly) PWM was requested.
+			if (ulValue >= 0.9)
+			{
+				TC_WriteCCR(chTC, chan, TC_CCR_SWTRG);
+			}
 		}
 
 		const uint32_t threshold = ConvertRange(ulValue, tc_read_rc(chTC, chNo));
