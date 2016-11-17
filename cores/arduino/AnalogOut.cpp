@@ -125,25 +125,47 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 			PWMEnabled = true;
 		}
 
+		const bool useFastClock = (freq >= PwmFastClock/65535);
+		const uint32_t period = ((useFastClock) ? PwmFastClock : PwmSlowClock)/freq;
+		const uint32_t duty = ConvertRange(ulValue, period);
+
+		PWMChanFreq[chan] = freq;
+		PWMChanPeriod[chan] = (uint16_t)period;
+
+		// DEcide whether to set the output initially high or initially low
+		const bool initiallyHigh = (ulValue > 0.5);
+
+		// Set up the PWM channel
+		pwm_channel_t channelConfig;
+		memset(&channelConfig, 0, sizeof(channelConfig));		// clear unused fields
+		channelConfig.channel = chan;
+		channelConfig.ul_prescaler = (useFastClock) ? PWM_CMR_CPRE_CLKB : PWM_CMR_CPRE_CLKA;
+		channelConfig.ul_duty = duty;
+		channelConfig.ul_period = period;
+
 		pwm_channel_disable(PWM, chan);
-		bool useFastClock = (freq >= PwmFastClock/65535);
-		uint32_t period = ((useFastClock) ? PwmFastClock : PwmSlowClock)/freq;
-		// Setup PWM for this PWM channel
+		pwm_channel_init(PWM, &channelConfig);
+#if 1
+		// Work around a bug in the SAM4E PWM3 channel (I haven't checked whether other SAM4E channels or the SAM3X has the same bug).
+		// Enabling a channel is supposed to clear its counter, but doesn't. If the counter is already past the new period then it has to
+		// reach 65535 and then wrap round before the PWM starts, which can take more than 2 seconds.
+		// So set the period to just greater than the current counter value.
+		irqflags_t flags = cpu_irq_save();
+		const uint32_t currentVal = PWM->PWM_CH_NUM[chan].PWM_CCNT;
+		const uint32_t initialPeriod = max<uint32_t>(period, (currentVal + 2) & 0xFFFF);	// set the period just higher than the count
+		PWM->PWM_CH_NUM[chan].PWM_CPRD = initialPeriod;
+		PWM->PWM_CH_NUM[chan].PWM_CDTY = (initiallyHigh) ? initialPeriod : 0;
+		PWM->PWM_CH_NUM[chan].PWM_CPRDUPD = period;						// tell it to set the correct period next time
+		PWM->PWM_CH_NUM[chan].PWM_CDTYUPD = duty;						// also update duty cycle next time
+		cpu_irq_restore(flags);
+#endif
+		pwm_channel_enable(PWM, chan);
+
+		// Now setup the PWM output pin for PWM this channel - do this after configuring the PWM to avoid glitches
 		pio_configure(pinDesc.pPort,
 				pinDesc.ulPinType,
 				pinDesc.ulPin,
 				pinDesc.ulPinConfiguration);
-		pwm_channel_t channelConfig;
-		memset(&channelConfig, 0, sizeof(channelConfig));		// clear unused fields
-		channelConfig.ul_prescaler = (useFastClock) ? PWM_CMR_CPRE_CLKB : PWM_CMR_CPRE_CLKA;
-		channelConfig.ul_period = period;
-		channelConfig.ul_duty = ConvertRange(ulValue, period);
-		channelConfig.channel = chan;
-		pwm_channel_init(PWM, &channelConfig);
-		pwm_channel_enable(PWM, chan);
-
-		PWMChanFreq[chan] = freq;
-		PWMChanPeriod[chan] = (uint16_t)period;
 	}
 	else
 	{
@@ -231,8 +253,8 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)
 
 			// When using TC channels to do PWM control of heaters with active low outputs on the Duet WiFi, if we don't take precautions
 			// then we get a glitch straight after initialising the channel, because the compare output starts in the low state.
-			// To avoid that, set the output high here if 100% (or nearly) PWM was requested.
-			if (ulValue >= 0.9)
+			// To avoid that, set the output high here if a high PWM was requested.
+			if (ulValue >= 0.5)
 			{
 				TC_WriteCCR(chTC, chan, TC_CCR_SWTRG);
 			}

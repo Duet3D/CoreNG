@@ -38,7 +38,8 @@ enum PinMode
 	OUTPUT_HIGH,					// pin is an output with initial state HIGH
 	AIN,							// pin is an analog input, digital input buffer is disabled if possible
 	SPECIAL,						// pin is used for the special function defined for it in the variant.cpp file
-	OUTPUT_PWM,						// used in SX1509B expansion driver to put the pin in PWM output mode
+	OUTPUT_PWM_LOW,					// PWM output mode, initially low
+	OUTPUT_PWM_HIGH,				// PWM output mode, initially high
 	OUTPUT_LOW_OPEN_DRAIN,			// used in SX1509B expansion driver to put the pin in open drain output mode
 	OUTPUT_HIGH_OPEN_DRAIN,			// used in SX1509B expansion driver to put the pin in open drain output mode
 	OUTPUT_PWM_OPEN_DRAIN			// used in SX1509B expansion driver to put the pin in PWM output mode

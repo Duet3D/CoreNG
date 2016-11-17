@@ -114,10 +114,17 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 			}
 			break;
 
-		case OUTPUT_PWM:
+		case OUTPUT_PWM_LOW:
 			if ((pinDesc.ulPinAttribute & (PIN_ATTR_PWM | PIN_ATTR_TIMER)) != 0)
 			{
-				AnalogOut(pin, 0, 0);							// set it to zero frequency to force re-initialisation on next AnalogOut call
+				AnalogOut(pin, 0.0, 0);							// set it to zero frequency to force re-initialisation on next AnalogOut call
+			}
+			break;
+
+		case OUTPUT_PWM_HIGH:
+			if ((pinDesc.ulPinAttribute & (PIN_ATTR_PWM | PIN_ATTR_TIMER)) != 0)
+			{
+				AnalogOut(pin, 1.0, 0);							// set it to zero frequency to force re-initialisation on next AnalogOut call
 			}
 			break;
 
