@@ -75,8 +75,6 @@ void Dummy_Handler(void)
 }
 
 extern void TimeTick_Increment(void);				// in wiring.c
-extern void svcHook(void);
-extern void pendSVHook(void);
 extern int sysTickHook(void);
 
 /* Cortex-M4 core handlers */
@@ -85,9 +83,9 @@ void HardFault_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void MemManage_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void BusFault_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void UsageFault_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SVC_Handler		( void ) { svcHook(); }
+void SVC_Handler		( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void DebugMon_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void PendSV_Handler		( void ) { pendSVHook(); }
+void PendSV_Handler		( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 
 void SysTick_Handler(void)
 {
@@ -95,7 +93,6 @@ void SysTick_Handler(void)
 		return;
 
 	wdt_restart(WDT);							// kick the watchdog
-
 	TimeTick_Increment();						// increment tick count each ms
 }
 

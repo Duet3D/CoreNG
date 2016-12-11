@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SD/MMC stack configuration file.
+ * \brief This file contains the interface for default exception handlers.
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -44,56 +44,31 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_SD_MMC_H_INCLUDED
-#define CONF_SD_MMC_H_INCLUDED
+#ifndef EXCEPTIONS_H_INCLUDED
+#define EXCEPTIONS_H_INCLUDED
 
-// Define this to enable the SPI mode instead of Multimedia Card interface mode
-//#define SD_MMC_SPI_MODE
+#include "sam3xa.h"
 
-// Define this to enable the SDIO support
-//#define SDIO_SUPPORT_ENABLE
-
-// Define this to enable the debug trace to the current standard output (stdio)
-//#define SD_MMC_DEBUG
-
-/*! \name board MCI SD/MMC slot template definition
- *
- * The GPIO and MCI/HSMCI connections of the SD/MMC Connector must be added
- * in board.h file.
- */
-
-#include "board.h"
-
-// SD card configuration for Duet and Duet WiFi
-#define SD_MMC_ENABLE
-
-#ifdef __RADDS__
-
-#define SD_MMC_HSMCI_MEM_CNT		0			// Number of HSMCI card slots supported
-#define SD_MMC_SPI_MEM_CNT			1			// Number of SPI card slots supported
-
-#define SD_MMC_SPI_MAX_CLOCK		(2000000)	// Max 2MHz clock for SPI cards, to allow a reasonable cable length
-
-#define SD_MMC_CD_DETECT_VALUE		false
-#define SD_MMC_WP_DETECT_VALUE		false
-
-#else
-
-#define CONF_BOARD_SD_MMC_HSMCI		1			// Enable HSMCI
-#define SD_MMC_HSMCI_MEM_CNT		1			// Number of HSMCI card slots supported
-#define SD_MMC_HSMCI_SLOT_0_SIZE	4			// HSMCI bus width
-#define SD_MMC_SPI_MEM_CNT			1			// Number of SPI card slots supported
-
-#define SD_MMC_SPI_MAX_CLOCK		(2000000)	// Max 2MHz clock for SPI cards, to allow a reasonable cable length
-
-#define SD_MMC_CD_DETECT_VALUE		false
-#define SD_MMC_WP_DETECT_VALUE		false
-
+/* @cond 0 */
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
 #endif
+/**INDENT-ON**/
+/* @endcond */
 
-#define SD_MMC_MEM_CNT				(SD_MMC_HSMCI_MEM_CNT + SD_MMC_SPI_MEM_CNT)
+/* Function prototype for exception table items (interrupt handler). */
+typedef void (*IntFunc) (void);
 
-#define ACCESS_MEM_TO_RAM_ENABLED
+/* Default empty handler */
+void Dummy_Handler(void);
 
-#endif /* CONF_SD_MMC_H_INCLUDED */
+/* @cond 0 */
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/* @endcond */
 
+#endif /* EXCEPTIONS_H_INCLUDED */

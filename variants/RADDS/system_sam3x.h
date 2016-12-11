@@ -1,9 +1,10 @@
 /**
  * \file
  *
- * \brief SD/MMC stack configuration file.
+ * \brief Provides the low-level initialization functions that called 
+ * on chip startup.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,56 +45,45 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_SD_MMC_H_INCLUDED
-#define CONF_SD_MMC_H_INCLUDED
+#ifndef SYSTEM_SAM3X_H_INCLUDED
+#define SYSTEM_SAM3X_H_INCLUDED
 
-// Define this to enable the SPI mode instead of Multimedia Card interface mode
-//#define SD_MMC_SPI_MODE
-
-// Define this to enable the SDIO support
-//#define SDIO_SUPPORT_ENABLE
-
-// Define this to enable the debug trace to the current standard output (stdio)
-//#define SD_MMC_DEBUG
-
-/*! \name board MCI SD/MMC slot template definition
- *
- * The GPIO and MCI/HSMCI connections of the SD/MMC Connector must be added
- * in board.h file.
- */
-
-#include "board.h"
-
-// SD card configuration for Duet and Duet WiFi
-#define SD_MMC_ENABLE
-
-#ifdef __RADDS__
-
-#define SD_MMC_HSMCI_MEM_CNT		0			// Number of HSMCI card slots supported
-#define SD_MMC_SPI_MEM_CNT			1			// Number of SPI card slots supported
-
-#define SD_MMC_SPI_MAX_CLOCK		(2000000)	// Max 2MHz clock for SPI cards, to allow a reasonable cable length
-
-#define SD_MMC_CD_DETECT_VALUE		false
-#define SD_MMC_WP_DETECT_VALUE		false
-
-#else
-
-#define CONF_BOARD_SD_MMC_HSMCI		1			// Enable HSMCI
-#define SD_MMC_HSMCI_MEM_CNT		1			// Number of HSMCI card slots supported
-#define SD_MMC_HSMCI_SLOT_0_SIZE	4			// HSMCI bus width
-#define SD_MMC_SPI_MEM_CNT			1			// Number of SPI card slots supported
-
-#define SD_MMC_SPI_MAX_CLOCK		(2000000)	// Max 2MHz clock for SPI cards, to allow a reasonable cable length
-
-#define SD_MMC_CD_DETECT_VALUE		false
-#define SD_MMC_WP_DETECT_VALUE		false
-
+/* @cond 0 */
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
 #endif
+/**INDENT-ON**/
+/* @endcond */
 
-#define SD_MMC_MEM_CNT				(SD_MMC_HSMCI_MEM_CNT + SD_MMC_SPI_MEM_CNT)
+#include <stdint.h>
+#include <compiler.h>
 
-#define ACCESS_MEM_TO_RAM_ENABLED
+extern uint32_t SystemCoreClock;	/* System Clock Frequency (Core Clock) */
 
-#endif /* CONF_SD_MMC_H_INCLUDED */
+/**
+ * @brief Setup the microcontroller system.
+ * Initialize the System and update the SystemCoreClock variable.
+ */
+void SystemInit(void);
 
+/**
+ * @brief Updates the SystemCoreClock with current core Clock 
+ * retrieved from cpu registers.
+ */
+void SystemCoreClockUpdate(void);
+
+/** 
+ * Initialize flash.
+ */
+void system_init_flash(uint32_t ul_clk);
+
+/* @cond 0 */
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/* @endcond */
+
+#endif /* SYSTEM_SAM3X_H_INCLUDED */

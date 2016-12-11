@@ -1789,12 +1789,14 @@ void sd_mmc_init(const Pin cdPins[], const Pin wpPins[], const Pin spiCsPins[])
 		{
 			pinMode(card->wp_gpio, INPUT_PULLUP);
 		}
+#if SD_MMC_HSMCI_MEM_CNT != 0
 		if (slot < SD_MMC_HSMCI_MEM_CNT)
 		{
 			card->iface = &hsmciInterface;
 			card->slot = slot;
 		}
 		else
+#endif
 		{
 			card->iface = &spiInterface;
 			card->slot = slot - SD_MMC_HSMCI_MEM_CNT;
