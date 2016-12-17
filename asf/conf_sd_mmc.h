@@ -70,7 +70,7 @@
 #ifdef __RADDS__
 
 #define SD_MMC_HSMCI_MEM_CNT		0			// Number of HSMCI card slots supported
-#define SD_MMC_SPI_MEM_CNT			1			// Number of SPI card slots supported
+#define SD_MMC_SPI_MEM_CNT			2			// Number of SPI card slots supported
 
 #define SD_MMC_SPI_MAX_CLOCK		(2000000)	// Max 2MHz clock for SPI cards, to allow a reasonable cable length
 
