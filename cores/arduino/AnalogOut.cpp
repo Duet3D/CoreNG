@@ -99,6 +99,9 @@ static bool PWMEnabled = false;
 static uint16_t PWMChanFreq[numPwmChannels] = {0};
 static uint16_t PWMChanPeriod[numPwmChannels];
 
+//***Temporary for debugging
+uint32_t maxPwmLoopCount = 0;
+
 // AnalogWrite to a PWM pin
 // Return true if successful, false if we need to fall back to digitalWrite
 static bool AnalogWritePwm(const PinDescription& pinDesc, float ulValue, uint16_t freq)
@@ -122,6 +125,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 			clockConfig.ul_clkb = PwmFastClock;
 			clockConfig.ul_mck = VARIANT_MCK;
 			pwm_init(PWM, &clockConfig);
+			PWM->PWM_SCM = 0;						// ensure no sync channels
 			PWMEnabled = true;
 		}
 
@@ -132,33 +136,44 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 		PWMChanFreq[chan] = freq;
 		PWMChanPeriod[chan] = (uint16_t)period;
 
-		// DEcide whether to set the output initially high or initially low
-		const bool initiallyHigh = (ulValue > 0.5);
-
 		// Set up the PWM channel
+		// We need to work around a bug in the SAM PWM channels. Enabling a channel is supposed to clear the counter, but it doesn't.
+		// A further complication is that on the SAM3X, the update-period register doesn't appear to work.
+		// So we need to make sure the counter is less than the new period before we change the period.
+		for (unsigned int j = 0; j < 5; ++j)										// twice through should be enough, but just in case...
+		{
+			pwm_channel_disable(PWM, chan);
+			if (j > maxPwmLoopCount)
+			{
+				maxPwmLoopCount = j;
+			}
+			uint32_t oldCurrentVal = PWM->PWM_CH_NUM[chan].PWM_CCNT & 0xFFFF;
+			if (oldCurrentVal < period || oldCurrentVal > 65536 - 10)	// if counter is already small enough or about to wrap round, OK
+			{
+				break;
+			}
+			oldCurrentVal += 2;											// note: +1 doesn't work here, has to be at least +2
+			PWM->PWM_CH_NUM[chan].PWM_CPRD = oldCurrentVal;				// change the period to be just greater than the counter
+			PWM->PWM_CH_NUM[chan].PWM_CMR = PWM_CMR_CPRE_CLKB;			// use the fast clock to avoid waiting too long
+			pwm_channel_enable(PWM, chan);
+			for (unsigned int i = 0; i < 1000; ++i)
+			{
+				const uint32_t newCurrentVal = PWM->PWM_CH_NUM[chan].PWM_CCNT & 0xFFFF;
+				if (newCurrentVal < period || newCurrentVal > oldCurrentVal)
+				{
+					break;												// get out when we have wrapped round, or failed to
+				}
+			}
+		}
+
 		pwm_channel_t channelConfig;
-		memset(&channelConfig, 0, sizeof(channelConfig));		// clear unused fields
+		memset(&channelConfig, 0, sizeof(channelConfig));				// clear unused fields
 		channelConfig.channel = chan;
 		channelConfig.ul_prescaler = (useFastClock) ? PWM_CMR_CPRE_CLKB : PWM_CMR_CPRE_CLKA;
 		channelConfig.ul_duty = duty;
 		channelConfig.ul_period = period;
 
-		pwm_channel_disable(PWM, chan);
 		pwm_channel_init(PWM, &channelConfig);
-#if 1
-		// Work around a bug in the SAM4E PWM3 channel (I haven't checked whether other SAM4E channels or the SAM3X has the same bug).
-		// Enabling a channel is supposed to clear its counter, but doesn't. If the counter is already past the new period then it has to
-		// reach 65535 and then wrap round before the PWM starts, which can take more than 2 seconds.
-		// So set the period to just greater than the current counter value.
-		irqflags_t flags = cpu_irq_save();
-		const uint32_t currentVal = PWM->PWM_CH_NUM[chan].PWM_CCNT;
-		const uint32_t initialPeriod = max<uint32_t>(period, (currentVal + 2) & 0xFFFF);	// set the period just higher than the count
-		PWM->PWM_CH_NUM[chan].PWM_CPRD = initialPeriod;
-		PWM->PWM_CH_NUM[chan].PWM_CDTY = (initiallyHigh) ? initialPeriod : 0;
-		PWM->PWM_CH_NUM[chan].PWM_CPRDUPD = period;						// tell it to set the correct period next time
-		PWM->PWM_CH_NUM[chan].PWM_CDTYUPD = duty;						// also update duty cycle next time
-		cpu_irq_restore(flags);
-#endif
 		pwm_channel_enable(PWM, chan);
 
 		// Now setup the PWM output pin for PWM this channel - do this after configuring the PWM to avoid glitches
