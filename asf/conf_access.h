@@ -53,13 +53,7 @@
 #define LUN_0                DISABLE   //!< On-Chip Virtual Memory.
 #define LUN_1                DISABLE   //!< AT45DBX Data Flash.
 #define LUN_2                ENABLE    //!< SD/MMC Card over Slot 0
-
-#if defined(__SAM4E8E__)
 #define LUN_3                ENABLE    //!< SD/MMC Card in slot 1
-#else
-#define LUN_3                DISABLE   //!< Spare
-#endif
-
 #define LUN_4                DISABLE   //!< Spare
 #define LUN_5                DISABLE   //!< Spare
 #define LUN_6                DISABLE   //!< Spare
