@@ -282,8 +282,6 @@ extern "C" void init( void )
 	// Initialize Serial port U(S)ART pins
 	ConfigurePin(g_APinDescription[APINS_UART0]);
 	setPullup(APIN_UART0_RXD, true); 							// Enable pullup for RX0
-	ConfigurePin(g_APinDescription[APINS_UART1]);
-	setPullup(APIN_UART1_RXD, true); 							// Enable pullup for RX1
 
 	// No need to initialize the USB pins on the SAM4E because they are USB by default
 
@@ -296,9 +294,6 @@ extern "C" void init( void )
 	// Initialize HSMCI pins
 	ConfigurePin(g_APinDescription[APIN_HSMCI_CLOCK]);
 	ConfigurePin(g_APinDescription[APINS_HSMCI_DATA]);
-
-	// Start the USB
-	udc_start();
 }
 
 // End

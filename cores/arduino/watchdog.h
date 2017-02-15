@@ -26,7 +26,7 @@
 /*
  * \brief Enable the watchdog with the specified timeout. Should only be called once.
  *
- * \param timeount in milliseconds.
+ * \param timeout in milliseconds.
  */
 void watchdogEnable (uint32_t timeout);
 
@@ -41,12 +41,6 @@ void watchdogDisable (void);
  *
  */
 void watchdogReset (void);
-
-/*
- * \brief Watchdog initialize hook. This function is called from init(). If the user does not provide
- * this function, then the default action is to disable watchdog.
- */
-void watchdogSetup (void);
 
 #endif /* _WATCHDOG_ */
 

@@ -47,12 +47,4 @@ void watchdogReset(void)
 	wdt_restart (WDT);
 }
 
-
-extern "C"
-void _watchdogDefaultSetup (void)
-{
-	wdt_disable (WDT);
-}
-void watchdogSetup (void) __attribute__ ((weak, alias("_watchdogDefaultSetup")));
-
-
+// End

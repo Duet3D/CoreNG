@@ -404,10 +404,9 @@ extern "C" void init( void )
 	// Initialize C library
 	__libc_init_array();
 
-	// Initialize Serial port U(S)ART pins
+	// Initialize Serial port 0 U(S)ART pins
 	ConfigurePin(g_APinDescription[APINS_UART]);
 	setPullup(APIN_UART_RXD, true); 							// Enable pullup for RX0
-	ConfigurePin(g_APinDescription[APINS_USART0]);
 
 	// Initialize USB pins
 	ConfigurePin(g_APinDescription[APINS_USB]);
@@ -429,9 +428,6 @@ extern "C" void init( void )
 	pmc_enable_periph_clk(ID_TRNG);
 	TRNG->TRNG_IDR = TRNG_IDR_DATRDY;							// Disable all interrupts
 	TRNG->TRNG_CR = TRNG_CR_KEY(0x524e47) | TRNG_CR_ENABLE;		// Enable TRNG with security key (required)
-
-	// Start the USB
-	udc_start();
 }
 
 // End

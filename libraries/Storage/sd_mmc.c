@@ -1820,8 +1820,17 @@ uint8_t sd_mmc_nb_slot(void)
 
 sd_mmc_err_t sd_mmc_check(uint8_t slot)
 {
+#if 1	//dc42
+	sd_mmc_err_t sd_mmc_err;
+	do
+	{
+		sd_mmc_err = sd_mmc_select_slot(slot);
+	} while (sd_mmc_err == SD_MMC_CD_DEBOUNCING);
+#else
 	sd_mmc_err_t sd_mmc_err = sd_mmc_select_slot(slot);
-	if (sd_mmc_err != SD_MMC_INIT_ONGOING) {
+#endif
+	if (sd_mmc_err != SD_MMC_INIT_ONGOING)
+	{
 		sd_mmc_deselect_slot();
 		return sd_mmc_err;
 	}

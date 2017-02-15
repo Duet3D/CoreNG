@@ -114,6 +114,7 @@ extern "C"{
 #define APIN_UART_RXD		 (0u)
 // Serial1
 #define APINS_USART0         (82u)
+#define APIN_USART0_RXD		 (19u)
 // Serial2
 #define APINS_USART1         (83u)
 // Serial3

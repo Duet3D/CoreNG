@@ -8,6 +8,7 @@
 #include "USBSerial.h"
 #include "conf_usb.h"		// include this to check that the signatures of the callback functions are correct
 #include "udi_cdc.h"		// Atmel CDC module
+#include "udc.h"
 
 // SerialCDC members
 
@@ -17,6 +18,7 @@ void SerialCDC::begin(uint32_t baud_count)
 {
 	// suppress "unused parameter" warning
 	(void)baud_count;
+	udc_start();
 }
 
 void SerialCDC::begin(uint32_t baud_count, uint8_t config)
@@ -24,11 +26,13 @@ void SerialCDC::begin(uint32_t baud_count, uint8_t config)
 	// suppress "unused parameter" warning
 	(void)baud_count;
 	(void)config;
+	udc_start();
 }
 
 void SerialCDC::end()
 {
 	isConnected = false;
+	udc_stop();
 }
 
 int SerialCDC::available()
