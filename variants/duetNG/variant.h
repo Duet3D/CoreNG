@@ -106,11 +106,11 @@ extern "C"{
  * UART/USART Interfaces
  */
 // Serial
-#define APINS_UART0			(106u)
+#define APINS_UART0			(107u)
 #define APIN_UART0_RXD		(9u)
 #define APIN_UART0_TXD		(10u)
 // Serial1
-#define APINS_UART1			(107u)
+#define APINS_UART1			(108u)
 #define APIN_UART1_RXD		(5u)
 #define APIN_UART1_TXD		(6u)
 
@@ -149,10 +149,10 @@ static const uint8_t DAC1 = 31;
  */
 
 // HSMCI
-static const uint8_t APIN_HSMCI_CLOCK = 103;
-static const uint8_t APINS_HSMCI_DATA = 104;
+static const uint8_t APIN_HSMCI_CLOCK = 104;
+static const uint8_t APINS_HSMCI_DATA = 105;
 
-static const uint32_t MaxPinNumber = 102;						// last GPIO pin
+static const uint32_t MaxPinNumber = 103;						// last GPIO pin
 
 static const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
 static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds
