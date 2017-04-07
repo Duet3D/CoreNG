@@ -105,6 +105,8 @@ extern "C"{
 /*
  * UART/USART Interfaces
  */
+// SerialUSB
+#define USB_VBUS_PIN		(54u)
 // Serial
 #define APINS_UART0			(107u)
 #define APIN_UART0_RXD		(9u)

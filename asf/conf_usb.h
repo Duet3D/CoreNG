@@ -16,11 +16,18 @@
  */
 
 //! Device definition (mandatory)
-#define  USB_DEVICE_VENDOR_ID             0x03EB			// Atmel VID
-#define  USB_DEVICE_PRODUCT_ID            0x2404			// Atmel PID for CDC applications
+#define  USB_DEVICE_VENDOR_ID             0x1209			// VID from which PIDs are allocated to open source projects
+
+#if SAM3XA
+#define  USB_DEVICE_PRODUCT_ID            0x60EC			// PID allocated to us for older Duets
+#endif
+#if SAM4E
+#define  USB_DEVICE_PRODUCT_ID            0x60ED			// PID allocated to us for Duet NG series
+#endif
+
 #define  USB_DEVICE_MAJOR_VERSION         1
 #define  USB_DEVICE_MINOR_VERSION         0
-#define  USB_DEVICE_POWER                 100 // Consumption on Vbus line (mA)
+#define  USB_DEVICE_POWER                 200 // Consumption on Vbus line (mA)
 #define  USB_DEVICE_ATTR                  \
 	(USB_CONFIG_ATTR_SELF_POWERED)
 // (USB_CONFIG_ATTR_BUS_POWERED)
@@ -28,7 +35,7 @@
 // (USB_CONFIG_ATTR_REMOTE_WAKEUP|USB_CONFIG_ATTR_BUS_POWERED)
 
 //! USB Device string definitions (Optional)
-#define  USB_DEVICE_MANUFACTURE_NAME      "Think3DPrint3D"
+#define  USB_DEVICE_MANUFACTURE_NAME      "Duet3D"
 #define  USB_DEVICE_PRODUCT_NAME          "Duet"
 // #define  USB_DEVICE_SERIAL_NAME           "12...EF"
 
