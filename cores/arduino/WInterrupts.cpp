@@ -22,26 +22,17 @@ const uint32_t pioInterruptPriority = 5;
 
 typedef void (*interruptCB)(void);
 
-static interruptCB callbacksPioA[32];
-static interruptCB callbacksPioB[32];
-static interruptCB callbacksPioC[32];
-static interruptCB callbacksPioD[32];
+static interruptCB callbacksPioA[32] = { 0 };
+static interruptCB callbacksPioB[32] = { 0 };
+static interruptCB callbacksPioC[32] = { 0 };
+static interruptCB callbacksPioD[32] = { 0 };
 #ifdef ID_PIOE
-static interruptCB callbacksPioE[32];
+static interruptCB callbacksPioE[32] = { 0 };
 #endif
 
 /* Configure PIO interrupt sources */
-static void __initialize() {
-	for (size_t i=0; i<32; i++) {
-		callbacksPioA[i] = NULL;
-		callbacksPioB[i] = NULL;
-		callbacksPioC[i] = NULL;
-		callbacksPioD[i] = NULL;
-#ifdef ID_PIOE
-		callbacksPioE[i] = NULL;
-#endif
-	}
-
+static void __initialize()
+{
 	pmc_enable_periph_clk(ID_PIOA);
 	NVIC_DisableIRQ(PIOA_IRQn);
 	NVIC_ClearPendingIRQ(PIOA_IRQn);
@@ -85,8 +76,8 @@ extern "C" void attachInterrupt(uint32_t pin, void (*callback)(void), uint32_t m
 	}
 
 	// Retrieve pin information
-	Pio *pio = g_APinDescription[pin].pPort;
-	uint32_t mask = g_APinDescription[pin].ulPin;
+	Pio * const pio = g_APinDescription[pin].pPort;
+	const uint32_t mask = g_APinDescription[pin].ulPin;
 	uint32_t pos = 0;
 
 	for (uint32_t t = mask; t>1; t>>=1, pos++) {}
@@ -152,8 +143,8 @@ extern "C" void attachInterrupt(uint32_t pin, void (*callback)(void), uint32_t m
 extern "C" void detachInterrupt(uint32_t pin)
 {
 	// Retrieve pin information
-	Pio *pio = g_APinDescription[pin].pPort;
-	uint32_t mask = g_APinDescription[pin].ulPin;
+	Pio * const pio = g_APinDescription[pin].pPort;
+	const uint32_t mask = g_APinDescription[pin].ulPin;
 
 	// Disable interrupt
 	pio->PIO_IDR = mask;
@@ -165,65 +156,58 @@ bool inInterrupt()
 	return (__get_IPSR() & 0x01FF) != 0;
 }
 
+// Common PIO interrupt handler
+void CommonPioHandler(Pio *pio, const interruptCB callbacks[])
+{
+	uint32_t isr = pio->PIO_ISR & pio->PIO_IMR;
+	// The following loop is partially unwound for better speed
+	for (unsigned int i = 0; i < 8; ++i)
+	{
+		if ((isr & 0x01) != 0 && callbacks[0] != nullptr)
+		{
+			callbacks[0]();
+		}
+		if ((isr & 0x02) != 0 && callbacks[1] != nullptr)
+		{
+			callbacks[1]();
+		}
+		if ((isr & 0x04) != 0 && callbacks[2] != nullptr)
+		{
+			callbacks[2]();
+		}
+		if ((isr & 0x08) != 0 && callbacks[3] != nullptr)
+		{
+			callbacks[3]();
+		}
+		isr >>= 4;
+		callbacks += 4;
+	}
+}
+
 extern "C" void PIOA_Handler(void)
 {
-	uint32_t isr = PIOA->PIO_ISR;
-	for (uint32_t i=0; i<32; i++, isr>>=1)
-	{
-		if ((isr & 0x1) != 0 && callbacksPioA[i] != nullptr)
-		{
-			callbacksPioA[i]();
-		}
-	}
+	CommonPioHandler(PIOA, callbacksPioA);
 }
 
 extern "C" void PIOB_Handler(void)
 {
-	uint32_t isr = PIOB->PIO_ISR;
-	for (uint32_t i=0; i<32; i++, isr>>=1)
-	{
-		if ((isr & 0x1) != 0 && callbacksPioB[i] != nullptr)
-		{
-			callbacksPioB[i]();
-		}
-	}
+	CommonPioHandler(PIOB, callbacksPioB);
 }
 
 extern "C" void PIOC_Handler(void)
 {
-	uint32_t isr = PIOC->PIO_ISR;
-	for (uint32_t i=0; i<32; i++, isr>>=1)
-	{
-		if ((isr & 0x1) != 0 && callbacksPioC[i] != nullptr)
-		{
-			callbacksPioC[i]();
-		}
-	}
+	CommonPioHandler(PIOC, callbacksPioC);
 }
 
 extern "C" void PIOD_Handler(void)
 {
-	uint32_t isr = PIOD->PIO_ISR;
-	for (uint32_t i=0; i<32; i++, isr>>=1)
-	{
-		if ((isr & 0x1) != 0 && callbacksPioD[i] != nullptr)
-		{
-			callbacksPioD[i]();
-		}
-	}
+	CommonPioHandler(PIOD, callbacksPioD);
 }
 
 #ifdef ID_PIOE
 extern "C" void PIOE_Handler(void)
 {
-	uint32_t isr = PIOE->PIO_ISR;
-	for (uint32_t i=0; i<32; i++, isr>>=1)
-	{
-		if ((isr & 0x1) != 0 && callbacksPioE[i] != nullptr)
-		{
-			callbacksPioE[i]();
-		}
-	}
+	CommonPioHandler(PIOE, callbacksPioE);
 }
 #endif
 

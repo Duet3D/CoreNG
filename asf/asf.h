@@ -24,4 +24,8 @@
 #include "sam/drivers/spi/spi.h"
 #include "sam/drivers/wdt/wdt.h"
 
+#if SAM4E
+#include "sam/drivers/rswdt/rswdt.h"
+#endif
+
 #endif /* ASF_H_ */
