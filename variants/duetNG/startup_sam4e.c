@@ -204,9 +204,6 @@ void Reset_Handler(void)
 	fpu_enable();
 #endif
 
-	/* Initialize the C library */
-//	__libc_init_array();
-
 	/* Branch to main function */
 	main();
 

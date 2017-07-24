@@ -268,7 +268,7 @@ extern "C" void init( void )
 {
 	SystemInit();
 
-	// Set Systick to 1ms interval, common to all SAM3 variants
+	// Set Systick to 1ms interval, common to all SAM4 variants
 	if (SysTick_Config(SystemCoreClock / 1000))
 	{
 		// Capture error

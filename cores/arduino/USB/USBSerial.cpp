@@ -13,7 +13,7 @@
 #ifdef __SAM4E8E__
 #include "WInterrupts.h"
 
-void core_vbus_off();
+void core_vbus_off(void*);
 #endif
 
 // SerialCDC members
@@ -21,7 +21,7 @@ void core_vbus_off();
 SerialCDC::SerialCDC() : /* _cdc_tx_buffer(), */ txBufsize(1), isConnected(false)
 {
 #ifdef __SAM4E8E__
-	attachInterrupt(USB_VBUS_PIN, core_vbus_off, FALLING);
+	attachInterrupt(USB_VBUS_PIN, core_vbus_off, FALLING, nullptr);
 #endif
 }
 
@@ -147,7 +147,7 @@ extern "C" void core_cdc_tx_empty_notify(uint8_t port)
 
 #ifdef __SAM4E8E__
 // On the SAM4E there is only a GPIO pin available to monitor the VBUS state
-void core_vbus_off()
+void core_vbus_off(void*)
 {
 	SerialUSB.cdcSetConnected(false);
 }
