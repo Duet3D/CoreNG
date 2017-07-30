@@ -36,8 +36,13 @@
 // (USB_CONFIG_ATTR_REMOTE_WAKEUP|USB_CONFIG_ATTR_BUS_POWERED)
 
 //! USB Device string definitions (Optional)
-#define  USB_DEVICE_MANUFACTURE_NAME      "Duet3D"
-#define  USB_DEVICE_PRODUCT_NAME          "Duet"
+#if defined(__ALLIGATOR__)
+# define  USB_DEVICE_MANUFACTURE_NAME      "Alligator3D"
+# define  USB_DEVICE_PRODUCT_NAME          "Alligator_r2"
+#else
+# define  USB_DEVICE_MANUFACTURE_NAME      "Duet3D"
+# define  USB_DEVICE_PRODUCT_NAME          "Duet"
+#endif
 // #define  USB_DEVICE_SERIAL_NAME           "12...EF"
 
 /**
