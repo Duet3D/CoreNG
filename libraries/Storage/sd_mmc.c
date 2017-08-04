@@ -1775,7 +1775,7 @@ static bool sd_mmc_mci_install_mmc(void)
 
 void sd_mmc_init(const Pin cdPins[], const Pin wpPins[], const Pin spiCsPins[])
 {
-	for (uint8_t slot = 0; slot < SD_MMC_MEM_CNT; slot++)
+	for (size_t slot = 0; slot < SD_MMC_MEM_CNT; slot++)
 	{
 		struct sd_mmc_card *card = &sd_mmc_cards[slot];
 		card->state = SD_MMC_CARD_STATE_NO_CARD;
@@ -1798,8 +1798,10 @@ void sd_mmc_init(const Pin cdPins[], const Pin wpPins[], const Pin spiCsPins[])
 		else
 #endif
 		{
+#if (SD_MMC_SPI_MEM_CNT != 0)
 			card->iface = &spiInterface;
 			card->slot = slot - SD_MMC_HSMCI_MEM_CNT;
+#endif
 		}
 	}
 	sd_mmc_slot_sel = 0xFF;					// No slot selected

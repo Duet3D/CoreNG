@@ -48,7 +48,6 @@
 # define  USB_DEVICE_MANUFACTURE_NAME      "Duet3D"
 # define  USB_DEVICE_PRODUCT_NAME          "Duet"
 #endif
-// #define  USB_DEVICE_SERIAL_NAME           "12...EF"
 
 /**
  * USB Device Callbacks definitions (Optional)
