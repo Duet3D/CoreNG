@@ -15,7 +15,6 @@ void RTCDue::Init()
 	// disable RTC alarm interrupts
 	NVIC_DisableIRQ(RTC_IRQn);
 	NVIC_ClearPendingIRQ(RTC_IRQn);
-	NVIC_SetPriority(RTC_IRQn, 8);
 }
 
 bool RTCDue::IsDateTimeSet()

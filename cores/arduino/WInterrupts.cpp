@@ -42,32 +42,27 @@ static void __initialize()
 	pmc_enable_periph_clk(ID_PIOA);
 	NVIC_DisableIRQ(PIOA_IRQn);
 	NVIC_ClearPendingIRQ(PIOA_IRQn);
-	NVIC_SetPriority(PIOA_IRQn, pioInterruptPriority);
 	NVIC_EnableIRQ(PIOA_IRQn);
 
 	pmc_enable_periph_clk(ID_PIOB);
 	NVIC_DisableIRQ(PIOB_IRQn);
 	NVIC_ClearPendingIRQ(PIOB_IRQn);
-	NVIC_SetPriority(PIOB_IRQn, pioInterruptPriority);
 	NVIC_EnableIRQ(PIOB_IRQn);
 
 	pmc_enable_periph_clk(ID_PIOC);
 	NVIC_DisableIRQ(PIOC_IRQn);
 	NVIC_ClearPendingIRQ(PIOC_IRQn);
-	NVIC_SetPriority(PIOC_IRQn, pioInterruptPriority);
 	NVIC_EnableIRQ(PIOC_IRQn);
 
 	pmc_enable_periph_clk(ID_PIOD);
 	NVIC_DisableIRQ(PIOD_IRQn);
 	NVIC_ClearPendingIRQ(PIOD_IRQn);
-	NVIC_SetPriority(PIOD_IRQn, pioInterruptPriority);
 	NVIC_EnableIRQ(PIOD_IRQn);
 
 #ifdef ID_PIOE
 	pmc_enable_periph_clk(ID_PIOE);
 	NVIC_DisableIRQ(PIOE_IRQn);
 	NVIC_ClearPendingIRQ(PIOE_IRQn);
-	NVIC_SetPriority(PIOE_IRQn, pioInterruptPriority);
 	NVIC_EnableIRQ(PIOE_IRQn);
 #endif
 }
@@ -76,24 +71,20 @@ static void __initialize()
 // This needs to be fast. Hopefully the ARM conditional instructions will be used to advantage here.
 static unsigned int GetHighestBit(uint32_t bits)
 {
-	unsigned int bitNum = 0;
-	if (bits >= 0x00010000)
-	{
-		bitNum += 16;
-	}
-	if ((bits >> bitNum) >= 0x0100)
+	unsigned int bitNum = (bits >= 0x00010000) ? 16 : 0;
+	if ((bits >> bitNum) >= 0x0100u)
 	{
 		bitNum += 8;
 	}
-	if ((bits >> bitNum) >= 0x0010)
+	if ((bits >> bitNum) >= 0x0010u)
 	{
 		bitNum += 4;
 	}
-	if ((bits >> bitNum) >= 0x0004)
+	if ((bits >> bitNum) >= 0x0004u)
 	{
 		bitNum += 2;
 	}
-	if ((bits >> bitNum) >= 0x0002)
+	if ((bits >> bitNum) >= 0x0002u)
 	{
 		bitNum += 1;
 	}
@@ -102,11 +93,11 @@ static unsigned int GetHighestBit(uint32_t bits)
 
 extern "C" void attachInterrupt(uint32_t pin, void (*callback)(void*), uint32_t mode, void *param)
 {
-	static int enabled = 0;
+	static bool enabled = false;
 	if (!enabled)
 	{
 		__initialize();
-		enabled = 1;
+		enabled = true;
 	}
 
 	// Retrieve pin information

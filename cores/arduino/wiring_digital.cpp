@@ -47,7 +47,7 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 					(debounceCutoff == 0) ? 0 : PIO_DEBOUNCE);
 			if (debounceCutoff != 0)
 			{
-				pio_set_debounce_filter(pinDesc.pPort, pinDesc.ulPin, debounceCutoff);	// enable debounce filer with specified cutoff frequency
+				pio_set_debounce_filter(pinDesc.pPort, pinDesc.ulPin, debounceCutoff);	// enable debounce filter with specified cutoff frequency
 			}
 			break;
 
@@ -64,7 +64,7 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 					(debounceCutoff == 0) ? PIO_PULLUP : PIO_PULLUP | PIO_DEBOUNCE);
 			if (debounceCutoff != 0)
 			{
-				pio_set_debounce_filter(pinDesc.pPort, pinDesc.ulPin, debounceCutoff);	// enable debounce filer with specified cutoff frequency
+				pio_set_debounce_filter(pinDesc.pPort, pinDesc.ulPin, debounceCutoff);	// enable debounce filter with specified cutoff frequency
 			}
 			break;
 
@@ -81,7 +81,7 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 					(debounceCutoff == 0) ? 0 : PIO_DEBOUNCE);
 			if (debounceCutoff != 0)
 			{
-				pio_set_debounce_filter(pinDesc.pPort, pinDesc.ulPin, debounceCutoff);	// enable debounce filer with specified cutoff frequency
+				pio_set_debounce_filter(pinDesc.pPort, pinDesc.ulPin, debounceCutoff);	// enable debounce filter with specified cutoff frequency
 			}
 			break;
 #endif
@@ -154,7 +154,7 @@ extern "C"  void digitalWrite(Pin pin, bool ulVal)
 		const PinDescription& pinDesc = g_APinDescription[pin];
 		if (pinDesc.ulPinType != PIO_NOT_A_PIN)
 		{
-			if (ulVal)		// we make use of the fact that LOW is zero and HIGH is nonzero
+			if (ulVal)
 			{
 				pinDesc.pPort->PIO_SODR = pinDesc.ulPin;
 			}
