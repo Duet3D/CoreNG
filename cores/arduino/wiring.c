@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-static volatile uint32_t g_ms_ticks = 0;		// Count of 1ms time ticks. */
+static volatile uint64_t g_ms_ticks = 0;		// Count of 1ms time ticks. */
 
 void TimeTick_Increment( void )
 {
@@ -30,6 +30,11 @@ void TimeTick_Increment( void )
 }
 
 uint32_t millis( void )
+{
+    return (uint32_t)g_ms_ticks;
+}
+
+uint64_t millis64( void )
 {
     return g_ms_ticks;
 }
@@ -46,7 +51,7 @@ uint32_t micros( void )
 
     ticks2  = SysTick->VAL;
     pend2   = !!((SCB->ICSR & SCB_ICSR_PENDSTSET_Msk)||((SCB->SHCSR & SCB_SHCSR_SYSTICKACT_Msk)))  ;
-    count2  = g_ms_ticks;
+    count2  = (uint32_t)g_ms_ticks;
 
     do {
         ticks=ticks2;
@@ -54,7 +59,7 @@ uint32_t micros( void )
         count=count2;
         ticks2  = SysTick->VAL;
         pend2   = !!((SCB->ICSR & SCB_ICSR_PENDSTSET_Msk)||((SCB->SHCSR & SCB_SHCSR_SYSTICKACT_Msk)))  ;
-        count2  = g_ms_ticks;
+        count2  = (uint32_t)g_ms_ticks;
     } while ((pend != pend2) || (count != count2) || (ticks < ticks2));
 
     return ((count+pend) * 1000) + (((SysTick->LOAD  - ticks)*(1048576/(VARIANT_MCK/1000000)))>>20) ;
@@ -66,10 +71,10 @@ void delay( uint32_t ms )
 {
     if (ms != 0)
     {
-		const uint32_t start = g_ms_ticks;
+		const uint32_t start = (uint32_t)g_ms_ticks;
 		do {
 			yield();
-		} while (g_ms_ticks - start < ms);
+		} while ((uint32_t)g_ms_ticks - start < ms);
     }
 }
 

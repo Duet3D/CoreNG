@@ -137,9 +137,8 @@ extern int _write( UNUSED(int file), char *ptr, int len )
 
 extern void _exit( int status )
 {
-    printf( "Exiting with status %d.\n", status ) ;
-
-    for ( ; ; ) ;
+//	printf( "Exiting with status %d.\n", status ) ;
+	for ( ; ; ) ;
 }
 
 extern void _kill( UNUSED(int pid), UNUSED(int sig) )

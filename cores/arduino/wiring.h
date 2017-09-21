@@ -31,7 +31,7 @@ extern void initVariant( void ) ;
 extern void init( void ) ;
 
 /**
- * \brief Returns the number of milliseconds since the Arduino board began running the current program.
+ * \brief Returns the number of milliseconds since the core started.
  *
  * This number will overflow (go back to zero), after approximately 50 days.
  *
@@ -40,12 +40,15 @@ extern void init( void ) ;
 extern uint32_t millis( void ) ;
 
 /**
- * \brief Returns the number of microseconds since the Arduino board began running the current program.
+ * \brief Returns the number of milliseconds since the core started.
+ * \return Number of milliseconds since the program started (uint64_t)
+ */
+extern uint64_t millis64( void ) ;
+
+/**
+ * \brief Returns the number of microseconds since the core started.
  *
- * This number will overflow (go back to zero), after approximately 70 minutes. On 16 MHz Arduino boards
- * (e.g. Duemilanove and Nano), this function has a resolution of four microseconds (i.e. the value returned is
- * always a multiple of four). On 8 MHz Arduino boards (e.g. the LilyPad), this function has a resolution
- * of eight microseconds.
+ * This number will overflow (go back to zero), after approximately 70 minutes.
  *
  * \note There are 1,000 microseconds in a millisecond and 1,000,000 microseconds in a second.
  */
