@@ -48,8 +48,11 @@
 #include "exceptions.h"
 #include "system_sam4e.h"
 
+// Eclipse doesn't get the state of __FPU_USED right
 #if __FPU_USED /* CMSIS defined value to indicate usage of FPU */
 #include "fpu/fpu.h"
+#else
+# warning Compiling without FPU support
 #endif
 
 /* Initialize segments */
@@ -202,6 +205,8 @@ void Reset_Handler(void)
 
 #if __FPU_USED
 	fpu_enable();
+#else
+# warning Compiling without FPU support
 #endif
 
 	/* Branch to main function */

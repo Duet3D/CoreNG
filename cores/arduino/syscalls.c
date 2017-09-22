@@ -91,7 +91,6 @@ extern int _close( UNUSED(int file) )
 extern int _fstat( UNUSED(int file), struct stat *st )
 {
     st->st_mode = S_IFCHR ;
-
     return 0 ;
 }
 
@@ -112,32 +111,11 @@ extern int _read(UNUSED(int file), UNUSED(char *ptr), UNUSED(int len) )
 
 extern int _write( UNUSED(int file), char *ptr, int len )
 {
-#if 1
 	return len;
-#else
-    int iIndex ;
-
-
-//    for ( ; *ptr != 0 ; ptr++ )
-    for ( iIndex=0 ; iIndex < len ; iIndex++, ptr++ )
-    {
-//        UART_PutChar( *ptr ) ;
-
-		// Check if the transmitter is ready
-		  while ((UART->UART_SR & UART_SR_TXRDY) != UART_SR_TXRDY)
-			;
-
-		  // Send character
-		  UART->UART_THR = *ptr;
-    }
-
-    return iIndex ;
-#endif
 }
 
 extern void _exit( int status )
 {
-//	printf( "Exiting with status %d.\n", status ) ;
 	for ( ; ; ) ;
 }
 
@@ -150,3 +128,5 @@ extern int _getpid ( void )
 {
     return -1 ;
 }
+
+// End

@@ -84,6 +84,11 @@ inline float fsquare(float arg)
 	return arg * arg;
 }
 
+inline double dsquare(double arg)
+{
+	return arg * arg;
+}
+
 inline uint64_t isquare64(int32_t arg)
 {
 	return (uint64_t)((int64_t)arg * arg);
