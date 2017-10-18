@@ -75,13 +75,13 @@ size_t SerialCDC::write(uint8_t c)
 	return 1;
 }
 
-// Non-blocking write to USB. Returns number of bytes written.
+// Non-blocking write to USB. Returns number of bytes written. If we are not connected, pretend that all bytes hacve been written.
 size_t SerialCDC::write(const uint8_t *buffer, size_t size)
 {
 	if (isConnected && size != 0)
 	{
-		size_t remaining = udi_cdc_write_buf(buffer, size);
-		return size = remaining;
+		const size_t remaining = udi_cdc_write_buf(buffer, size);
+		return size - remaining;
 	}
 	return size;
 }

@@ -15,7 +15,6 @@
 class SerialCDC : public Stream
 {
 private:
-	//RingBuffer _cdc_tx_buffer;
 	size_t txBufsize;
 	bool isConnected;
 
@@ -34,7 +33,7 @@ public:
 	size_t write(const uint8_t *buffer, size_t size) override;
 
 	size_t write(const char *str) { return Print::write(str); }
-    size_t write(const char *buffer, size_t size) { return Print::write(buffer, size); }
+    size_t write(const char *buffer, size_t size) { return write((const uint8_t *)buffer, size); }
 
 	size_t canWrite() const override;	// Function added by DC42 so that we can tell how many characters we can write without blocking (for Duet)
 	operator bool() const;
