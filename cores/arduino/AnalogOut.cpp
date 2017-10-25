@@ -91,7 +91,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_DAC) != 0)
 #if SAM3XA
 const unsigned int numPwmChannels = 8;
 #endif
-#if SAM4E
+#if SAM4E || SAM4S
 const unsigned int numPwmChannels = 4;
 #endif
 
@@ -199,14 +199,24 @@ const unsigned int numTcChannels = 9;
 static const uint8_t channelToChNo[] = { 0, 1, 2, 0, 1, 2, 0, 1, 2 };
 
 // Map from timer channel to TC number
-static Tc * const channelToTC[] = { TC0, TC0, TC0,
-									TC1, TC1, TC1,
-									TC2, TC2, TC2 };
+static Tc * const channelToTC[] =
+{
+	TC0, TC0, TC0,
+	TC1, TC1, TC1,
+#if SAM3XA || SAM4E
+	TC2, TC2, TC2
+#endif
+};
 
 // Map from timer channel to TIO number
-static const uint8_t channelToId[] = { ID_TC0, ID_TC1, ID_TC2,
-									   ID_TC3, ID_TC4, ID_TC5,
-									   ID_TC6, ID_TC7, ID_TC8 };
+static const uint8_t channelToId[] =
+{
+	ID_TC0, ID_TC1, ID_TC2,
+	ID_TC3, ID_TC4, ID_TC5,
+#if SAM3XA || SAM4E
+	ID_TC6, ID_TC7, ID_TC8
+#endif
+};
 
 // Current frequency of each TC channel
 static uint16_t TCChanFreq[numTcChannels] = {0};

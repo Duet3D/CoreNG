@@ -8,7 +8,7 @@
 #include "Core.h"
 #include "AnalogIn.h"
 
-#if SAM3XA
+#if SAM3XA || SAM4S
 # include "adc/adc.h"
 #elif SAM4E
 # include "afec/afec.h"
@@ -18,7 +18,7 @@
 
 #include "pmc.h"
 
-#if SAM3XA
+#if SAM3XA || SAM4S
 const unsigned int numChannels = 16;
 #endif
 #if SAM4E
@@ -28,12 +28,13 @@ const unsigned int numChannels = 32;
 static uint32_t activeChannels = 0;
 static AnalogCallback_t callbackFn = nullptr;
 
-#if SAM3XA
+#if SAM3XA || SAM4S
 static inline adc_channel_num_t GetAdcChannel(AnalogChannelNumber channel)
 {
 	return static_cast<adc_channel_num_t>((unsigned int)channel);
 }
 #endif
+
 #if SAM4E
 static inline Afec *GetAfec(AnalogChannelNumber channel)
 {
@@ -49,7 +50,7 @@ static inline afec_channel_num GetAfecChannel(AnalogChannelNumber channel)
 // Module initialisation
 void AnalogInInit()
 {
-#if SAM3XA
+#if SAM3XA || SAM4S
 	pmc_enable_periph_clk(ID_ADC);
 	adc_init(ADC, SystemCoreClock, 2000000, ADC_STARTUP_TIME_12);	// 2MHz clock
 	adc_configure_timing(ADC, 3, ADC_SETTLING_TIME_3, 1);			// Add transfer time
@@ -91,7 +92,7 @@ void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 		if (enable)
 		{
 			activeChannels |= (1 << channel);
-#if SAM3XA
+#if SAM3XA || SAM4S
 			adc_enable_channel(ADC, GetAdcChannel(channel));
 			if (GetAdcChannel(channel) == ADC_TEMPERATURE_SENSOR)
 			{
@@ -110,7 +111,7 @@ void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 		else
 		{
 			activeChannels &= ~(1 << channel);
-#if SAM3XA
+#if SAM3XA || SAM4S
 			adc_disable_channel(ADC, GetAdcChannel(channel));
 			if (GetAdcChannel(channel) == ADC_TEMPERATURE_SENSOR)
 			{
@@ -129,7 +130,7 @@ uint16_t AnalogInReadChannel(AnalogChannelNumber channel)
 {
 	if ((unsigned int)channel < numChannels)
 	{
-#if SAM3XA
+#if SAM3XA || SAM4S
 		return adc_get_channel_value(ADC, GetAdcChannel(channel));
 #endif
 #if SAM4E
@@ -200,7 +201,7 @@ void AnalogInStartConversion(uint32_t channels)
 // Check whether all conversions have been completed since the last call to AnalogStartConversion
 bool AnalogInCheckReady(uint32_t channels)
 {
-#if SAM3XA
+#if SAM3XA || SAM4S
 	const uint32_t mask = channels & activeChannels;
 	return (adc_get_status(ADC) & mask) == mask;
 #endif
@@ -232,7 +233,7 @@ AnalogChannelNumber GetTemperatureAdcChannel()
 #if SAM4E
 	return static_cast<AnalogChannelNumber>(AFEC_TEMPERATURE_SENSOR);		// AFEC0 channel 15
 #endif
-#if SAM3XA
+#if SAM3XA || SAM4S
 	return static_cast<AnalogChannelNumber>(ADC_TEMPERATURE_SENSOR);
 #endif
 }

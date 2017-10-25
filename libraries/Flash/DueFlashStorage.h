@@ -16,25 +16,16 @@ Further modified up by David Crocker
 #define DUEFLASHSTORAGE_H
 
 #include "Core.h"
+
+#if SAM3XA
+
 #include "sam/services/flash_efc/flash_efc.h"
-
-#ifdef __SAM4E8E__
-
-// 1Kb of data
-#define FLASH_DATA_LENGTH   ((IFLASH_PAGE_SIZE/sizeof(byte))*4)
-
-// Choose a start address close to the top of the Flash 1 memory space
-#define  FLASH_START  ((uint8_t *)(IFLASH_ADDR + IFLASH_SIZE - FLASH_DATA_LENGTH))
-
-#else
 
 // 1Kb of data
 #define FLASH_DATA_LENGTH   ((IFLASH1_PAGE_SIZE/sizeof(byte))*4)
 
 // Choose a start address close to the top of the Flash 1 memory space
 #define  FLASH_START  ((uint8_t *)(IFLASH1_ADDR + IFLASH1_SIZE - FLASH_DATA_LENGTH))
-
-#endif
 
 //#define FLASH_DEBUG(x) Serial.print(x);
 #define FLASH_DEBUG(x)
@@ -50,5 +41,7 @@ namespace DueFlashStorage
 	void read(uint32_t address, void *data, uint32_t dataLength);
 	bool write(uint32_t address, const void *data, uint32_t dataLength);
 };
+
+#endif
 
 #endif

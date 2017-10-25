@@ -73,7 +73,7 @@
 // Use mul and div effective values here.
 #define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
 
-#if SAM4E
+#if SAM4E || SAM4S
 # define CONFIG_PLL0_MUL			20		// (20 * 12)/2 = 120MHz
 #endif
 #if SAM3XA
@@ -86,7 +86,7 @@
 
 // ===== USB Clock Source Options   (Fusb = FpllX / USB_div)
 // Use div effective value here.
-#if SAM4E
+#if SAM4E || SAM4S
 # define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL0
 # define CONFIG_USBCLK_DIV           5
 #endif

@@ -107,8 +107,20 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.2096189025" name="/" resourcePath="variants/sam4s">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1403441807" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release" unusedChildren="">
+							<option id="cdt.managedbuild.option.gnu.cross.prefix.247642039.973594618" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.247642039"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1331950428.1098668310" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.1331950428"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1939199946" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.597788140"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1171911036" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.975309532"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.969005512" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.1294480107"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.516181914" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1446941494"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.852467980" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.597234958"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1586819944" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.643116128"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="variants/alligator|asf/sam/drivers/rswdt|variants/RADDS|asf/common/services/storage/ecc_hamming|asf/sam/utils/syscalls/gcc|asf/common/services/spi|variants/duetNG|asf/common/components/memory/sd_mmc/sd_mmc_spi.h|asf/common/components/memory/sd_mmc/sd_mmc_spi.c|asf/common/components/memory/sd_mmc/module_config_spi|asf/common/utils/osprintf|asf/common/utils/membag|asf/common/utils/stdio|asf/common/services/clock/sam4s|asf/common/services/clock/sam3s|asf/common/services/clock/sam4e|asf/sam/components/ethernet_phy|asf/sam/components/ethernet_phy/ksz8061rnb|asf/sam/components/ethernet_phy/ksz8081mnx|asf/sam/components/ethernet_phy/ksz8081rna|asf/sam/components/ethernet_phy/ksz8851snl|asf/sam/components/ethernet_phy/dm9161a|asf/sam/drivers/acc|asf/sam/drivers/aes|asf/sam/drivers/crccu|asf/sam/drivers/afec|asf/sam/drivers/udp|asf/sam/drivers/xdmac|asf/sam/drivers/abdacb|asf/common/services/delay|asf/common/services/serial|asf/common/services/fifo|asf/common/services/crc32|asf/common/services/isp|asf/common/services/gfx_mono|asf/common/services/gfx|asf/common/services/sensors|asf/common/services/hugemem|asf/common/services/freertos|asf/common/services/calendar|asf/common/services/adp|asf/common/services/usb/class/phdc|asf/common/services/usb/class/msc|asf/common/services/usb/class/hid|asf/common/services/usb/class/dfu_flip|asf/common/services/usb/class/composite|asf/common/services/usb/class/aoa|asf/common/drivers|libraries/HID|libraries/SPI|asf/sam/utils/cmsis/samg|asf/sam/utils/cmsis/same70|asf/sam/utils/cmsis/sam4s|asf/sam/utils/cmsis/sam4n|asf/sam/utils/cmsis/sam4l|asf/sam/utils/cmsis/sam4e|asf/sam/utils/cmsis/sam4cp|asf/sam/utils/cmsis/sam4cm32|asf/sam/utils/cmsis/sams70|asf/sam/utils/cmsis/samv70|asf/sam/utils/cmsis/samv71|asf/sam/utils/cmsis/sam4cm|asf/sam/utils/cmsis/sam4c|asf/sam/utils/cmsis/sam3u|asf/sam/utils/cmsis/sam3s8|asf/sam/utils/cmsis/sam3s|asf/sam/utils/cmsis/sam3n|asf/thirdparty/CMSIS/DSP_Lib|asf/common/applications|asf/sam/applications|system/CMSIS/Device/ARM/ARMCM3/Source/Templates|system/CMSIS/CMSIS/DSP_Lib|system/CMSIS/Device/ARM/ARMCM4|system/CMSIS/Device/ARM/ARMCM0|system/CMSIS/Device/ATMEL/sam3sd8|system/CMSIS/Device/ATMEL/sam3u|system/CMSIS/Device/ATMEL/sam3s|system/CMSIS/Device/ATMEL/sam3n|system/CMSIS/Device/ATMEL/sam4s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="variants/sam4s|variants/alligator|asf/sam/drivers/rswdt|variants/RADDS|asf/common/services/storage/ecc_hamming|asf/sam/utils/syscalls/gcc|asf/common/services/spi|variants/duetNG|asf/common/components/memory/sd_mmc/sd_mmc_spi.h|asf/common/components/memory/sd_mmc/sd_mmc_spi.c|asf/common/components/memory/sd_mmc/module_config_spi|asf/common/utils/osprintf|asf/common/utils/membag|asf/common/utils/stdio|asf/common/services/clock/sam4s|asf/common/services/clock/sam3s|asf/common/services/clock/sam4e|asf/sam/components/ethernet_phy|asf/sam/components/ethernet_phy/ksz8061rnb|asf/sam/components/ethernet_phy/ksz8081mnx|asf/sam/components/ethernet_phy/ksz8081rna|asf/sam/components/ethernet_phy/ksz8851snl|asf/sam/components/ethernet_phy/dm9161a|asf/sam/drivers/acc|asf/sam/drivers/aes|asf/sam/drivers/crccu|asf/sam/drivers/afec|asf/sam/drivers/udp|asf/sam/drivers/xdmac|asf/sam/drivers/abdacb|asf/common/services/delay|asf/common/services/serial|asf/common/services/fifo|asf/common/services/crc32|asf/common/services/isp|asf/common/services/gfx_mono|asf/common/services/gfx|asf/common/services/sensors|asf/common/services/hugemem|asf/common/services/freertos|asf/common/services/calendar|asf/common/services/adp|asf/common/services/usb/class/phdc|asf/common/services/usb/class/msc|asf/common/services/usb/class/hid|asf/common/services/usb/class/dfu_flip|asf/common/services/usb/class/composite|asf/common/services/usb/class/aoa|asf/common/drivers|libraries/HID|libraries/SPI|asf/sam/utils/cmsis/samg|asf/sam/utils/cmsis/same70|asf/sam/utils/cmsis/sam4s|asf/sam/utils/cmsis/sam4n|asf/sam/utils/cmsis/sam4l|asf/sam/utils/cmsis/sam4e|asf/sam/utils/cmsis/sam4cp|asf/sam/utils/cmsis/sam4cm32|asf/sam/utils/cmsis/sams70|asf/sam/utils/cmsis/samv70|asf/sam/utils/cmsis/samv71|asf/sam/utils/cmsis/sam4cm|asf/sam/utils/cmsis/sam4c|asf/sam/utils/cmsis/sam3u|asf/sam/utils/cmsis/sam3s8|asf/sam/utils/cmsis/sam3s|asf/sam/utils/cmsis/sam3n|asf/thirdparty/CMSIS/DSP_Lib|asf/common/applications|asf/sam/applications|system/CMSIS/Device/ARM/ARMCM3/Source/Templates|system/CMSIS/CMSIS/DSP_Lib|system/CMSIS/Device/ARM/ARMCM4|system/CMSIS/Device/ARM/ARMCM0|system/CMSIS/Device/ATMEL/sam3sd8|system/CMSIS/Device/ATMEL/sam3u|system/CMSIS/Device/ATMEL/sam3s|system/CMSIS/Device/ATMEL/sam3n|system/CMSIS/Device/ATMEL/sam4s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -221,8 +233,20 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.431889144" name="/" resourcePath="variants/sam4s">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1180554410" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release" unusedChildren="">
+							<option id="cdt.managedbuild.option.gnu.cross.prefix.542555289.1384202348" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.542555289"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.317148025.349922477" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.317148025"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1181177909" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.326515188"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.44036338" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1042598993"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1516360061" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.1984929218"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.546416778" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1414305257"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.1795016339" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.1891518724"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.2015887243" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.176734971"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="variants/alligator|variants/RADDS|asf/common/services/spi|asf/common/drivers/nvm|asf/common/services/clock/sam3s|asf/common/services/clock/sam3x|asf/common/services/clock/sam4s|asf/common/services/usb/class/composite|asf/common/services/usb/class/dfu_flip|asf/common/services/usb/class/hid|asf/common/services/usb/class/msc|asf/common/services/usb/class/phdc|asf/common/services/usb/class/aoa|asf/common/services/serial|asf/common/services/delay|asf/common/services/fifo|asf/common/services/crc32|asf/common/services/adp|asf/common/utils/stdio|asf/common/utils/osprintf|asf/common/utils/membag|asf/sam/components/ethernet_phy|asf/sam/drivers/acc|asf/sam/drivers/aes|asf/sam/drivers/crccu|asf/sam/drivers/adc|asf/sam/drivers/emac|asf/sam/drivers/trng|asf/sam/drivers/uotghs|asf/sam/drivers/xdmac|asf/sam/utils/cmsis/samv70|asf/sam/utils/cmsis/sams70|asf/sam/utils/cmsis/same70|asf/sam/utils/cmsis/sam4s|asf/sam/utils/cmsis/sam4n|asf/sam/utils/cmsis/sam4l|asf/sam/utils/cmsis/sam4cp|asf/sam/utils/cmsis/sam4cm32|asf/sam/utils/cmsis/sam4cm|asf/sam/utils/cmsis/samv71|asf/sam/utils/cmsis/sam4c|asf/sam/utils/cmsis/sam3x|asf/sam/utils/cmsis/sam3u|asf/sam/utils/cmsis/sam3s8|asf/sam/utils/cmsis/sam3s|asf/sam/utils/cmsis/sam3n|libraries/SPI|libraries/HID|variants/duet" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="variants/sam4s|variants/alligator|variants/RADDS|asf/common/services/spi|asf/common/drivers/nvm|asf/common/services/clock/sam3s|asf/common/services/clock/sam3x|asf/common/services/clock/sam4s|asf/common/services/usb/class/composite|asf/common/services/usb/class/dfu_flip|asf/common/services/usb/class/hid|asf/common/services/usb/class/msc|asf/common/services/usb/class/phdc|asf/common/services/usb/class/aoa|asf/common/services/serial|asf/common/services/delay|asf/common/services/fifo|asf/common/services/crc32|asf/common/services/adp|asf/common/utils/stdio|asf/common/utils/osprintf|asf/common/utils/membag|asf/sam/components/ethernet_phy|asf/sam/drivers/acc|asf/sam/drivers/aes|asf/sam/drivers/crccu|asf/sam/drivers/adc|asf/sam/drivers/emac|asf/sam/drivers/trng|asf/sam/drivers/uotghs|asf/sam/drivers/xdmac|asf/sam/utils/cmsis/samv70|asf/sam/utils/cmsis/sams70|asf/sam/utils/cmsis/same70|asf/sam/utils/cmsis/sam4s|asf/sam/utils/cmsis/sam4n|asf/sam/utils/cmsis/sam4l|asf/sam/utils/cmsis/sam4cp|asf/sam/utils/cmsis/sam4cm32|asf/sam/utils/cmsis/sam4cm|asf/sam/utils/cmsis/samv71|asf/sam/utils/cmsis/sam4c|asf/sam/utils/cmsis/sam3x|asf/sam/utils/cmsis/sam3u|asf/sam/utils/cmsis/sam3s8|asf/sam/utils/cmsis/sam3s|asf/sam/utils/cmsis/sam3n|libraries/SPI|libraries/HID|variants/duet" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -335,8 +359,20 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.707159577.630210494" name="/" resourcePath="variants/sam4s">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.16508186" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release" unusedChildren="">
+							<option id="cdt.managedbuild.option.gnu.cross.prefix.1933363652.940596112" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.1933363652"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1302577148.1954534296" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.1302577148"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.2069187087" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.746308312"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1273825653" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1484012667"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.561011150" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.2127627495"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.586860930" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.30463407"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.1851612897" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.1863001867"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.261176137" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.144431637"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="variants/alligator|asf/sam/drivers/rswdt|asf/sam/drivers/hsmci|variants/duet|asf/common/services/storage/ecc_hamming|asf/sam/utils/syscalls/gcc|asf/common/services/spi|variants/duetNG|asf/common/components/memory/sd_mmc/sd_mmc_spi.h|asf/common/components/memory/sd_mmc/sd_mmc_spi.c|asf/common/components/memory/sd_mmc/module_config_spi|asf/common/utils/osprintf|asf/common/utils/membag|asf/common/utils/stdio|asf/common/services/clock/sam4s|asf/common/services/clock/sam3s|asf/common/services/clock/sam4e|asf/sam/components/ethernet_phy|asf/sam/components/ethernet_phy/ksz8061rnb|asf/sam/components/ethernet_phy/ksz8081mnx|asf/sam/components/ethernet_phy/ksz8081rna|asf/sam/components/ethernet_phy/ksz8851snl|asf/sam/components/ethernet_phy/dm9161a|asf/sam/drivers/acc|asf/sam/drivers/aes|asf/sam/drivers/crccu|asf/sam/drivers/afec|asf/sam/drivers/udp|asf/sam/drivers/xdmac|asf/sam/drivers/abdacb|asf/common/services/delay|asf/common/services/serial|asf/common/services/fifo|asf/common/services/crc32|asf/common/services/isp|asf/common/services/gfx_mono|asf/common/services/gfx|asf/common/services/sensors|asf/common/services/hugemem|asf/common/services/freertos|asf/common/services/calendar|asf/common/services/adp|asf/common/services/usb/class/phdc|asf/common/services/usb/class/msc|asf/common/services/usb/class/hid|asf/common/services/usb/class/dfu_flip|asf/common/services/usb/class/composite|asf/common/services/usb/class/aoa|asf/common/drivers|libraries/HID|libraries/SPI|asf/sam/utils/cmsis/samg|asf/sam/utils/cmsis/same70|asf/sam/utils/cmsis/sam4s|asf/sam/utils/cmsis/sam4n|asf/sam/utils/cmsis/sam4l|asf/sam/utils/cmsis/sam4e|asf/sam/utils/cmsis/sam4cp|asf/sam/utils/cmsis/sam4cm32|asf/sam/utils/cmsis/sams70|asf/sam/utils/cmsis/samv70|asf/sam/utils/cmsis/samv71|asf/sam/utils/cmsis/sam4cm|asf/sam/utils/cmsis/sam4c|asf/sam/utils/cmsis/sam3u|asf/sam/utils/cmsis/sam3s8|asf/sam/utils/cmsis/sam3s|asf/sam/utils/cmsis/sam3n|asf/thirdparty/CMSIS/DSP_Lib|asf/common/applications|asf/sam/applications|system/CMSIS/Device/ARM/ARMCM3/Source/Templates|system/CMSIS/CMSIS/DSP_Lib|system/CMSIS/Device/ARM/ARMCM4|system/CMSIS/Device/ARM/ARMCM0|system/CMSIS/Device/ATMEL/sam3sd8|system/CMSIS/Device/ATMEL/sam3u|system/CMSIS/Device/ATMEL/sam3s|system/CMSIS/Device/ATMEL/sam3n|system/CMSIS/Device/ATMEL/sam4s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="variants/sam4s|variants/alligator|asf/sam/drivers/rswdt|asf/sam/drivers/hsmci|variants/duet|asf/common/services/storage/ecc_hamming|asf/sam/utils/syscalls/gcc|asf/common/services/spi|variants/duetNG|asf/common/components/memory/sd_mmc/sd_mmc_spi.h|asf/common/components/memory/sd_mmc/sd_mmc_spi.c|asf/common/components/memory/sd_mmc/module_config_spi|asf/common/utils/osprintf|asf/common/utils/membag|asf/common/utils/stdio|asf/common/services/clock/sam4s|asf/common/services/clock/sam3s|asf/common/services/clock/sam4e|asf/sam/components/ethernet_phy|asf/sam/components/ethernet_phy/ksz8061rnb|asf/sam/components/ethernet_phy/ksz8081mnx|asf/sam/components/ethernet_phy/ksz8081rna|asf/sam/components/ethernet_phy/ksz8851snl|asf/sam/components/ethernet_phy/dm9161a|asf/sam/drivers/acc|asf/sam/drivers/aes|asf/sam/drivers/crccu|asf/sam/drivers/afec|asf/sam/drivers/udp|asf/sam/drivers/xdmac|asf/sam/drivers/abdacb|asf/common/services/delay|asf/common/services/serial|asf/common/services/fifo|asf/common/services/crc32|asf/common/services/isp|asf/common/services/gfx_mono|asf/common/services/gfx|asf/common/services/sensors|asf/common/services/hugemem|asf/common/services/freertos|asf/common/services/calendar|asf/common/services/adp|asf/common/services/usb/class/phdc|asf/common/services/usb/class/msc|asf/common/services/usb/class/hid|asf/common/services/usb/class/dfu_flip|asf/common/services/usb/class/composite|asf/common/services/usb/class/aoa|asf/common/drivers|libraries/HID|libraries/SPI|asf/sam/utils/cmsis/samg|asf/sam/utils/cmsis/same70|asf/sam/utils/cmsis/sam4s|asf/sam/utils/cmsis/sam4n|asf/sam/utils/cmsis/sam4l|asf/sam/utils/cmsis/sam4e|asf/sam/utils/cmsis/sam4cp|asf/sam/utils/cmsis/sam4cm32|asf/sam/utils/cmsis/sams70|asf/sam/utils/cmsis/samv70|asf/sam/utils/cmsis/samv71|asf/sam/utils/cmsis/sam4cm|asf/sam/utils/cmsis/sam4c|asf/sam/utils/cmsis/sam3u|asf/sam/utils/cmsis/sam3s8|asf/sam/utils/cmsis/sam3s|asf/sam/utils/cmsis/sam3n|asf/thirdparty/CMSIS/DSP_Lib|asf/common/applications|asf/sam/applications|system/CMSIS/Device/ARM/ARMCM3/Source/Templates|system/CMSIS/CMSIS/DSP_Lib|system/CMSIS/Device/ARM/ARMCM4|system/CMSIS/Device/ARM/ARMCM0|system/CMSIS/Device/ATMEL/sam3sd8|system/CMSIS/Device/ATMEL/sam3u|system/CMSIS/Device/ATMEL/sam3s|system/CMSIS/Device/ATMEL/sam3n|system/CMSIS/Device/ATMEL/sam4s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -449,8 +485,146 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.1297149118.353894999" name="/" resourcePath="variants/sam4s">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.65545125" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release" unusedChildren="">
+							<option id="cdt.managedbuild.option.gnu.cross.prefix.1742313350.794380533" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.1742313350"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1910619934.1317318262" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.1910619934"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1075727035" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.986965141"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1166894006" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.2134758087"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1140094137" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.1400541449"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.992804800" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1071764679"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.853827259" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.444187562"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1970651080" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.1159486181"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="asf/sam/drivers/hsmci|variants/duet|asf/sam/drivers/rswdt|variants/RADDS|asf/common/services/storage/ecc_hamming|asf/sam/utils/syscalls/gcc|asf/common/services/spi|variants/duetNG|asf/common/components/memory/sd_mmc/sd_mmc_spi.h|asf/common/components/memory/sd_mmc/sd_mmc_spi.c|asf/common/components/memory/sd_mmc/module_config_spi|asf/common/utils/osprintf|asf/common/utils/membag|asf/common/utils/stdio|asf/common/services/clock/sam4s|asf/common/services/clock/sam3s|asf/common/services/clock/sam4e|asf/sam/components/ethernet_phy|asf/sam/components/ethernet_phy/ksz8061rnb|asf/sam/components/ethernet_phy/ksz8081mnx|asf/sam/components/ethernet_phy/ksz8081rna|asf/sam/components/ethernet_phy/ksz8851snl|asf/sam/components/ethernet_phy/dm9161a|asf/sam/drivers/acc|asf/sam/drivers/aes|asf/sam/drivers/crccu|asf/sam/drivers/afec|asf/sam/drivers/udp|asf/sam/drivers/xdmac|asf/sam/drivers/abdacb|asf/common/services/delay|asf/common/services/serial|asf/common/services/fifo|asf/common/services/crc32|asf/common/services/isp|asf/common/services/gfx_mono|asf/common/services/gfx|asf/common/services/sensors|asf/common/services/hugemem|asf/common/services/freertos|asf/common/services/calendar|asf/common/services/adp|asf/common/services/usb/class/phdc|asf/common/services/usb/class/msc|asf/common/services/usb/class/hid|asf/common/services/usb/class/dfu_flip|asf/common/services/usb/class/composite|asf/common/services/usb/class/aoa|asf/common/drivers|libraries/HID|libraries/SPI|asf/sam/utils/cmsis/samg|asf/sam/utils/cmsis/same70|asf/sam/utils/cmsis/sam4s|asf/sam/utils/cmsis/sam4n|asf/sam/utils/cmsis/sam4l|asf/sam/utils/cmsis/sam4e|asf/sam/utils/cmsis/sam4cp|asf/sam/utils/cmsis/sam4cm32|asf/sam/utils/cmsis/sams70|asf/sam/utils/cmsis/samv70|asf/sam/utils/cmsis/samv71|asf/sam/utils/cmsis/sam4cm|asf/sam/utils/cmsis/sam4c|asf/sam/utils/cmsis/sam3u|asf/sam/utils/cmsis/sam3s8|asf/sam/utils/cmsis/sam3s|asf/sam/utils/cmsis/sam3n|asf/thirdparty/CMSIS/DSP_Lib|asf/common/applications|asf/sam/applications|system/CMSIS/Device/ARM/ARMCM3/Source/Templates|system/CMSIS/CMSIS/DSP_Lib|system/CMSIS/Device/ARM/ARMCM4|system/CMSIS/Device/ARM/ARMCM0|system/CMSIS/Device/ATMEL/sam3sd8|system/CMSIS/Device/ATMEL/sam3u|system/CMSIS/Device/ATMEL/sam3s|system/CMSIS/Device/ATMEL/sam3n|system/CMSIS/Device/ATMEL/sam4s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="variants/sam4s|asf/sam/drivers/hsmci|variants/duet|asf/sam/drivers/rswdt|variants/RADDS|asf/common/services/storage/ecc_hamming|asf/sam/utils/syscalls/gcc|asf/common/services/spi|variants/duetNG|asf/common/components/memory/sd_mmc/sd_mmc_spi.h|asf/common/components/memory/sd_mmc/sd_mmc_spi.c|asf/common/components/memory/sd_mmc/module_config_spi|asf/common/utils/osprintf|asf/common/utils/membag|asf/common/utils/stdio|asf/common/services/clock/sam4s|asf/common/services/clock/sam3s|asf/common/services/clock/sam4e|asf/sam/components/ethernet_phy|asf/sam/components/ethernet_phy/ksz8061rnb|asf/sam/components/ethernet_phy/ksz8081mnx|asf/sam/components/ethernet_phy/ksz8081rna|asf/sam/components/ethernet_phy/ksz8851snl|asf/sam/components/ethernet_phy/dm9161a|asf/sam/drivers/acc|asf/sam/drivers/aes|asf/sam/drivers/crccu|asf/sam/drivers/afec|asf/sam/drivers/udp|asf/sam/drivers/xdmac|asf/sam/drivers/abdacb|asf/common/services/delay|asf/common/services/serial|asf/common/services/fifo|asf/common/services/crc32|asf/common/services/isp|asf/common/services/gfx_mono|asf/common/services/gfx|asf/common/services/sensors|asf/common/services/hugemem|asf/common/services/freertos|asf/common/services/calendar|asf/common/services/adp|asf/common/services/usb/class/phdc|asf/common/services/usb/class/msc|asf/common/services/usb/class/hid|asf/common/services/usb/class/dfu_flip|asf/common/services/usb/class/composite|asf/common/services/usb/class/aoa|asf/common/drivers|libraries/HID|libraries/SPI|asf/sam/utils/cmsis/samg|asf/sam/utils/cmsis/same70|asf/sam/utils/cmsis/sam4s|asf/sam/utils/cmsis/sam4n|asf/sam/utils/cmsis/sam4l|asf/sam/utils/cmsis/sam4e|asf/sam/utils/cmsis/sam4cp|asf/sam/utils/cmsis/sam4cm32|asf/sam/utils/cmsis/sams70|asf/sam/utils/cmsis/samv70|asf/sam/utils/cmsis/samv71|asf/sam/utils/cmsis/sam4cm|asf/sam/utils/cmsis/sam4c|asf/sam/utils/cmsis/sam3u|asf/sam/utils/cmsis/sam3s8|asf/sam/utils/cmsis/sam3s|asf/sam/utils/cmsis/sam3n|asf/thirdparty/CMSIS/DSP_Lib|asf/common/applications|asf/sam/applications|system/CMSIS/Device/ARM/ARMCM3/Source/Templates|system/CMSIS/CMSIS/DSP_Lib|system/CMSIS/Device/ARM/ARMCM4|system/CMSIS/Device/ARM/ARMCM0|system/CMSIS/Device/ATMEL/sam3sd8|system/CMSIS/Device/ATMEL/sam3u|system/CMSIS/Device/ATMEL/sam3s|system/CMSIS/Device/ATMEL/sam3n|system/CMSIS/Device/ATMEL/sam4s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235" moduleId="org.eclipse.cdt.core.settings" name="SAM4S">
+				<externalSettings>
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/CoreNG"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/CoreNG/SAM4S"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="CoreNG" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="a" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.staticLib" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.staticLib,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235" name="SAM4S" parent="cdt.managedbuild.config.gnu.cross.lib.release">
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235." name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1568400799" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
+							<option id="cdt.managedbuild.option.gnu.cross.prefix.1500986800" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" useByScannerDiscovery="false" value="arm-none-eabi-" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1530662974" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value="C:\Program Files (x86)\GNU Tools ARM Embedded\6 2017-q2-update" valueType="string"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1232639951" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
+							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.199276801" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1183576625" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
+								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.option.optimization.level.208795421" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.more" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.debugging.level.223823153" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.546277181" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__SAM4S8C__"/>
+									<listOptionValue builtIn="false" value="UDD_ENABLE"/>
+									<listOptionValue builtIn="false" value="UDD_NO_SLEEP_MGR"/>
+								</option>
+								<option id="gnu.c.compiler.option.include.paths.456581536" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/cores/arduino}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/header_files}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/preprocessor}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/cmsis/sam4s/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/dmac}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/efc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/hsmci}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pio}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pmc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/spi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/usart}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/utils}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/clock}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/ioport}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/sleepmgr}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/usb}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/usb/udc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/usb/class/cdc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/usb/class/cdc/device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/thirdparty/CMSIS/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/variants/sam4s}&quot;"/>
+								</option>
+								<option id="gnu.c.compiler.option.misc.other.104397759" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -std=gnu99 -mcpu=cortex-m4 -mthumb -ffunction-sections -fdata-sections -nostdlib -Wdouble-promotion -fsingle-precision-constant" valueType="string"/>
+								<option id="gnu.c.compiler.option.dialect.std.30602068" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1803202121" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.767378840" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
+								<option id="gnu.cpp.compiler.option.optimization.level.1149717444" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.more" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.debugging.level.956266763" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1242604197" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__SAM4S8C__"/>
+									<listOptionValue builtIn="false" value="UDD_ENABLE"/>
+									<listOptionValue builtIn="false" value="UDD_NO_SLEEP_MGR"/>
+								</option>
+								<option id="gnu.cpp.compiler.option.include.paths.133581936" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/cores/arduino}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/header_files}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/preprocessor}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/cmsis/sam4s/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/dmac}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/efc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pio}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pmc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/spi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/utils}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/clock}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/ioport}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/usb}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/usb/udc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/usb/class/cdc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/usb/class/cdc/device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/thirdparty/CMSIS/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libraries/Storage}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/variants/sam4s}&quot;"/>
+								</option>
+								<option id="gnu.cpp.compiler.option.other.other.1846724005" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -std=gnu++11 -mcpu=cortex-m4 -mthumb -ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions -nostdlib -Wdouble-promotion -fsingle-precision-constant" valueType="string"/>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.370649081" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.773712733" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1038195547" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.346899799" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.983362555" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.81408842" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235.1267605895" name="/" resourcePath="variants/sam4s">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.659202078" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release" unusedChildren="">
+							<option id="cdt.managedbuild.option.gnu.cross.prefix.1500986800.658155615" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.1500986800"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1530662974.823844206" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.1530662974"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.136041494" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.1183576625"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1627969972" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.767378840"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1988592150" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.773712733"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1611350524" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1038195547"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.841367935" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.346899799"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1354106023" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.983362555"/>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry excluding="asf/sam/drivers/afec|asf/sam/drivers/can|asf/sam/drivers/dmac|asf/sam/drivers/rswdt|variants/duetNG|variants/alligator|variants/RADDS|asf/common/services/spi|asf/common/drivers/nvm|asf/common/services/clock/sam3s|asf/common/services/clock/sam3x|asf/common/services/clock/sam4s|asf/common/services/usb/class/composite|asf/common/services/usb/class/dfu_flip|asf/common/services/usb/class/hid|asf/common/services/usb/class/msc|asf/common/services/usb/class/phdc|asf/common/services/usb/class/aoa|asf/common/services/serial|asf/common/services/delay|asf/common/services/fifo|asf/common/services/crc32|asf/common/services/adp|asf/common/utils/stdio|asf/common/utils/osprintf|asf/common/utils/membag|asf/sam/components/ethernet_phy|asf/sam/drivers/acc|asf/sam/drivers/aes|asf/sam/drivers/crccu|asf/sam/drivers/emac|asf/sam/drivers/trng|asf/sam/drivers/uotghs|asf/sam/drivers/xdmac|asf/sam/utils/cmsis/samv70|asf/sam/utils/cmsis/sams70|asf/sam/utils/cmsis/same70|asf/sam/utils/cmsis/sam4s|asf/sam/utils/cmsis/sam4n|asf/sam/utils/cmsis/sam4l|asf/sam/utils/cmsis/sam4cp|asf/sam/utils/cmsis/sam4cm32|asf/sam/utils/cmsis/sam4cm|asf/sam/utils/cmsis/samv71|asf/sam/utils/cmsis/sam4c|asf/sam/utils/cmsis/sam3x|asf/sam/utils/cmsis/sam3u|asf/sam/utils/cmsis/sam3s8|asf/sam/utils/cmsis/sam3s|asf/sam/utils/cmsis/sam3n|libraries/SPI|libraries/HID|variants/duet" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -471,6 +645,9 @@
 			<resource resourceType="PROJECT" workspacePath="/CoreNG"/>
 		</configuration>
 		<configuration configurationName="SAM4E_PROTO1"/>
+		<configuration configurationName="SAM4S">
+			<resource resourceType="PROJECT" workspacePath="/CoreNG"/>
+		</configuration>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>

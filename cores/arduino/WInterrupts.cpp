@@ -31,7 +31,9 @@ struct InterruptCallback
 static InterruptCallback callbacksPioA[32] = { 0 };
 static InterruptCallback callbacksPioB[32] = { 0 };
 static InterruptCallback callbacksPioC[32] = { 0 };
+#ifdef ID_PIOD
 static InterruptCallback callbacksPioD[32] = { 0 };
+#endif
 #ifdef ID_PIOE
 static InterruptCallback callbacksPioE[32] = { 0 };
 #endif
@@ -54,10 +56,12 @@ static void __initialize()
 	NVIC_ClearPendingIRQ(PIOC_IRQn);
 	NVIC_EnableIRQ(PIOC_IRQn);
 
+#ifdef ID_PIOD
 	pmc_enable_periph_clk(ID_PIOD);
 	NVIC_DisableIRQ(PIOD_IRQn);
 	NVIC_ClearPendingIRQ(PIOD_IRQn);
 	NVIC_EnableIRQ(PIOD_IRQn);
+#endif
 
 #ifdef ID_PIOE
 	pmc_enable_periph_clk(ID_PIOE);
@@ -123,11 +127,13 @@ extern "C" void attachInterrupt(uint32_t pin, void (*callback)(void*), uint32_t 
 		callbacksPioC[pos].func = callback;
 		callbacksPioC[pos].param = param;
 	}
+#ifdef ID_PIOD
 	else if (pio == PIOD)
 	{
 		callbacksPioD[pos].func = callback;
 		callbacksPioD[pos].param = param;
 	}
+#endif
 #ifdef ID_PIOE
 	else if (pio == PIOE)
 	{
@@ -227,10 +233,12 @@ extern "C" void PIOC_Handler(void)
 	CommonPioHandler(PIOC, callbacksPioC);
 }
 
+#ifdef ID_PIOD
 extern "C" void PIOD_Handler(void)
 {
 	CommonPioHandler(PIOD, callbacksPioD);
 }
+#endif
 
 #ifdef ID_PIOE
 extern "C" void PIOE_Handler(void)
