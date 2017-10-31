@@ -48,7 +48,7 @@
 #define FLASH_H_INCLUDED
 
 #include "compiler.h"
-#include "efc.h"
+#include "efc/efc.h"
 
 /// @cond 0
 /**INDENT-OFF**/

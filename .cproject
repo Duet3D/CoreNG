@@ -80,11 +80,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/preprocessor}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/cmsis/sam3x/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/dmac}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/efc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pio}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pmc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/spi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/utils}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/clock}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/ioport}&quot;"/>
@@ -105,18 +100,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.643116128" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1000374027" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.2096189025" name="/" resourcePath="variants/sam4s">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1403441807" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release" unusedChildren="">
-							<option id="cdt.managedbuild.option.gnu.cross.prefix.247642039.973594618" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.247642039"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1331950428.1098668310" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.1331950428"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1939199946" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.597788140"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1171911036" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.975309532"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.969005512" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.1294480107"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.516181914" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1446941494"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.852467980" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.597234958"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1586819944" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.643116128"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -205,12 +188,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/preprocessor}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/cmsis/sam4e/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/dmac}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/efc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pio}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pmc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/spi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/utils}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/clock}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/ioport}&quot;"/>
@@ -231,18 +208,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.176734971" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.830434724" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.431889144" name="/" resourcePath="variants/sam4s">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1180554410" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release" unusedChildren="">
-							<option id="cdt.managedbuild.option.gnu.cross.prefix.542555289.1384202348" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.542555289"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.317148025.349922477" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.317148025"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1181177909" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.326515188"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.44036338" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1042598993"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1516360061" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.1984929218"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.546416778" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1414305257"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.1795016339" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.1891518724"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.2015887243" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.176734971"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -332,11 +297,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/preprocessor}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/cmsis/sam3x/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/dmac}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/efc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pio}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pmc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/spi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/utils}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/clock}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/ioport}&quot;"/>
@@ -357,18 +317,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.144431637" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.528954818" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.707159577.630210494" name="/" resourcePath="variants/sam4s">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.16508186" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release" unusedChildren="">
-							<option id="cdt.managedbuild.option.gnu.cross.prefix.1933363652.940596112" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.1933363652"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1302577148.1954534296" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.1302577148"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.2069187087" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.746308312"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1273825653" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1484012667"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.561011150" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.2127627495"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.586860930" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.30463407"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.1851612897" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.1863001867"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.261176137" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.144431637"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -458,11 +406,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/preprocessor}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/cmsis/sam3x/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/dmac}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/efc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pio}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pmc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/spi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/utils}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/clock}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/ioport}&quot;"/>
@@ -483,18 +426,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1159486181" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1276724607" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.1297149118.353894999" name="/" resourcePath="variants/sam4s">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.65545125" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release" unusedChildren="">
-							<option id="cdt.managedbuild.option.gnu.cross.prefix.1742313350.794380533" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.1742313350"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1910619934.1317318262" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.1910619934"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1075727035" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.986965141"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1166894006" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.2134758087"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1140094137" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.1400541449"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.992804800" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1071764679"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.853827259" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.444187562"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1970651080" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.1159486181"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -583,12 +514,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/preprocessor}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/utils/cmsis/sam4s/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/dmac}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/efc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pio}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/pmc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/sam/drivers/spi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/utils}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/clock}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/asf/common/services/ioport}&quot;"/>
@@ -609,18 +534,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.983362555" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.81408842" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235.1267605895" name="/" resourcePath="variants/sam4s">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.659202078" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release" unusedChildren="">
-							<option id="cdt.managedbuild.option.gnu.cross.prefix.1500986800.658155615" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.1500986800"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1530662974.823844206" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.1530662974"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.136041494" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.1183576625"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1627969972" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.767378840"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1988592150" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.773712733"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1611350524" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1038195547"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.841367935" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.346899799"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1354106023" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.983362555"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

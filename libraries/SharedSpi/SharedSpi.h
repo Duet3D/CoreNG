@@ -19,11 +19,11 @@
 #define _GSPI_MASTER_H_
 
 #include "compiler.h"
-#include "spi.h"
+#include "spi/spi.h"
 
 #if defined(USE_SAM3X_DMAC)
-#include "dmac.h"
-#include "pmc.h"
+#include "dmac/dmac.h"
+#include "pmc/pmc.h"
 #endif
 
 /**

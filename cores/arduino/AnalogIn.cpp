@@ -16,7 +16,7 @@
 # error Analog input module not written for this processor
 #endif
 
-#include "pmc.h"
+#include "pmc/pmc.h"
 
 #if SAM3XA || SAM4S
 const unsigned int numChannels = 16;
