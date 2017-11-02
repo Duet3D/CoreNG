@@ -100,6 +100,20 @@ inline const PinDescription& GetPinDescription(Pin pin)
 	return g_APinDescription[pin];
 }
 
+// Set a pin high with no error checking
+inline void fastDigitalWriteHigh(Pin pin)
+{
+	const PinDescription& pinDesc = g_APinDescription[pin];
+	pinDesc.pPort->PIO_SODR = pinDesc.ulPin;
+}
+
+// Set a pin low with no error checking
+inline void fastDigitalWriteLow(Pin pin)
+{
+	const PinDescription& pinDesc = g_APinDescription[pin];
+	pinDesc.pPort->PIO_CODR = pinDesc.ulPin;
+}
+
 #endif
 
 #endif /* _WIRING_DIGITAL_ */

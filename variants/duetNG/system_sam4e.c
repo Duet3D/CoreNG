@@ -117,12 +117,6 @@ void SystemInit( void )
 	}
 
 	SystemCoreClock = CHIP_FREQ_CPU_MAX;
-
-	// Enable the cache
-	struct cmcc_config g_cmcc_cfg;
-	cmcc_get_config_defaults(&g_cmcc_cfg);
-	cmcc_init(CMCC, &g_cmcc_cfg);
-	cmcc_enable(CMCC);
 }
 
 /* @cond 0 */
