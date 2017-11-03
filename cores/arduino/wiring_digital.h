@@ -101,14 +101,14 @@ inline const PinDescription& GetPinDescription(Pin pin)
 }
 
 // Set a pin high with no error checking
-inline void fastDigitalWriteHigh(Pin pin)
+inline void fastDigitalWriteHigh(uint32_t pin)
 {
 	const PinDescription& pinDesc = g_APinDescription[pin];
 	pinDesc.pPort->PIO_SODR = pinDesc.ulPin;
 }
 
 // Set a pin low with no error checking
-inline void fastDigitalWriteLow(Pin pin)
+inline void fastDigitalWriteLow(uint32_t pin)
 {
 	const PinDescription& pinDesc = g_APinDescription[pin];
 	pinDesc.pPort->PIO_CODR = pinDesc.ulPin;
