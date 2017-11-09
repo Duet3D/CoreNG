@@ -54,7 +54,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_DAC) != 0)
 		// Half word transfer mode
 		dacc_set_transfer_mode(DACC_INTERFACE, 0);
 #if SAM4E
-		// The data sheet says we must also set this bit when using a peripheral clock frequency >100MHz
+		// The SAM4E data sheet says we must also set this bit when using a peripheral clock frequency >100MHz. Not applicable to the SAM4S.
 		DACC->DACC_MR |= DACC_MR_CLKDIV_DIV_4;
 #endif
 
@@ -90,8 +90,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_DAC) != 0)
 
 #if SAM3XA
 const unsigned int numPwmChannels = 8;
-#endif
-#if SAM4E || SAM4S
+#elif SAM4E || SAM4S
 const unsigned int numPwmChannels = 4;
 #endif
 
@@ -125,7 +124,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 			clockConfig.ul_clkb = PwmFastClock;
 			clockConfig.ul_mck = VARIANT_MCK;
 			pwm_init(PWM, &clockConfig);
-			PWM->PWM_SCM = 0;						// ensure no sync channels
+			PWM->PWM_SCM = 0;											// ensure no sync channels
 			PWMEnabled = true;
 		}
 
@@ -140,7 +139,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 		// We need to work around a bug in the SAM PWM channels. Enabling a channel is supposed to clear the counter, but it doesn't.
 		// A further complication is that on the SAM3X, the update-period register doesn't appear to work.
 		// So we need to make sure the counter is less than the new period before we change the period.
-		for (unsigned int j = 0; j < 5; ++j)										// twice through should be enough, but just in case...
+		for (unsigned int j = 0; j < 5; ++j)							// twice through should be enough, but just in case...
 		{
 			pwm_channel_disable(PWM, chan);
 			if (j > maxPwmLoopCount)
@@ -193,13 +192,24 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 	return true;
 }
 
+#if SAM4S
+const unsigned int numTcChannels = 6;
+#elif SAM3XA || SAM4E
 const unsigned int numTcChannels = 9;
+#endif
 
 // Map from timer channel to TC channel number
-static const uint8_t channelToChNo[] = { 0, 1, 2, 0, 1, 2, 0, 1, 2 };
+static const uint8_t channelToChNo[numTcChannels] =
+{
+	0, 1, 2,
+	0, 1, 2,
+#if SAM3XA || SAM4E
+	0, 1, 2
+#endif
+};
 
 // Map from timer channel to TC number
-static Tc * const channelToTC[] =
+static Tc * const channelToTC[numTcChannels] =
 {
 	TC0, TC0, TC0,
 	TC1, TC1, TC1,
@@ -209,7 +219,7 @@ static Tc * const channelToTC[] =
 };
 
 // Map from timer channel to TIO number
-static const uint8_t channelToId[] =
+static const uint8_t channelToId[numTcChannels] =
 {
 	ID_TC0, ID_TC1, ID_TC2,
 	ID_TC3, ID_TC4, ID_TC5,
