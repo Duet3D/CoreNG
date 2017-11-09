@@ -3,7 +3,7 @@
  *
  * \brief Power Management Controller (PMC) driver for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -101,12 +101,14 @@ extern "C" {
 #define PMC_PCK_0               0 /* PCK0 ID */
 #define PMC_PCK_1               1 /* PCK1 ID */
 #define PMC_PCK_2               2 /* PCK2 ID */
-#if SAMG55
+#if (SAMG55 || SAMV71 || SAMV70 || SAME70 || SAMS70)
 #define PMC_PCK_3               3 /* PCK3 ID */
 #define PMC_PCK_4               4 /* PCK4 ID */
 #define PMC_PCK_5               5 /* PCK5 ID */
 #define PMC_PCK_6               6 /* PCK6 ID */
+#if SAMG55
 #define PMC_PCK_7               7 /* PCK7 ID */
+#endif
 #endif
 
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CM || SAMG || SAM4CP || SAMV71 || SAMV70 || SAME70 || SAMS70)
@@ -314,9 +316,7 @@ void pmc_clr_fast_startup_input(uint32_t ul_inputs);
 void pmc_cp_set_fast_startup_input(uint32_t ul_inputs);
 void pmc_cp_clr_fast_startup_input(uint32_t ul_inputs);
 #endif
-#if (!(SAMG51 || SAMG53 || SAMG54))
 void pmc_enable_sleepmode(uint8_t uc_type);
-#endif
 void pmc_enable_waitmode(void);
 #if (!(SAMG51 || SAMG53 || SAMG54))
 void pmc_enable_backupmode(void);

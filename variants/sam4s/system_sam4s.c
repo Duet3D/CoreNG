@@ -57,6 +57,9 @@ extern "C" {
 /**INDENT-ON**/
 /* @endcond */
 
+/* External 12MHz crystal */
+#define CHIP_FREQ_XTAL_12M (12000000UL)
+
 /* Clock Settings (120MHz) */
 #define SYS_BOARD_OSCOUNT   (CKGR_MOR_MOSCXTST(0x8U))
 #define SYS_BOARD_PLLAR     (CKGR_PLLAR_ONE \

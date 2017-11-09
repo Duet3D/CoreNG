@@ -309,7 +309,11 @@ static void udd_sleep_mode(bool b_idle)
 
 static void udd_sleep_mode(bool b_idle)
 {
-	UNUSED(b_idle);		// changed by dc42
+#if 1	// dc42
+	UNUSED(b_idle);
+#else
+	b_idle = b_idle;
+#endif
 }
 
 #endif // UDD_NO_SLEEP_MGR
@@ -525,7 +529,7 @@ void udd_interrupt(void)
 ISR(UDD_USB_INT_FUN)
 #endif
 {
-#ifndef UDD_NO_SLEEP_MGR		// dc42 added
+#ifndef UDD_NO_SLEEP_MGR               // dc42 added
 	/* For fast wakeup clocks restore
 	 * In WAIT mode, clocks are switched to FASTRC.
 	 * After wakeup clocks should be restored, before that ISR should not
@@ -535,7 +539,7 @@ ISR(UDD_USB_INT_FUN)
 		cpu_irq_disable();
 		return;
 	}
-#endif							// dc42 added
+#endif                          	   // dc42 added
 
 	if (Is_udd_sof()) {
 		udd_ack_sof();
@@ -620,7 +624,7 @@ ISR(UDD_USB_INT_FUN)
 		// Ack Vbus transition and send status to high level
 		otg_unfreeze_clock();
 		otg_ack_vbus_transition();
-#if 0	// dc42 disable the next bit
+#if 0   // dc42 disable the next bit
 		otg_freeze_clock();
 #ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
 		if (Is_otg_vbus_high()) {
@@ -629,7 +633,7 @@ ISR(UDD_USB_INT_FUN)
 			udd_detach();
 		}
 #endif
-#endif
+#endif	// dc42
 #ifdef UDC_VBUS_EVENT
 		UDC_VBUS_EVENT(Is_otg_vbus_high());
 #endif
@@ -670,12 +674,12 @@ void udd_enable(void)
 	NVIC_SetPriority((IRQn_Type) ID_UOTGHS, UDD_USB_INT_LEVEL);
 	NVIC_EnableIRQ((IRQn_Type) ID_UOTGHS);
 
-#ifndef UDD_NO_SLEEP_MGR	// dc42 added
+#ifndef UDD_NO_SLEEP_MGR		// dc42 added
 	// Always authorize asynchrone USB interrupts to exit of sleep mode
 	// For SAM USB wake up device except BACKUP mode
 	pmc_set_fast_startup_input(PMC_FSMR_USBAL);
 #endif
-#endif
+#endif							// dc42
 
 #if (defined USB_ID_GPIO) && (defined UHD_ENABLE)
 	// Check that the device mode is selected by ID pin
@@ -715,7 +719,7 @@ void udd_enable(void)
 
 	otg_ack_vbus_transition();
 #if 1
-	// DC42: the VBUS detection is problematic, it can lead to the ISR looping. So we do this instead of enabling the interrupt.
+	// dc42: the VBUS detection is problematic, it can lead to the ISR looping. So we do this instead of enabling the interrupt.
 	udd_attach();
 #else
 	// Force Vbus interrupt in case of Vbus always with a high level
@@ -725,7 +729,7 @@ void udd_enable(void)
 	}
 	otg_enable_vbus_interrupt();
 	otg_freeze_clock();
-#endif
+#endif	//dc42
 
 #ifndef UDD_NO_SLEEP_MGR
 	if (!udd_b_sleep_initialized) {

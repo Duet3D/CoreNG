@@ -3,7 +3,7 @@
  *
  * \brief Reinforced Safety Watchdog Timer (RSWDT) driver for SAM.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2017 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -110,8 +110,13 @@ uint32_t rswdt_get_timeout_value(uint32_t ul_us, uint32_t ul_sclk)
 void rswdt_init(Rswdt *p_rswdt, uint32_t ul_mode, uint16_t us_counter,
 		uint16_t us_delta)
 {
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+	p_rswdt->RSWDT_MR = ul_mode |
+			RSWDT_MR_WDV(us_counter);
+#else
 	p_rswdt->RSWDT_MR = ul_mode |
 			RSWDT_MR_WDV(us_counter) | RSWDT_MR_WDD(us_delta);
+#endif
 }
 
 /**

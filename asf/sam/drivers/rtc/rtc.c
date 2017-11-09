@@ -3,7 +3,7 @@
  *
  * \brief Real-Time Clock (RTC) driver for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -224,12 +224,12 @@ uint32_t rtc_set_time(Rtc *p_rtc, uint32_t ul_hour, uint32_t ul_minute,
 			((ul_second % BCD_FACTOR) << RTC_TIMR_SEC_Pos);
 
 	/* Update time register. Check the spec for the flow. */
+	while ((p_rtc->RTC_SR & RTC_SR_SEC) != RTC_SR_SEC);
 	p_rtc->RTC_CR |= RTC_CR_UPDTIM;
 	while ((p_rtc->RTC_SR & RTC_SR_ACKUPD) != RTC_SR_ACKUPD);
 	p_rtc->RTC_SCCR = RTC_SCCR_ACKCLR;
 	p_rtc->RTC_TIMR = ul_time;
 	p_rtc->RTC_CR &= (~RTC_CR_UPDTIM);
-	p_rtc->RTC_SCCR |= RTC_SCCR_SECCLR;
 
 	return (p_rtc->RTC_VER & RTC_VER_NVTIM);
 }
@@ -374,14 +374,12 @@ uint32_t rtc_set_date(Rtc *p_rtc, uint32_t ul_year, uint32_t ul_month,
 			((ul_day % BCD_FACTOR) << RTC_CALR_DATE_Pos);
 
 	/* Update calendar register. Check the spec for the flow. */
+	while ((p_rtc->RTC_SR & RTC_SR_SEC) != RTC_SR_SEC);
 	p_rtc->RTC_CR |= RTC_CR_UPDCAL;
 	while ((p_rtc->RTC_SR & RTC_SR_ACKUPD) != RTC_SR_ACKUPD);
-
 	p_rtc->RTC_SCCR = RTC_SCCR_ACKCLR;
 	p_rtc->RTC_CALR = ul_date;
 	p_rtc->RTC_CR &= (~RTC_CR_UPDCAL);
-	/* Clear SECENV in SCCR */
-	p_rtc->RTC_SCCR |= RTC_SCCR_SECCLR;
 
 	return (p_rtc->RTC_VER & RTC_VER_NVCAL);
 }
@@ -503,9 +501,11 @@ void rtc_set_calendar_event(Rtc *p_rtc, uint32_t ul_selection)
 	p_rtc->RTC_CR |= (ul_selection << RTC_CR_CALEVSEL_Pos) & RTC_CR_CALEVSEL_Msk;
 }
 
-#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4N) || (SAM4C) || (SAMG) || (SAM4CP) || (SAM4CM))
+#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4N) || (SAM4C) || (SAMG) || (SAM4CP) || (SAM4CM) || defined(__DOXYGEN__))
 /**
  * \brief Set the RTC calendar mode.
+ *
+ * \note This function is only available on SAM3S8/3SD8/4S/4N/4C/G devices.
  *
  * \param p_rtc Pointer to an RTC instance.
  * \param ul_mode 1 for Persian mode,0 for Gregorian mode.
@@ -521,6 +521,8 @@ void rtc_set_calendar_mode(Rtc *p_rtc, uint32_t ul_mode)
 
 /**
  * \brief Get the RTC calendar mode.
+ *
+ * \note This function is only available on SAM3S8/3SD8/4S/4N/4C/G devices.
  *
  * \param p_rtc Pointer to an RTC instance.
  *
@@ -540,6 +542,8 @@ uint32_t rtc_get_calendar_mode(Rtc *p_rtc)
 /**
  * \brief Set the RTC calibration.
  *
+ * \note This function is only available on SAM3S8/3SD8/4S/4N/4C/G devices.
+ *
  * \param p_rtc Pointer to an RTC instance.
  * \param ul_direction_ppm Positive/negative correction.
  * \param ul_correction Correction value.
@@ -558,6 +562,7 @@ void rtc_set_calibration(Rtc *p_rtc, uint32_t ul_direction_ppm,
 		ul_temp &= (~RTC_MR_NEGPPM);
 	}
 
+	ul_temp &= (~RTC_MR_CORRECTION_Msk);
 	ul_temp |= RTC_MR_CORRECTION(ul_correction);
 
 	if (ul_range_ppm) {
@@ -570,9 +575,11 @@ void rtc_set_calibration(Rtc *p_rtc, uint32_t ul_direction_ppm,
 }
 #endif
 
-#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C) || (SAMG) || (SAM4CP) || (SAM4CM) || SAMV71 || SAMV70 || SAME70 || SAMS70)
+#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C) || (SAMG) || (SAM4CP) || (SAM4CM) || SAMV71 || SAMV70 || SAME70 || SAMS70 || defined(__DOXYGEN__))
 /**
  * \brief Set the RTC output waveform.
+ *
+ * \note This function is only available on SAM3S8/3SD8/4S/4C/G/V/S/E devices.
  *
  * \param p_rtc Pointer to an RTC instance.
  * \param ul_channel Output channel selection.
@@ -683,9 +690,11 @@ void rtc_set_waveform(Rtc *p_rtc, uint32_t ul_channel, uint32_t ul_value)
 	}
 }
 
-#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C) || SAMV71 || SAMV70 || SAME70 || SAMS70)
+#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C) || SAMV71 || SAMV70 || SAME70 || SAMS70 || defined(__DOXYGEN__))
 /**
  * \brief Set the pulse output waveform parameters.
+ *
+ * \note This function is only available on SAM3S8/3SD8/4S/4C/V/S/E devices.
  *
  * \param p_rtc Pointer to an RTC instance.
  * \param ul_time_high High duration of the output pulse.
@@ -707,9 +716,11 @@ void rtc_set_pulse_parameter(Rtc *p_rtc, uint32_t ul_time_high,
 #endif
 
 
-#if ((SAM3N) || (SAM3U) || (SAM3XA))
+#if ((SAM3N) || (SAM3U) || (SAM3XA) || defined(__DOXYGEN__))
 /**
  * \brief Enable or disable write protection of RTC registers.
+ *
+ * \note This function is only available on SAM3N/3U/3XA devices.
  *
  * \param p_rtc Pointer to an RTC instance.
  * \param ul_enable 1 to enable, 0 to disable.
@@ -724,9 +735,11 @@ void rtc_set_writeprotect(Rtc *p_rtc, uint32_t ul_enable)
 }
 #endif /* ((SAM3N) || (SAM3U) || (SAM3XA)) */
 
-#if SAM4C || SAM4CP || SAM4CM
+#if SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__)
 /**
  * \brief Get the RTC tamper time value.
+ *
+ * \note This function is only available on SAM4C devices.
  *
  * \note This function should be called before rtc_get_tamper_source()
  *       function call, Otherwise the tamper time will be cleared.
@@ -774,6 +787,8 @@ void rtc_get_tamper_time(Rtc *p_rtc, uint32_t *pul_hour, uint32_t *pul_minute,
 
 /**
  * \brief Get the RTC tamper date.
+ *
+ * \note This function is only available on SAM4C devices.
  *
  * \note This function should be called before rtc_get_tamper_source()
  *       function call, Otherwise the tamper date will be cleared.
@@ -828,6 +843,8 @@ void rtc_get_tamper_date(Rtc *p_rtc, uint32_t *pul_year, uint32_t *pul_month,
 /**
  * \brief Get the RTC tamper source.
  *
+ * \note This function is only available on SAM4C devices.
+ *
  * \param p_rtc Pointer to an RTC instance.
  * \param reg_num Current tamper register set number.
  *
@@ -841,6 +858,8 @@ uint32_t rtc_get_tamper_source(Rtc *p_rtc, uint8_t reg_num)
 
 /**
  * \brief Get the RTC tamper event counter.
+ *
+ * \note This function is only available on SAM4C devices.
  *
  * \note This function should be called before rtc_get_tamper_source()
  *       function call, Otherwise the tamper event counter will be cleared.
@@ -857,6 +876,8 @@ uint32_t rtc_get_tamper_event_counter(Rtc *p_rtc)
 
 /**
  * \brief Check the system is in backup mode when RTC tamper event happen.
+ *
+ * \note This function is only available on SAM4C devices.
  *
  * \note This function should be called before rtc_get_tamper_source()
  *       function call, Otherwise the flag indicates tamper occur in backup
@@ -878,9 +899,11 @@ bool rtc_is_tamper_occur_in_backup_mode(Rtc *p_rtc, uint8_t reg_num)
 }
 #endif
 
-#if (SAMG55)
+#if (SAMG55) || defined(__DOXYGEN__)
 /**
  * \brief Get the RTC milliseconds value.
+ *
+ * \note This function is only available on SAMG55 devices.
  *
  * \param p_rtc Pointer to an RTC instance.
  *

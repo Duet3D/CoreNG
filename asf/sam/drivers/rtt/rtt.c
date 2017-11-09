@@ -3,7 +3,7 @@
  *
  * \brief Real-time Timer (RTT) driver for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -203,7 +203,13 @@ void rtt_disable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
  */
 uint32_t rtt_read_timer_value(Rtt *p_rtt)
 {
-	return p_rtt->RTT_VR;
+	uint32_t rtt_val = p_rtt->RTT_VR;
+
+	while (rtt_val != p_rtt->RTT_VR) {
+		rtt_val = p_rtt->RTT_VR;
+	}
+
+	return rtt_val;
 }
 
 /**

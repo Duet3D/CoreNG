@@ -3,7 +3,7 @@
  *
  * \brief Real-Time Clock (RTC) driver for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -85,26 +85,26 @@ uint32_t rtc_get_valid_entry(Rtc *p_rtc);
 void rtc_set_time_event(Rtc *p_rtc, uint32_t ul_selection);
 void rtc_set_calendar_event(Rtc *p_rtc, uint32_t ul_selection);
 
-#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4N) || (SAM4C) || (SAMG) || (SAM4CP) || (SAM4CM))
+#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4N) || (SAM4C) || (SAMG) || (SAM4CP) || (SAM4CM) || defined(__DOXYGEN__))
 void rtc_set_calendar_mode(Rtc *p_rtc, uint32_t ul_mode);
 uint32_t rtc_get_calendar_mode(Rtc *p_rtc);
 void rtc_set_calibration(Rtc *p_rtc, uint32_t ul_direction_ppm,
 		uint32_t ul_correction, uint32_t ul_range_ppm);
 #endif
 
-#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C) || (SAMG) || (SAM4CP) || (SAM4CM) || SAMV71 || SAMV70 || SAME70 || SAMS70)
+#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C) || (SAMG) || (SAM4CP) || (SAM4CM) || SAMV71 || SAMV70 || SAME70 || SAMS70 || defined(__DOXYGEN__))
 void rtc_set_waveform(Rtc *p_rtc, uint32_t ul_channel, uint32_t ul_value);
-#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C)|| (SAM4CP) || (SAM4CM) || SAMV71 || SAMV70 || SAME70 || SAMS70)
+#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C)|| (SAM4CP) || (SAM4CM) || SAMV71 || SAMV70 || SAME70 || SAMS70 || defined(__DOXYGEN__))
 void rtc_set_pulse_parameter(Rtc *p_rtc, uint32_t ul_time_high,
 		uint32_t ul_period);
 #endif
 #endif
 
-#if ((SAM3N) || (SAM3U) || (SAM3XA))
+#if ((SAM3N) || (SAM3U) || (SAM3XA) || defined(__DOXYGEN__))
 void rtc_set_writeprotect(Rtc *p_rtc, uint32_t ul_enable);
 #endif /* ((SAM3N) || (SAM3U) || (SAM3XA)) */
 
-#if ((SAM4C) || (SAM4CP) || (SAM4CM))
+#if ((SAM4C) || (SAM4CP) || (SAM4CM) || defined(__DOXYGEN__))
 void rtc_get_tamper_time(Rtc *p_rtc, uint32_t *pul_hour, uint32_t *pul_minute,
 		uint32_t *pul_second, uint8_t reg_num);
 void rtc_get_tamper_date(Rtc *p_rtc, uint32_t *pul_year, uint32_t *pul_month,
@@ -114,7 +114,7 @@ uint32_t rtc_get_tamper_event_counter(Rtc *p_rtc);
 bool rtc_is_tamper_occur_in_backup_mode(Rtc *p_rtc, uint8_t reg_num);
 #endif
 
-#if (SAMG55)
+#if (SAMG55 || defined(__DOXYGEN__))
 uint32_t rtc_get_milliseconds(Rtc *p_rtc);
 #endif
 

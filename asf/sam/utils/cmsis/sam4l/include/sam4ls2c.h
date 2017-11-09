@@ -3,7 +3,7 @@
  *
  * \brief Header file for SAM4LS2C
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2017 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -73,7 +73,7 @@ typedef volatile       uint8_t  RoReg8;  /**< Read only  8-bit register (volatil
 #endif
 typedef volatile       uint32_t WoReg;   /**< Write only 32-bit register (volatile unsigned int) */
 typedef volatile       uint16_t WoReg16; /**< Write only 16-bit register (volatile unsigned int) */
-typedef volatile       uint32_t WoReg8;  /**< Write only  8-bit register (volatile unsigned int) */
+typedef volatile       uint8_t  WoReg8;  /**< Write only  8-bit register (volatile unsigned int) */
 typedef volatile       uint32_t RwReg;   /**< Read-Write 32-bit register (volatile unsigned int) */
 typedef volatile       uint16_t RwReg16; /**< Read-Write 16-bit register (volatile unsigned int) */
 typedef volatile       uint8_t  RwReg8;  /**< Read-Write  8-bit register (volatile unsigned int) */
@@ -385,7 +385,7 @@ void TWIM3_Handler               ( void );
  * \brief Configuration of the Cortex-M4 Processor and Core Peripherals
  */
 
-#define LITTLE_ENDIAN          1        
+#define LITTLE_ENDIAN          1
 #define __BB_PRESENT           0         /*!< BIT_BANDING present or not */
 #define __CLKGATE_PRESENT      1         /*!< CLKGATE present or not */
 #define __CM4_REV              1         /*!< Core revision r0p1 */
@@ -810,7 +810,7 @@ void TWIM3_Handler               ( void );
 /* ************************************************************************** */
 /** \addtogroup SAM4LS2C_compat Definitions */
 /*@{*/
-// These defines are used to keep compatibility with existing 
+// These defines are used to keep compatibility with existing
 // sam/drivers/usart implementation from SAM3/4 products with SAM4L product.
 #define US_MR_USART_MODE_HW_HANDSHAKING  US_MR_USART_MODE_HARDWARE
 #define US_MR_USART_MODE_IS07816_T_0     US_MR_USART_MODE_ISO7816_T0
@@ -833,20 +833,20 @@ void TWIM3_Handler               ( void );
 #define CHIP_FREQ_FLASH_HSEN_FWS_0 (18000000UL) /**< \brief Maximum operating frequency when FWS is 0 and the FLASH HS mode is enabled */
 #define CHIP_FREQ_FLASH_HSEN_FWS_1 (36000000UL) /**< \brief Maximum operating frequency when FWS is 1 and the FLASH HS mode is enabled */
 
-// These defines are used to keep compatibility with existing 
-// sam/drivers/tc implementation from SAM3/4 products with SAM4L product. 
+// These defines are used to keep compatibility with existing
+// sam/drivers/tc implementation from SAM3/4 products with SAM4L product.
 #define TC_CMR_LDRA_RISING    TC_CMR_LDRA_POS_EDGE_TIOA
 #define TC_CMR_LDRB_FALLING   TC_CMR_LDRB_NEG_EDGE_TIOA
 #define TC_CMR_ETRGEDG_FALLING TC_CMR_ETRGEDG_NEG_EDGE
 
-// These defines are used to keep compatibility with existing 
-// sam/drivers/spi implementation from SAM3/4 products with SAM4L product. 
+// These defines are used to keep compatibility with existing
+// sam/drivers/spi implementation from SAM3/4 products with SAM4L product.
 #define SPI_CSR_BITS_8_BIT    SPI_CSR_BITS_8_BPT
 #define SPI_WPCR_SPIWPKEY_VALUE SPI_WPCR_WPKEY_VALUE
 #define SPI_WPCR_SPIWPEN      SPI_WPCR_WPEN
 
-// These defines are used to keep compatibility with existing 
-// sam/drivers/crccu implementation from SAM3/4 products with SAM4L product. 
+// These defines are used to keep compatibility with existing
+// sam/drivers/crccu implementation from SAM3/4 products with SAM4L product.
 #define CRCCU_DMA_EN          CRCCU_DMAEN
 #define CRCCU_DMA_DIS         CRCCU_DMADIS
 #define CRCCU_DMA_SR          CRCCU_DMASR

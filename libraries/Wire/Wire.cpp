@@ -18,9 +18,19 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <cstring>
 #include "Wire.h"
+
+#if SAME70
+// TWI disabled for now
+#else
+
+#if SAME70
+#include "twihs/twihs.h"
+#else
 #include "twi/twi.h"
+#endif
+
+#include <cstring>
 
 /**
  * \brief Configures a TWI peripheral to operate in master mode, at the given
@@ -539,6 +549,8 @@ TwoWire Wire1 = TwoWire(WIRE1_INTERFACE, Wire1_Init);
 void WIRE1_ISR_HANDLER(void) {
 	Wire1.onService();
 }
+#endif
+
 #endif
 
 // End

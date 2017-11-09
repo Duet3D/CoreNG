@@ -3,7 +3,7 @@
  *
  * \brief SAM HSMCI driver
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,10 +44,16 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+#if 0	//dc42
+#include <asf.h>
+#include "conf_board.h"
+#include "../../../../libraries/Storage/sd_mmc_protocol.h"
+#endif
+
+#include "sysclk.h"
 #include "pmc.h"
 #include "hsmci.h"
 #include "conf_sd_mmc.h"
-#include "sysclk.h"
 
 /**
  * \ingroup sam_drivers_hsmci
@@ -164,7 +170,7 @@ static void hsmci_reset(void)
  */
 static void hsmci_set_speed(uint32_t speed, uint32_t mck)
 {
-#if (SAM4E)
+#if (SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70)
 	uint32_t clkdiv = 0;
 	uint32_t clkodd = 0;
 	// clock divider, represent (((clkdiv << 1) + clkodd) + 2)
@@ -217,19 +223,19 @@ static void hsmci_set_speed(uint32_t speed, uint32_t mck)
 
 }
 
-#if 1	//dc42
+#if 1  // dc42
 // Get the speed of the HSMCI clock for reporting purposes, in bytes/sec
 uint32_t hsmci_get_speed()
 {
-#if SAM4E
-	const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
-	const uint32_t clkodd = ((HSMCI->HSMCI_MR & HSMCI_MR_CLKODD) != 0) ? 1 : 0;
-	const uint32_t hsmciClock = sysclk_get_cpu_hz()/((2 * clkdiv) + clkodd + 2);
+#if SAM4E || SAME70
+       const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
+       const uint32_t clkodd = ((HSMCI->HSMCI_MR & HSMCI_MR_CLKODD) != 0) ? 1 : 0;
+       const uint32_t hsmciClock = sysclk_get_cpu_hz()/((2 * clkdiv) + clkodd + 2);
 #else
-	const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
-	const uint32_t hsmciClock =  sysclk_get_cpu_hz()/((2 * clkdiv) + 2);
+       const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
+       const uint32_t hsmciClock =  sysclk_get_cpu_hz()/((2 * clkdiv) + 2);
 #endif
-	return hsmciClock/2;		// HSMCI interface is 4 bits wide, so divide by 2 to get bytes/sec
+       return hsmciClock/2;            // HSMCI interface is 4 bits wide, so divide by 2 to get bytes/sec
 }
 
 static hsmciIdleFunc_t hsmciIdleFunc = NULL;
@@ -237,9 +243,9 @@ static hsmciIdleFunc_t hsmciIdleFunc = NULL;
 // Set the idle function and return the old one
 hsmciIdleFunc_t hsmci_set_idle_func(hsmciIdleFunc_t p)
 {
-	hsmciIdleFunc_t ret = hsmciIdleFunc;
-	hsmciIdleFunc = p;
-	return ret;
+       hsmciIdleFunc_t ret = hsmciIdleFunc;
+       hsmciIdleFunc = p;
+       return ret;
 }
 
 #endif
@@ -392,7 +398,7 @@ void hsmci_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width, bool h
 		HSMCI->HSMCI_CFG &= ~HSMCI_CFG_HSMODE;
 	}
 
-	hsmci_set_speed(clock, sysclk_get_cpu_hz());
+	hsmci_set_speed(clock, sysclk_get_peripheral_hz());
 
 	switch (slot) {
 	case 0:
@@ -601,6 +607,12 @@ bool hsmci_read_word(uint32_t* value)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI
 	do {
+#if 1  // dc42 changes
+		if (hsmciIdleFunc != NULL)
+		{
+			hsmciIdleFunc();
+		}
+#endif
 		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
@@ -641,6 +653,12 @@ bool hsmci_write_word(uint32_t value)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
 	do {
+#if 1  // dc42 changes
+		if (hsmciIdleFunc != NULL)
+		{
+			hsmciIdleFunc();
+		}
+#endif
 		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
@@ -655,7 +673,6 @@ bool hsmci_write_word(uint32_t value)
 }
 
 #ifdef HSMCI_SR_DMADONE
-
 bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 {
 	uint32_t cfg, nb_data;
@@ -718,7 +735,7 @@ bool hsmci_wait_end_of_read_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI
 	do {
-#if 1	// dc42 changes
+#if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
 			hsmciIdleFunc();
@@ -807,7 +824,7 @@ bool hsmci_wait_end_of_write_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
 	do {
-#if 1	// dc42 changes
+#if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
 			hsmciIdleFunc();
@@ -871,7 +888,7 @@ bool hsmci_wait_end_of_read_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
 	do {
-#if 1	// dc42 changes
+#if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
 			hsmciIdleFunc();
@@ -895,7 +912,7 @@ bool hsmci_wait_end_of_read_blocks(void)
 	// It is the last transfer, then wait command completed
 	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
 	do {
-#if 1	// dc42 changes
+#if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
 			hsmciIdleFunc();
@@ -946,7 +963,7 @@ bool hsmci_wait_end_of_write_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
 	do {
-#if 1	// dc42 changes
+#if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
 			hsmciIdleFunc();
@@ -971,7 +988,7 @@ bool hsmci_wait_end_of_write_blocks(void)
 	// It is the last transfer, then wait command completed
 	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
 	do {
-#if 1	// dc42 changes
+#if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
 			hsmciIdleFunc();
@@ -1005,17 +1022,33 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 
 	nb_data = nb_block * hsmci_block_size;
 
-	p_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
-					| XDMAC_CC_MBSIZE_SINGLE
-					| XDMAC_CC_DSYNC_PER2MEM
-					| XDMAC_CC_CSIZE_CHK_1
-					| XDMAC_CC_DWIDTH_WORD
-					| XDMAC_CC_SIF_AHB_IF1
-					| XDMAC_CC_DIF_AHB_IF0
-					| XDMAC_CC_SAM_FIXED_AM
-					| XDMAC_CC_DAM_INCREMENTED_AM
-					| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
-	p_cfg.mbr_ubc = nb_data / 4;
+	if((uint32_t)dest & 3) {
+		p_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+						| XDMAC_CC_MBSIZE_SINGLE
+						| XDMAC_CC_DSYNC_PER2MEM
+						| XDMAC_CC_CSIZE_CHK_1
+						| XDMAC_CC_DWIDTH_BYTE
+						| XDMAC_CC_SIF_AHB_IF1
+						| XDMAC_CC_DIF_AHB_IF0
+						| XDMAC_CC_SAM_FIXED_AM
+						| XDMAC_CC_DAM_INCREMENTED_AM
+						| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
+		p_cfg.mbr_ubc = nb_data;
+		HSMCI->HSMCI_MR |= HSMCI_MR_FBYTE;
+	} else {
+		p_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+						| XDMAC_CC_MBSIZE_SINGLE
+						| XDMAC_CC_DSYNC_PER2MEM
+						| XDMAC_CC_CSIZE_CHK_1
+						| XDMAC_CC_DWIDTH_WORD
+						| XDMAC_CC_SIF_AHB_IF1
+						| XDMAC_CC_DIF_AHB_IF0
+						| XDMAC_CC_SAM_FIXED_AM
+						| XDMAC_CC_DAM_INCREMENTED_AM
+						| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
+		p_cfg.mbr_ubc = nb_data / 4;
+		HSMCI->HSMCI_MR &= ~HSMCI_MR_FBYTE;
+	}
 	p_cfg.mbr_sa = (uint32_t)&(HSMCI->HSMCI_FIFO[0]);
 	p_cfg.mbr_da = (uint32_t)dest;
 	xdmac_configure_transfer(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, &p_cfg);
@@ -1031,6 +1064,12 @@ bool hsmci_wait_end_of_read_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI
 	do {
+#if 1  // dc42 changes
+		if (hsmciIdleFunc != NULL)
+		{
+			hsmciIdleFunc();
+		}
+#endif
 		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
@@ -1065,17 +1104,33 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 
 	nb_data = nb_block * hsmci_block_size;
 
-	p_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
-					| XDMAC_CC_MBSIZE_SINGLE
-					| XDMAC_CC_DSYNC_MEM2PER
-					| XDMAC_CC_CSIZE_CHK_1
-					| XDMAC_CC_DWIDTH_WORD
-					| XDMAC_CC_SIF_AHB_IF0
-					| XDMAC_CC_DIF_AHB_IF1
-					| XDMAC_CC_SAM_INCREMENTED_AM
-					| XDMAC_CC_DAM_FIXED_AM
-					| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
-	p_cfg.mbr_ubc = nb_data / 4;
+	if((uint32_t)src & 3) {
+		p_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+						| XDMAC_CC_MBSIZE_SINGLE
+						| XDMAC_CC_DSYNC_MEM2PER
+						| XDMAC_CC_CSIZE_CHK_1
+						| XDMAC_CC_DWIDTH_BYTE
+						| XDMAC_CC_SIF_AHB_IF0
+						| XDMAC_CC_DIF_AHB_IF1
+						| XDMAC_CC_SAM_INCREMENTED_AM
+						| XDMAC_CC_DAM_FIXED_AM
+						| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
+		p_cfg.mbr_ubc = nb_data;
+		HSMCI->HSMCI_MR |= HSMCI_MR_FBYTE;
+	} else {
+		p_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+						| XDMAC_CC_MBSIZE_SINGLE
+						| XDMAC_CC_DSYNC_MEM2PER
+						| XDMAC_CC_CSIZE_CHK_1
+						| XDMAC_CC_DWIDTH_WORD
+						| XDMAC_CC_SIF_AHB_IF0
+						| XDMAC_CC_DIF_AHB_IF1
+						| XDMAC_CC_SAM_INCREMENTED_AM
+						| XDMAC_CC_DAM_FIXED_AM
+						| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
+		p_cfg.mbr_ubc = nb_data / 4;
+		HSMCI->HSMCI_MR &= ~HSMCI_MR_FBYTE;
+	}
 	p_cfg.mbr_sa = (uint32_t)src;
 	p_cfg.mbr_da = (uint32_t)&(HSMCI->HSMCI_FIFO[0]);
 	xdmac_configure_transfer(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, &p_cfg);
@@ -1091,6 +1146,12 @@ bool hsmci_wait_end_of_write_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI
 	do {
+#if 1  // dc42 changes
+		if (hsmciIdleFunc != NULL)
+		{
+			hsmciIdleFunc();
+		}
+#endif
 		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 		HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {

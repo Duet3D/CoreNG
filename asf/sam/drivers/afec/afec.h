@@ -3,7 +3,7 @@
  *
  * \brief Analog-Front-End Controller driver for SAM.
  *
- * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -104,7 +104,7 @@ enum afec_trigger {
 	AFEC_TRIG_FREERUN = 0xFF,
 };
 
-#if defined __SAM4E8C__  || defined __SAM4E16C__ || defined __SAM4E8CB__  || defined__SAM4E16CB__
+#if defined __SAM4E8C__  || defined __SAM4E16C__ || defined __SAM4E8CB__  || defined __SAM4E16CB__
 /** Definitions for AFEC channel number */
 enum afec_channel_num {
 	AFEC_CHANNEL_0 = 0,

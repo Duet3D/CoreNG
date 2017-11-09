@@ -524,7 +524,9 @@ void pwm_channel_update_output(Pwm *p_pwm, pwm_channel_t *p_channel,
 		pwm_output_t *p_output, bool b_sync)
 {
 	uint32_t ch_num = p_channel->channel;
+#if 0	// dc42
 	uint32_t channel = (1 << ch_num);
+#endif
 
 	bool override_pwmh = p_output->b_override_pwmh;
 	bool override_pwml = p_output->b_override_pwml;
@@ -544,14 +546,16 @@ void pwm_channel_update_output(Pwm *p_pwm, pwm_channel_t *p_channel,
 	p_pwm->PWM_OOV = override_value;
 
 	/* Apply new output selection */
-	if (override_pwml && override_pwmh) {
-		b_sync ? (p_pwm->PWM_OSSUPD =
-				(channel | (channel << 16))) : (p_pwm->PWM_OSS =
-				(channel | (channel << 16)));
+	if (b_sync) {
+		p_pwm->PWM_OSSUPD = ((override_pwml << ch_num) << 16) |
+			(override_pwmh << ch_num);
+		p_pwm->PWM_OSCUPD = ((!override_pwml << ch_num) << 16) |
+			(!override_pwmh << ch_num);
 	} else {
-		b_sync ? (p_pwm->PWM_OSCUPD =
-				(channel | (channel << 16))) : (p_pwm->PWM_OSC =
-				(channel | (channel << 16)));
+		p_pwm->PWM_OSS = ((override_pwml << ch_num) << 16) |
+			(override_pwmh << ch_num);
+		p_pwm->PWM_OSC = ((!override_pwml << ch_num) << 16) |
+			(!override_pwmh << ch_num);
 	}
 }
 

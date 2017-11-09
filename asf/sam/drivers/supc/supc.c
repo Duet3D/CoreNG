@@ -3,7 +3,7 @@
  *
  * \brief Supply Controller (SUPC) driver for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -72,6 +72,11 @@ extern "C" {
 void supc_enable_backup_mode(Supc *p_supc)
 {
 	p_supc->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF;
+	uint32_t ul_dummy = p_supc->SUPC_MR;
+#if 1	// dc42
+	UNUSED(ul_dummy);
+#endif
+	__DSB();
 	__WFE();
 	__WFI();
 }

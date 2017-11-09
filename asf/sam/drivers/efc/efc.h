@@ -3,7 +3,7 @@
  *
  * \brief Embedded Flash Controller (EFC) driver for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -77,7 +77,7 @@ typedef enum efc_rc {
 #define EFC_FCMD_EWP     0x03  //!< Erase page and write page
 #define EFC_FCMD_EWPL    0x04  //!< Erase page and write page then lock
 #define EFC_FCMD_EA      0x05  //!< Erase all
-#if (SAM3SD8)
+#if (SAM3S8 || SAM3SD8)
 #define EFC_FCMD_EPL     0x06  //!< Erase plane
 #endif
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || \
