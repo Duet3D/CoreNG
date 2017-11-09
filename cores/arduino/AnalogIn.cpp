@@ -20,8 +20,7 @@
 
 #if SAM3XA || SAM4S
 const unsigned int numChannels = 16;
-#endif
-#if SAM4E
+#elif SAM4E
 const unsigned int numChannels = 32;
 #endif
 
@@ -57,8 +56,7 @@ void AnalogInInit()
 	adc_configure_trigger(ADC, ADC_TRIG_SW, 0);						// Disable hardware trigger
 	adc_disable_interrupt(ADC, 0xFFFFFFFF);							// Disable all ADC interrupts
 	adc_disable_all_channel(ADC);
-#endif
-#if SAM4E
+#elif SAM4E
 	afec_enable(AFEC0);
 	afec_enable(AFEC1);
 	afec_config cfg;
@@ -91,15 +89,17 @@ void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 	{
 		if (enable)
 		{
-			activeChannels |= (1 << channel);
+			activeChannels |= (1u << channel);
 #if SAM3XA || SAM4S
 			adc_enable_channel(ADC, GetAdcChannel(channel));
+#if SAM4S
+			adc_set_calibmode(ADC);										// auto calibrate at start of next sequence
+#endif
 			if (GetAdcChannel(channel) == ADC_TEMPERATURE_SENSOR)
 			{
 				adc_enable_ts(ADC);
 			}
-#endif
-#if SAM4E
+#elif SAM4E
 			afec_ch_config cfg;
 			afec_ch_get_config_defaults(&cfg);
 			afec_ch_set_config(GetAfec(channel), GetAfecChannel(channel), &cfg);
@@ -110,15 +110,14 @@ void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 		}
 		else
 		{
-			activeChannels &= ~(1 << channel);
+			activeChannels &= ~(1u << channel);
 #if SAM3XA || SAM4S
 			adc_disable_channel(ADC, GetAdcChannel(channel));
 			if (GetAdcChannel(channel) == ADC_TEMPERATURE_SENSOR)
 			{
 				adc_disable_ts(ADC);
 			}
-#endif
-#if SAM4E
+#elif SAM4E
 			afec_channel_disable(GetAfec(channel), GetAfecChannel(channel));
 #endif
 		}
@@ -132,8 +131,7 @@ uint16_t AnalogInReadChannel(AnalogChannelNumber channel)
 	{
 #if SAM3XA || SAM4S
 		return adc_get_channel_value(ADC, GetAdcChannel(channel));
-#endif
-#if SAM4E
+#elif SAM4E
 		return afec_channel_get_value(GetAfec(channel), GetAfecChannel(channel));
 #endif
 	}
@@ -174,7 +172,7 @@ static void StartConversion(Afec *afec)
 // Start converting the enabled channels
 void AnalogInStartConversion(uint32_t channels)
 {
-#if SAM3XA
+#if SAM3XA || SAM4S
 	// Clear out any existing conversion complete bits in the status register
 	for (uint32_t chan = 0; chan < 16; ++chan)
 	{
@@ -184,8 +182,7 @@ void AnalogInStartConversion(uint32_t channels)
 		}
 	}
 	adc_start(ADC);
-#endif
-#if SAM4E
+#elif SAM4E
 	channels &= activeChannels;
 	if (channels & 0x0000FFFF)
 	{
@@ -204,8 +201,7 @@ bool AnalogInCheckReady(uint32_t channels)
 #if SAM3XA || SAM4S
 	const uint32_t mask = channels & activeChannels;
 	return (adc_get_status(ADC) & mask) == mask;
-#endif
-#if SAM4E
+#elif SAM4E
 	channels &= activeChannels;
 	const uint32_t afec0Mask = channels & 0x0000FFFF;
 	const uint32_t afec1Mask = (channels >> 16) & 0x0000FFFF;
@@ -232,8 +228,7 @@ AnalogChannelNumber GetTemperatureAdcChannel()
 {
 #if SAM4E
 	return static_cast<AnalogChannelNumber>(AFEC_TEMPERATURE_SENSOR);		// AFEC0 channel 15
-#endif
-#if SAM3XA || SAM4S
+#elif SAM3XA || SAM4S
 	return static_cast<AnalogChannelNumber>(ADC_TEMPERATURE_SENSOR);
 #endif
 }

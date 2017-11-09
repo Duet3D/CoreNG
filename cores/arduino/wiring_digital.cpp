@@ -37,7 +37,7 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 			/* Enable peripheral for clocking input */
 			pmc_enable_periph_clk(pinDesc.ulPeripheralId);
 			pio_pull_up(pinDesc.pPort, pinDesc.ulPin, 0);		// turn off pullup
-#if SAM4E
+#if SAM4E || SAM4S
 			pio_pull_down(pinDesc.pPort, pinDesc.ulPin, 0);		// turn off pulldown
 #endif
 			pio_configure(
@@ -54,7 +54,7 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 		case INPUT_PULLUP:
 			/* Enable peripheral for clocking input */
 			pmc_enable_periph_clk(pinDesc.ulPeripheralId);
-#if SAM4E
+#if SAM4E || SAM4S
 			pio_pull_down(pinDesc.pPort, pinDesc.ulPin, 0);		// turn off pulldown
 #endif
 			pio_configure(
@@ -68,7 +68,7 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 			}
 			break;
 
-#if SAM4E
+#if SAM4E || SAM4S
 		case INPUT_PULLDOWN:
 			/* Enable peripheral for clocking input */
 			pmc_enable_periph_clk(pinDesc.ulPeripheralId);
@@ -130,7 +130,7 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 
 		case AIN:
 			pio_pull_up(pinDesc.pPort, pinDesc.ulPin, 0);		// turn off pullup
-#if SAM4E
+#if SAM4E || SAM4S
 			pio_pull_down(pinDesc.pPort, pinDesc.ulPin, 0);		// turn off pulldown
 #endif
 			// Ideally we should record which pins are being used as analog inputs, then we can disable the clock
