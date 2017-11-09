@@ -3,7 +3,7 @@
  *
  * \brief SAM Reset Controller (RSTC) driver.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -236,7 +236,7 @@ void rstc_reset_extern(Rstc *p_rstc);
 uint32_t rstc_get_status(Rstc* p_rstc);
 uint32_t rstc_get_reset_cause(Rstc* p_rstc);
 
-#if SAM4C || SAM4CP || defined(__DOXYGEN__)
+#if SAM4C || SAM4CM || SAM4CP || defined(__DOXYGEN__)
 #ifndef RSTC_CPMR_KEY_PASSWD
 /** \internal */
 #define RSTC_CPMR_KEY_PASSWD  RSTC_CPMR_CPKEY(0x5AU)

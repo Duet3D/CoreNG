@@ -3,7 +3,7 @@
  *
  * \brief Embedded Flash service for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -105,7 +105,7 @@ uint32_t flash_get_page_count_per_region(const uint32_t *pul_flash_descriptor);
 uint32_t flash_get_region_count(const uint32_t *pul_flash_descriptor);
 uint32_t flash_erase_all(uint32_t ul_address);
 
-#if SAM3SD8
+#if (SAM3S8 || SAM3SD8)
 uint32_t flash_erase_plane(uint32_t ul_address);
 #endif
 

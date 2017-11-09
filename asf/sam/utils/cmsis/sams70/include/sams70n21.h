@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -562,7 +562,7 @@ void XDMAC_Handler      ( void );
 
 #define IFLASH_SIZE             (0x200000u)
 #define IFLASH_PAGE_SIZE        (512u)
-#define IFLASH_LOCK_REGION_SIZE (8192u)
+#define IFLASH_LOCK_REGION_SIZE (16384u)
 #define IFLASH_NB_OF_PAGES      (4096u)
 #define IFLASH_NB_OF_LOCK_BITS  (128u)
 #define IRAM_SIZE               (0x60000u)
@@ -606,13 +606,14 @@ void XDMAC_Handler      ( void );
 #define CHIP_FREQ_XTAL_32K              (32768UL)
 #define CHIP_FREQ_XTAL_12M              (12000000UL)
 
-/* Embedded Flash Read Wait State (VDDCORE set at 1.20V) */
-#define CHIP_FREQ_FWS_0                 (20000000UL)  /**< \brief Maximum operating frequency when FWS is 0 */
-#define CHIP_FREQ_FWS_1                 (40000000UL)  /**< \brief Maximum operating frequency when FWS is 1 */
-#define CHIP_FREQ_FWS_2                 (60000000UL)  /**< \brief Maximum operating frequency when FWS is 2 */
-#define CHIP_FREQ_FWS_3                 (80000000UL)  /**< \brief Maximum operating frequency when FWS is 3 */
-#define CHIP_FREQ_FWS_4                 (100000000UL) /**< \brief Maximum operating frequency when FWS is 4 */
-#define CHIP_FREQ_FWS_5                 (123000000UL) /**< \brief Maximum operating frequency when FWS is 5 */
+/* Embedded Flash Read Wait State (for Worst-Case Conditions) */
+#define CHIP_FREQ_FWS_0                 (23000000UL)  /**< \brief Maximum operating frequency when FWS is 0 */
+#define CHIP_FREQ_FWS_1                 (46000000UL)  /**< \brief Maximum operating frequency when FWS is 1 */
+#define CHIP_FREQ_FWS_2                 (69000000UL)  /**< \brief Maximum operating frequency when FWS is 2 */
+#define CHIP_FREQ_FWS_3                 (92000000UL)  /**< \brief Maximum operating frequency when FWS is 3 */
+#define CHIP_FREQ_FWS_4                 (115000000UL) /**< \brief Maximum operating frequency when FWS is 4 */
+#define CHIP_FREQ_FWS_5                 (138000000UL) /**< \brief Maximum operating frequency when FWS is 5 */
+#define CHIP_FREQ_FWS_6                 (150000000UL) /**< \brief Maximum operating frequency when FWS is 6 */
 
 #ifdef __cplusplus
 }

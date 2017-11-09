@@ -3,7 +3,7 @@
  *
  * \brief Commonly used includes, types and macros.
  *
- * Copyright (c) 2010-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -239,7 +239,7 @@
 #elif defined ( __ICCARM__ ) /* IAR Ewarm 5.41+ */
 #   define OPTIMIZE_HIGH _Pragma("optimize=high")
 #elif defined (  __GNUC__  ) /* GCC CS3 2009q3-68 */
-#   define OPTIMIZE_HIGH __attribute__((optimize(s)))
+#   define OPTIMIZE_HIGH __attribute__((optimize("s")))
 #endif
 
 #include "interrupt.h"
@@ -582,9 +582,9 @@ typedef struct
  * \return The count of leading zero bits in \a u.
  */
 #if (defined __GNUC__) || (defined __CC_ARM)
-#   define clz(u)              __builtin_clz(u)
+#   define clz(u)              ((u) ? __builtin_clz(u) : 32)
 #elif (defined __ICCARM__)
-#   define clz(u)              __CLZ(u)
+#   define clz(u)              ((u) ? __CLZ(u) : 32)
 #else
 #   define clz(u)              (((u) == 0)          ? 32 : \
                                 ((u) & (1ul << 31)) ?  0 : \
@@ -628,7 +628,7 @@ typedef struct
  * \return The count of trailing zero bits in \a u.
  */
 #if (defined __GNUC__) || (defined __CC_ARM)
-#   define ctz(u)              __builtin_ctz(u)
+#   define ctz(u)              ((u) ? __builtin_ctz(u) : 32)
 #else
 #   define ctz(u)              ((u) & (1ul <<  0) ?  0 : \
                                 (u) & (1ul <<  1) ?  1 : \

@@ -3,7 +3,7 @@
  *
  * \brief Analog-Front-End Controller driver for SAM.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -640,7 +640,7 @@ void afec_configure_sequence(Afec *const afec,
 		for (uc_counter = 0; uc_counter < uc_num - AFEC_SEQ1_CHANNEL_NUM;
 				uc_counter++) {
 			afec->AFEC_SEQ2R |=
-					ch_list[uc_counter] << (4 * uc_counter);
+					ch_list[uc_counter + AFEC_SEQ1_CHANNEL_NUM] << (4 * uc_counter);
 		}
 	}
 }

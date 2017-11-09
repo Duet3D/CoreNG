@@ -3,7 +3,7 @@
  *
  * \brief USB Device Driver for UDP. Compliant with common UDD driver.
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -444,7 +444,7 @@ static bool udd_ep_interrupt(void);
  */
 ISR(UDD_USB_INT_FUN)
 {
-#ifndef UDD_NO_SLEEP_MGR		// dc42 added
+#ifndef UDD_NO_SLEEP_MGR               // dc42 added
 	/* For fast wakeup clocks restore
 	 * In WAIT mode, clocks are switched to FASTRC.
 	 * After wakeup clocks should be restored, before that ISR should not
@@ -454,7 +454,7 @@ ISR(UDD_USB_INT_FUN)
 		cpu_irq_disable();
 		return;
 	}
-#endif							// dc42 added
+#endif                                                 // dc42 added
 
 	/* The UDP peripheral clock in the Power Management Controller (PMC)
 	   must be enabled before any read/write operations to the UDP registers
@@ -611,9 +611,6 @@ void udd_disable(void)
 
 	udd_detach();
 
-	udd_disable_periph_ck();
-	sysclk_disable_usb();
-
 #ifndef UDD_NO_SLEEP_MGR
 	sleepmgr_unlock_mode(UDP_SLEEP_MODE_USB_SUSPEND);
 #endif
@@ -761,7 +758,7 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes,
 	udd_reset_endpoint(ep);
 	// Set configuration of new endpoint
 	udd_configure_endpoint(ep,
-		(b_dir_in ? (bmAttributes | 0x4) : bmAttributes),
+		(b_dir_in ? ((bmAttributes&USB_EP_TYPE_MASK) | 0x4) : (bmAttributes&USB_EP_TYPE_MASK)),
 		0);
 	return true;
 }
@@ -1541,7 +1538,8 @@ static bool udd_ep_interrupt(void)
 			if (ptr_job->b_buf_end) {
 				ptr_job->b_buf_end = false;
 				ptr_job->buf_size = ptr_job->buf_cnt; // buf_size is passed to callback as XFR count
-				udd_ep_finish_job(ptr_job, UDD_EP_TRANSFER_OK, ep);
+                udd_disable_endpoint_interrupt(ep);
+                udd_ep_finish_job(ptr_job, UDD_EP_TRANSFER_OK, ep);
 			}
 			if (ptr_job->buf_cnt >= ptr_job->buf_size &&
 					!ptr_job->b_shortpacket &&
@@ -1564,7 +1562,8 @@ static bool udd_ep_interrupt(void)
 				if (!udd_ep_in_sent(ep, true)) {
 					ptr_job->b_buf_end = false;
 					ptr_job->buf_size = ptr_job->buf_cnt; // buf_size is passed to callback as XFR count
-					udd_ep_finish_job(ptr_job, UDD_EP_TRANSFER_OK, ep);
+                    udd_disable_endpoint_interrupt(ep);
+                    udd_ep_finish_job(ptr_job, UDD_EP_TRANSFER_OK, ep);
 				}
 				udd_ack_in_sent(ep);
 				udd_ep_in_sent(ep, false);
