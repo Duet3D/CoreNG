@@ -23,6 +23,8 @@
 #include "ecv.h"		// macros for Escher C/C++ Verifier design-by-contract annotations
 #undef yield			// eCv definition clashes with function 'yield' in wiring.c (can use _ecv_yield instead within annotations)
 
+#include "compiler.h"
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>

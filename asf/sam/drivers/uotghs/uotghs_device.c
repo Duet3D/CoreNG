@@ -718,6 +718,10 @@ void udd_enable(void)
 #endif
 
 	otg_ack_vbus_transition();
+#if 1
+	// dc42: the VBUS detection is problematic, it can lead to the ISR looping. So we do this instead of enabling the interrupt.
+	udd_attach();
+#else
 	// Force Vbus interrupt in case of Vbus always with a high level
 	// This is possible with a short timing between a Host mode stop/start.
 	if (Is_otg_vbus_high()) {
@@ -725,6 +729,7 @@ void udd_enable(void)
 	}
 	otg_enable_vbus_interrupt();
 	otg_freeze_clock();
+#endif	//dc42
 
 #ifndef UDD_NO_SLEEP_MGR
 	if (!udd_b_sleep_initialized) {

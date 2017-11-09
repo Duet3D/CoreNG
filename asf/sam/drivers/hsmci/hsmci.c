@@ -44,9 +44,12 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+#if 0	//dc42
 #include <asf.h>
 #include "conf_board.h"
 #include "../../../../libraries/Storage/sd_mmc_protocol.h"
+#endif
+
 #include "sysclk.h"
 #include "pmc.h"
 #include "hsmci.h"

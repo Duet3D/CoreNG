@@ -21,10 +21,20 @@
 #ifndef TwoWire_h
 #define TwoWire_h
 
+#include "compiler.h"
+
+#if SAME70
+// TWI disabled for now
+#else
+
 #include "Stream.h"
 #include "variant.h"
 
 #define BUFFER_LENGTH 32
+
+#if SAME70
+# define Twi Twihs
+#endif
 
 class TwoWire : public Stream {
 public:
@@ -98,6 +108,8 @@ extern TwoWire Wire;
 #endif
 #if WIRE_INTERFACES_COUNT > 1
 extern TwoWire Wire1;
+#endif
+
 #endif
 
 #endif
