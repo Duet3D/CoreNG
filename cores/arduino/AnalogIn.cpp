@@ -10,7 +10,7 @@
 
 #if SAM3XA || SAM4S
 # include "adc/adc.h"
-#elif SAM4E
+#elif SAM4E || SAME70
 # include "afec/afec.h"
 #else
 # error Analog input module not written for this processor
@@ -22,6 +22,8 @@
 const unsigned int numChannels = 16;
 #elif SAM4E
 const unsigned int numChannels = 32;
+#elif SAME70
+const unsigned int numChannels = 23;
 #endif
 
 static uint32_t activeChannels = 0;
@@ -44,6 +46,21 @@ static inline afec_channel_num GetAfecChannel(AnalogChannelNumber channel)
 {
 	return static_cast<afec_channel_num>((unsigned int)channel & 15);
 }
+#elif SAME70
+static inline Afec *GetAfec(AnalogChannelNumber channel)
+{
+	// ADC0-ADC10 (AD0-AD10) are on the AFEC0, ADC11-ADC22 (AD0-AD11) are on AFEC1
+	return (channel >= ADC11) ? AFEC1 : AFEC0;
+}
+
+static inline afec_channel_num GetAfecChannel(AnalogChannelNumber channel)
+{
+	if (channel >= ADC11)
+	{
+		return static_cast<afec_channel_num>((unsigned int)channel - ADC11);
+	}
+	return static_cast<afec_channel_num>(channel);
+}
 #endif
 
 // Module initialisation
@@ -56,7 +73,7 @@ void AnalogInInit()
 	adc_configure_trigger(ADC, ADC_TRIG_SW, 0);						// Disable hardware trigger
 	adc_disable_interrupt(ADC, 0xFFFFFFFF);							// Disable all ADC interrupts
 	adc_disable_all_channel(ADC);
-#elif SAM4E
+#elif SAM4E || SAME70
 	afec_enable(AFEC0);
 	afec_enable(AFEC1);
 	afec_config cfg;
@@ -99,13 +116,15 @@ void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 			{
 				adc_enable_ts(ADC);
 			}
-#elif SAM4E
+#elif SAM4E || SAME70
 			afec_ch_config cfg;
 			afec_ch_get_config_defaults(&cfg);
 			afec_ch_set_config(GetAfec(channel), GetAfecChannel(channel), &cfg);
 			afec_channel_set_analog_offset(GetAfec(channel), GetAfecChannel(channel), 2048);	// need this to get the full ADC range
 			afec_channel_enable(GetAfec(channel), GetAfecChannel(channel));
+#if SAM4E
 			afec_start_calibration(GetAfec(channel));					// do automatic calibration
+#endif
 #endif
 		}
 		else
@@ -117,7 +136,7 @@ void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 			{
 				adc_disable_ts(ADC);
 			}
-#elif SAM4E
+#elif SAM4E || SAME70
 			afec_channel_disable(GetAfec(channel), GetAfecChannel(channel));
 #endif
 		}
@@ -131,7 +150,7 @@ uint16_t AnalogInReadChannel(AnalogChannelNumber channel)
 	{
 #if SAM3XA || SAM4S
 		return adc_get_channel_value(ADC, GetAdcChannel(channel));
-#elif SAM4E
+#elif SAM4E || SAME70
 		return afec_channel_get_value(GetAfec(channel), GetAfecChannel(channel));
 #endif
 	}
@@ -154,7 +173,7 @@ AnalogCallback_t AnalogInSetCallback(AnalogCallback_t fn)
 	return oldFn;
 }
 
-#if SAM4E
+#if SAM4E || SAME70
 static void StartConversion(Afec *afec)
 {
 	// Clear out any existing conversion complete bits in the status register
@@ -184,11 +203,21 @@ void AnalogInStartConversion(uint32_t channels)
 	adc_start(ADC);
 #elif SAM4E
 	channels &= activeChannels;
-	if (channels & 0x0000FFFF)
+	if ((channels & 0x0000FFFF) != 0)
 	{
 		StartConversion(AFEC0);
 	}
-	if (channels & 0xFFFF0000)
+	if ((channels & 0xFFFF0000) != 0)
+	{
+		StartConversion(AFEC1);
+	}
+#elif SAME70
+	channels &= activeChannels;
+	if ((channels & 0x000003FF) != 0)
+	{
+		StartConversion(AFEC0);
+	}
+	if ((channels & 0x003FF800) != 0)
 	{
 		StartConversion(AFEC1);
 	}
@@ -205,6 +234,12 @@ bool AnalogInCheckReady(uint32_t channels)
 	channels &= activeChannels;
 	const uint32_t afec0Mask = channels & 0x0000FFFF;
 	const uint32_t afec1Mask = (channels >> 16) & 0x0000FFFF;
+	return (afec_get_interrupt_status(AFEC0) & afec0Mask) == afec0Mask
+		&& (afec_get_interrupt_status(AFEC1) & afec1Mask) == afec1Mask;
+#elif SAME70
+	channels &= activeChannels;
+	const uint32_t afec0Mask = channels & 0x000003FF;
+	const uint32_t afec1Mask = (channels >> 10) & 0x000003FF;
 	return (afec_get_interrupt_status(AFEC0) & afec0Mask) == afec0Mask
 		&& (afec_get_interrupt_status(AFEC1) & afec1Mask) == afec1Mask;
 #endif
@@ -226,8 +261,8 @@ AnalogChannelNumber PinToAdcChannel(uint32_t pin)
 // Get the temperature measurement channel
 AnalogChannelNumber GetTemperatureAdcChannel()
 {
-#if SAM4E
-	return static_cast<AnalogChannelNumber>(AFEC_TEMPERATURE_SENSOR);		// AFEC0 channel 15
+#if SAM4E || SAME70
+	return static_cast<AnalogChannelNumber>(AFEC_TEMPERATURE_SENSOR);		// AFEC0 channel 15 on SAM4E and channel 11 on SAME70
 #elif SAM3XA || SAM4S
 	return static_cast<AnalogChannelNumber>(ADC_TEMPERATURE_SENSOR);
 #endif

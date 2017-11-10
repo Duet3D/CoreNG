@@ -52,8 +52,10 @@ void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg)
   // Configure PMC
   pmc_enable_periph_clk( _dwId );
 
+#if !SAME70
   // Disable PDC channel
   _pUart->UART_PTCR = UART_PTCR_RXTDIS | UART_PTCR_TXTDIS;
+#endif
 
   // Reset and disable receiver and transmitter
   _pUart->UART_CR = UART_CR_RSTRX | UART_CR_RSTTX | UART_CR_RXDIS | UART_CR_TXDIS;

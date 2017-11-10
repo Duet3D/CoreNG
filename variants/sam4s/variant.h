@@ -119,8 +119,6 @@ extern "C"{
 /*
  * DACC
  */
-#define DACC_INTERFACE		DACC
-#define DACC_INTERFACE_ID	ID_DACC
 #define DACC_RESOLUTION		12
 #define DACC_ISR_HANDLER    DACC_Handler
 #define DACC_ISR_ID         DACC_IRQn
@@ -129,8 +127,6 @@ static const uint8_t DAC1 = 31;
 /*
  * PWM
  */
-#define PWM_INTERFACE		PWM
-#define PWM_INTERFACE_ID	ID_PWM
 #define PWM_FREQUENCY		1000
 #define PWM_MAX_DUTY_CYCLE	255
 #define PWM_MIN_DUTY_CYCLE	0
@@ -139,8 +135,6 @@ static const uint8_t DAC1 = 31;
 /*
  * TC
  */
-#define TC_INTERFACE        TC0
-#define TC_INTERFACE_ID     ID_TC0
 #define TC_FREQUENCY        1000
 #define TC_MAX_DUTY_CYCLE   255
 #define TC_MIN_DUTY_CYCLE   0
