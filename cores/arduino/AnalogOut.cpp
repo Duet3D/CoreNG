@@ -45,16 +45,16 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_DAC) != 0)
 {
 	const AnalogChannelNumber channel = pinDesc.ulADCChannelNumber;
 	const uint32_t chDACC = ((channel == DA0) ? 0 : 1);
-	if (dacc_get_channel_status(DACC_INTERFACE) == 0)
+	if (dacc_get_channel_status(DACC) == 0)
 	{
 		// Enable clock for DACC_INTERFACE
-		pmc_enable_periph_clk(DACC_INTERFACE_ID);
+		pmc_enable_periph_clk(ID_DACC);
 		// Reset DACC registers
-		dacc_reset(DACC_INTERFACE);
+		dacc_reset(DACC);
 		// Half word transfer mode
-		dacc_set_transfer_mode(DACC_INTERFACE, 0);
+		dacc_set_transfer_mode(DACC, 0);
 #if SAM4E
-		// The SAM4E data sheet says we must also set this bit when using a peripheral clock frequency >100MHz. Not applicable to the SAM4S.
+		// The SAM4E data sheet says we must also set this bit when using a peripheral clock frequency >100MHz. Not applicable to the SAM4S and SAME70.
 		DACC->DACC_MR |= DACC_MR_CLKDIV_DIV_4;
 #endif
 
@@ -63,32 +63,41 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_DAC) != 0)
 		 * sleep mode - 0 (disabled)
 		 * fast wakeup - 0 (disabled)
 		 */
-		dacc_set_power_save(DACC_INTERFACE, 0, 0);
+		dacc_set_power_save(DACC, 0, 0);
 		/* Timing:
 		 * refresh - 0x08 (1024*8 dacc clocks)
 		 * max speed mode - 0 (disabled)
 		 * startup time - 0x10 (1024 dacc clocks)
 		 */
-		dacc_set_timing(DACC_INTERFACE, 0x08, 0, 0x10);
+		dacc_set_timing(DACC, 0x08, 0, 0x10);
 #endif
+#if !SAME70
 		// Set up analog current
-		dacc_set_analog_control(DACC_INTERFACE, DACC_ACR_IBCTLCH0(0x02) | DACC_ACR_IBCTLCH1(0x02) | DACC_ACR_IBCTLDACCORE(0x01));
+		dacc_set_analog_control(DACC, DACC_ACR_IBCTLCH0(0x02) | DACC_ACR_IBCTLCH1(0x02) | DACC_ACR_IBCTLDACCORE(0x01));
+#endif
 	}
 
-	// Disable TAG and select output channel chDACC
-	dacc_set_channel_selection(DACC_INTERFACE, chDACC);
-	if ((dacc_get_channel_status(DACC_INTERFACE) & (1 << chDACC)) == 0)
+#if !SAME70
+	// Disable TAG
+	dacc_set_channel_selection(DACC, chDACC);
+#endif
+	// Select output channel chDACC
+	if ((dacc_get_channel_status(DACC) & (1 << chDACC)) == 0)
 	{
-		dacc_enable_channel(DACC_INTERFACE, chDACC);
+		dacc_enable_channel(DACC, chDACC);
 	}
 
 	// Write user value - need to convert it from 8 to 12 bit resolution
-	dacc_write_conversion_data(DACC_INTERFACE, ConvertRange(ulValue, (1 << DACC_RESOLUTION) - 1));
-	while ((dacc_get_interrupt_status(DACC_INTERFACE) & DACC_ISR_EOC) == 0) {}
+#if SAME70
+	dacc_write_conversion_data(DACC, ConvertRange(ulValue, (1 << DACC_RESOLUTION) - 1), chDACC);
+#else
+	dacc_write_conversion_data(DACC, ConvertRange(ulValue, (1 << DACC_RESOLUTION) - 1));
+	while ((dacc_get_interrupt_status(DACC) & DACC_ISR_EOC) == 0) {}
+#endif
 	return true;
 }
 
-#if SAM3XA
+#if SAM3XA || SAME70
 const unsigned int numPwmChannels = 8;
 #elif SAM4E || SAM4S
 const unsigned int numPwmChannels = 4;
@@ -113,18 +122,40 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 		PWMChanFreq[chan] = freq;
 		return false;
 	}
-	else if (PWMChanFreq[chan] != freq)
+
+	// Which PWM interface do we need to work with?
+#if SAME70
+	Pwm *PWMInterface = (chan <= 3) ? PWM0 : PWM1;
+#else
+	Pwm *PWMInterface = PWM;
+#endif
+
+	if (PWMChanFreq[chan] != freq)
 	{
 		if (!PWMEnabled)
 		{
+#if SAME70
+			// PWM startup code for both PWM interfaces
+			pmc_enable_periph_clk(ID_PWM0);
+			pmc_enable_periph_clk(ID_PWM1);
+			pwm_clock_t clockConfig;
+			clockConfig.ul_clka = PwmSlowClock;
+			clockConfig.ul_clkb = PwmFastClock;
+			clockConfig.ul_mck = VARIANT_MCK;
+			pwm_init(PWM0, &clockConfig);
+			PWM0->PWM_SCM = 0;										// ensure no sync channels
+			pwm_init(PWM1, &clockConfig);
+			PWM1->PWM_SCM = 0;										// ensure no sync channels
+#else
 			// PWM Startup code
-			pmc_enable_periph_clk(PWM_INTERFACE_ID);
+			pmc_enable_periph_clk(ID_PWM);
 			pwm_clock_t clockConfig;
 			clockConfig.ul_clka = PwmSlowClock;
 			clockConfig.ul_clkb = PwmFastClock;
 			clockConfig.ul_mck = VARIANT_MCK;
 			pwm_init(PWM, &clockConfig);
-			PWM->PWM_SCM = 0;											// ensure no sync channels
+			PWM->PWM_SCM = 0;										// ensure no sync channels
+#endif
 			PWMEnabled = true;
 		}
 
@@ -141,23 +172,23 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 		// So we need to make sure the counter is less than the new period before we change the period.
 		for (unsigned int j = 0; j < 5; ++j)							// twice through should be enough, but just in case...
 		{
-			pwm_channel_disable(PWM, chan);
+			pwm_channel_disable(PWMInterface, chan);
 			if (j > maxPwmLoopCount)
 			{
 				maxPwmLoopCount = j;
 			}
-			uint32_t oldCurrentVal = PWM->PWM_CH_NUM[chan].PWM_CCNT & 0xFFFF;
+			uint32_t oldCurrentVal = PWMInterface->PWM_CH_NUM[chan].PWM_CCNT & 0xFFFF;
 			if (oldCurrentVal < period || oldCurrentVal > 65536 - 10)	// if counter is already small enough or about to wrap round, OK
 			{
 				break;
 			}
 			oldCurrentVal += 2;											// note: +1 doesn't work here, has to be at least +2
-			PWM->PWM_CH_NUM[chan].PWM_CPRD = oldCurrentVal;				// change the period to be just greater than the counter
-			PWM->PWM_CH_NUM[chan].PWM_CMR = PWM_CMR_CPRE_CLKB;			// use the fast clock to avoid waiting too long
-			pwm_channel_enable(PWM, chan);
+			PWMInterface->PWM_CH_NUM[chan].PWM_CPRD = oldCurrentVal;				// change the period to be just greater than the counter
+			PWMInterface->PWM_CH_NUM[chan].PWM_CMR = PWM_CMR_CPRE_CLKB;			// use the fast clock to avoid waiting too long
+			pwm_channel_enable(PWMInterface, chan);
 			for (unsigned int i = 0; i < 1000; ++i)
 			{
-				const uint32_t newCurrentVal = PWM->PWM_CH_NUM[chan].PWM_CCNT & 0xFFFF;
+				const uint32_t newCurrentVal = PWMInterface->PWM_CH_NUM[chan].PWM_CCNT & 0xFFFF;
 				if (newCurrentVal < period || newCurrentVal > oldCurrentVal)
 				{
 					break;												// get out when we have wrapped round, or failed to
@@ -172,8 +203,8 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 		channelConfig.ul_duty = duty;
 		channelConfig.ul_period = period;
 
-		pwm_channel_init(PWM, &channelConfig);
-		pwm_channel_enable(PWM, chan);
+		pwm_channel_init(PWMInterface, &channelConfig);
+		pwm_channel_enable(PWMInterface, chan);
 
 		// Now setup the PWM output pin for PWM this channel - do this after configuring the PWM to avoid glitches
 		pio_configure(pinDesc.pPort,
@@ -187,7 +218,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 		pwm_channel_t channelConfig;
 		channelConfig.channel = chan;
 		channelConfig.ul_period = (uint32_t)PWMChanPeriod[chan];
-		pwm_channel_update_duty(PWM, &channelConfig, ConvertRange(ulValue, channelConfig.ul_period));
+		pwm_channel_update_duty(PWMInterface, &channelConfig, ConvertRange(ulValue, channelConfig.ul_period));
 	}
 	return true;
 }
@@ -196,6 +227,8 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 const unsigned int numTcChannels = 6;
 #elif SAM3XA || SAM4E
 const unsigned int numTcChannels = 9;
+#elif SAME70
+const unsigned int numTcChannels = 12;
 #endif
 
 // Map from timer channel to TC channel number
@@ -203,6 +236,10 @@ static const uint8_t channelToChNo[numTcChannels] =
 {
 	0, 1, 2,
 	0, 1, 2,
+#if SAME70
+	0, 1, 2,
+	0, 1, 2
+#endif
 #if SAM3XA || SAM4E
 	0, 1, 2
 #endif
@@ -213,6 +250,10 @@ static Tc * const channelToTC[numTcChannels] =
 {
 	TC0, TC0, TC0,
 	TC1, TC1, TC1,
+#if SAME70
+	TC2, TC2, TC2,
+	TC3, TC3, TC3
+#endif
 #if SAM3XA || SAM4E
 	TC2, TC2, TC2
 #endif
@@ -223,6 +264,10 @@ static const uint8_t channelToId[numTcChannels] =
 {
 	ID_TC0, ID_TC1, ID_TC2,
 	ID_TC3, ID_TC4, ID_TC5,
+#if SAME70
+	ID_TC6, ID_TC7, ID_TC8,
+	ID_TC9, ID_TC10, ID_TC11
+#endif
 #if SAM3XA || SAM4E
 	ID_TC6, ID_TC7, ID_TC8
 #endif
@@ -273,6 +318,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)
 			// Enable the peripheral clock to this timer
 			pmc_enable_periph_clk(channelToId[chan]);
 
+#if SAME70
 			// Set up the timer mode and top count
 			tc_init(chTC, chNo,
 							TC_CMR_TCCLKS_TIMER_CLOCK2 |			// clock is MCLK/8 to save a little power and avoid overflow later on
@@ -283,6 +329,18 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)
 							TC_CMR_BCPB_CLEAR | TC_CMR_BCPC_CLEAR |
 							TC_CMR_ASWTRG_SET | TC_CMR_BSWTRG_SET);	// Software trigger will let us set the output high
 			const uint32_t top = (VARIANT_MCK/8)/(uint32_t)freq;	// with 120MHz clock this varies between 228 (@ 65.535kHz) and 15 million (@ 1Hz)
+#else
+			// Set up the timer mode and top count
+			tc_init(chTC, chNo,
+							TC_CMR_TCCLKS_TIMER_CLOCK3 |			// clock is MCLK/32 to avoid overflow later on
+							TC_CMR_WAVE |         					// Waveform mode
+							TC_CMR_WAVSEL_UP_RC | 					// Counter running up and reset when equals to RC
+							TC_CMR_EEVT_XC0 |     					// Set external events from XC0 (this setup TIOB as output)
+							TC_CMR_ACPA_CLEAR | TC_CMR_ACPC_CLEAR |
+							TC_CMR_BCPB_CLEAR | TC_CMR_BCPC_CLEAR |
+							TC_CMR_ASWTRG_SET | TC_CMR_BSWTRG_SET);	// Software trigger will let us set the output high
+			const uint32_t top = (VARIANT_MCK/32)/(uint32_t)freq;	// with 300MHz clock this varies between 143 (@ 65.535kHz) and 9.3 million (@ 1Hz)
+#endif
 			// The datasheet doesn't say how the period relates to the RC value, but from measurement it seems that we do not need to subtract one from top
 			tc_write_rc(chTC, chNo, top);
 

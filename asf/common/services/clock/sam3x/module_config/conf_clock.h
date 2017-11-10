@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM clock configuration.
+ * \brief SAM3X clock configuration.
  *
  * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
@@ -60,11 +60,8 @@
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_UPLLCK
 
 // ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
-#if SAME70
-# define CONFIG_SYSCLK_PRES         SYSCLK_PRES_1
-#else
-# define CONFIG_SYSCLK_PRES         SYSCLK_PRES_2
-#endif
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
+#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_16
@@ -72,36 +69,32 @@
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_64
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_3
 
-#if SAME70
-// ===== System Clock (MCK) Division Options     (Fmck = Fhclk / (SYSCLK_DIV))
-# define CONFIG_SYSCLK_DIV          2
-#endif
-
 // ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.
 #define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
-
-#if SAM4E || SAM4S
-# define CONFIG_PLL0_MUL			20		// (20 * 12)/2 = 120MHz
-#elif SAM3XA
-# define CONFIG_PLL0_MUL			14		// (14 * 12)/2 = 84MHz
-#elif SAME70
-#define CONFIG_PLL0_MUL             25		// (25 * 12)/1 = 300MHz
-#endif
-
-#define CONFIG_PLL0_DIV				1
-
+#define CONFIG_PLL0_MUL             14
+#define CONFIG_PLL0_DIV             1
 
 // ===== UPLL (UTMI) Hardware fixed at 480 MHz.
 
 // ===== USB Clock Source Options   (Fusb = FpllX / USB_div)
 // Use div effective value here.
-#if SAM4E || SAM4S
-# define CONFIG_USBCLK_SOURCE       USBCLK_SRC_PLL0
-# define CONFIG_USBCLK_DIV          5
-#elif SAM3XA || SAME70
-# define CONFIG_USBCLK_SOURCE       USBCLK_SRC_UPLL
-# define CONFIG_USBCLK_DIV          1
-#endif
+//#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL0
+#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_UPLL
+#define CONFIG_USBCLK_DIV           1
+
+// ===== Target frequency (System clock)
+// - XTAL frequency: 12MHz
+// - System clock source: PLLA
+// - System clock prescaler: 2 (divided by 2)
+// - PLLA source: XTAL
+// - PLLA output: XTAL * 14 / 1
+// - System clock is: 12 * 14 / 1 /2 = 84MHz
+// ===== Target frequency (USB Clock)
+// - USB clock source: UPLL
+// - USB clock divider: 1 (not divided)
+// - UPLL frequency: 480MHz
+// - USB clock: 480 / 1 = 480MHz
+
 
 #endif /* CONF_CLOCK_H_INCLUDED */
