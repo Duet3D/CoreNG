@@ -291,12 +291,63 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 //!       RX_DATA_BK0, TXPKTRDY, RX_DATA_BK1 require wait times of 3 UDPCK clock
 //!       cycles and 5 peripheral clock cycles before accessing DPR.
 //! @{
-  //! Bitmap for all status bits in CSR that are not effected by a value 1.
+  //! Bitmap for all status bits in CSR that are not affected by a value 1.
 #define UDP_REG_NO_EFFECT_1_ALL (UDP_CSR_RX_DATA_BK0 |\
                                  UDP_CSR_RX_DATA_BK1 |\
                                  UDP_CSR_STALLSENT   |\
                                  UDP_CSR_RXSETUP     |\
                                  UDP_CSR_TXCOMP)
+
+#if 1	// DC42
+
+// Macro udp_clear_csr in the original ASF 3.3.5 code occasionally hangs in a tight loop while trying to clear the TXCOMP bit.
+// The previous ASF we used (3.3.1) executed 20 NOPs in a for-loop instead of the infinite while-loop and didn't exhibit this problem.
+// Probably this happens when we are trying to clear a status bit, we get a higher priority interrupt, and when we get back from that ISR the status bit has got set again.
+// So I have limited the loop count to 10. Also I turned each macro into an inline function.
+
+/*! Sets specified bit(s) in the UDP_CSR.
+ *  \param ep   Endpoint number.
+ *  \param bits Bitmap to set to 1.
+ */
+static inline void udp_set_csr(udd_ep_id_t ep, uint32_t bits)
+{
+	uint32_t reg = UDP->UDP_CSR[ep];
+	reg |= UDP_REG_NO_EFFECT_1_ALL;
+	reg |= (bits);
+	UDP->UDP_CSR[ep] = reg;
+	for (unsigned int i = 0; i < 10 && (UDP->UDP_CSR[ep] & bits) != bits; ++i) {}
+}
+
+/*! Clears specified bit(s) in the UDP_CSR.
+ *  \param ep   Endpoint number.
+ *  \param bits Bitmap to set to 0.
+ */
+static inline void udp_clear_csr(udd_ep_id_t ep, uint32_t bits)
+{
+	uint32_t reg = UDP->UDP_CSR[ep];
+	reg |= UDP_REG_NO_EFFECT_1_ALL;
+	reg &= ~(bits);
+	UDP->UDP_CSR[ep] = reg;
+	for (unsigned int i = 0; i < 10 && (UDP->UDP_CSR[ep] & bits) != 0; ++i) {}
+}
+
+/*! Write specified bit(s) in the UDP_CSR.
+ *  \param ep   Endpoint number.
+ *  \param bits Bitmap to write.
+ */
+static inline void udp_write_csr(udd_ep_id_t ep, uint32_t mask, uint32_t bits)
+{
+	uint32_t reg = UDP->UDP_CSR[ep];
+	reg |= UDP_REG_NO_EFFECT_1_ALL;
+	reg &= ~(mask);
+	reg |= bits & mask;
+	UDP->UDP_CSR[ep] = reg;
+	for (unsigned int i = 0; i < 10 && (UDP->UDP_CSR[ep] & bits) != bits; ++i) {}
+}
+//! @}
+
+#else
+
 /*! Sets specified bit(s) in the UDP_CSR.
  *  \param ep   Endpoint number.
  *  \param bits Bitmap to set to 1.
@@ -338,6 +389,8 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 		while ((UDP->UDP_CSR[ep] & bits) != bits);         \
 	} while (0);
 //! @}
+
+#endif
 
 #define  udd_get_endpoint_status(ep)               (UDP->UDP_CSR[ep])
 
