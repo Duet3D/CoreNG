@@ -103,52 +103,39 @@ void RTC_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void RTT_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void WDT_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void PMC_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void EFC_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void EFC0_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef _SAM4S_EFC1_INSTANCE_
+void EFC1_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 void UART0_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SMC_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void UART1_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void PIOA_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void PIOB_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#ifdef _SAM4E_PIOC_INSTANCE_
+#ifdef _SAM4S_PIOC_INSTANCE_
 void PIOC_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#endif /* _SAM4E_PIOC_INSTANCE_ */
-void PIOD_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#ifdef _SAM4E_PIOE_INSTANCE_
-void PIOE_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#endif /* _SAM4E_PIOE_INSTANCE_ */
+#endif /* _SAM4S_PIOC_INSTANCE_ */
 void USART0_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void USART1_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void HSMCI_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TWI0_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TWI1_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void SPI_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void SSC_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void DMAC_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TC0_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TC1_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TC2_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#ifdef _SAM4E_TC1_INSTANCE_
+#ifdef _SAM4S_TC1_INSTANCE_
 void TC3_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TC4_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TC5_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#endif /* _SAM4E_TC1_INSTANCE_ */
-#ifdef _SAM4E_TC2_INSTANCE_
-void TC6_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC7_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void TC8_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#endif /* _SAM4E_TC2_INSTANCE_ */
-void AFEC0_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void AFEC1_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif /* _SAM4S_TC1_INSTANCE_ */
+void ADC_Handler 	( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void DACC_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void ACC_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void ARM_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void UDP_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void PWM_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void CAN0_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#ifdef _SAM4E_CAN1_INSTANCE_
-void CAN1_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#endif /* _SAM4E_CAN1_INSTANCE_ */
-void AES_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void GMAC_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void UART1_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void CRCCU_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void ACC_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void UDP_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 
 /* @cond 0 */
 /**INDENT-OFF**/

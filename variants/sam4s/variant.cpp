@@ -177,11 +177,11 @@ void UART0_Handler(void)
 }
 
 // UART1 is used to interface with PanelDue
-UARTClass Serial0(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2);
+UARTClass Serial(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2);
 
 void UART1_Handler(void)
 {
-  Serial0.IrqHandler();
+  Serial.IrqHandler();
 }
 
 // ----------------------------------------------------------------------------
