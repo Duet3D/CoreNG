@@ -61,17 +61,6 @@ extern "C"{
 
 // Number of pins defined in PinDescription array
 #define APINS_COUNT				(79u)
-#define NUM_DIGITAL_PINS		(54u)
-#define NUM_ANALOG_INPUTS		(12u)
-
-#define digitalPinToPort(P)        ( g_APinDescription[P].pPort )
-#define digitalPinToBitMask(P)     ( g_APinDescription[P].ulPin )
-#define portOutputRegister(port)   ( &(port->PIO_ODSR) )
-#define portInputRegister(port)    ( &(port->PIO_PDSR) )
-#define digitalPinHasPWM(P)        ( g_APinDescription[P].ulPWMChannel != NOT_ON_PWM || g_APinDescription[P].ulTCChannel != NOT_ON_TIMER )
-
-// Interrupts
-#define digitalPinToInterrupt(p)  ((p) < NUM_DIGITAL_PINS ? (p) : -1)
 
 /*
  * SPI Interfaces
@@ -144,7 +133,6 @@ static const uint8_t DAC0 = 66;
 static const uint8_t DAC1 = 67;
 static const uint8_t CANRX = 68;
 static const uint8_t CANTX = 69;
-#define ADC_RESOLUTION		12
 
 /*
  * Complementary CAN pins
@@ -156,30 +144,6 @@ static const uint8_t CAN1TX = 89;
 #define APINS_CAN0           (90u)
 // CAN1
 #define APINS_CAN1           (91u)
-
-
-/*
- * DACC
- */
-#define DACC_RESOLUTION		12
-#define DACC_ISR_HANDLER    DACC_Handler
-#define DACC_ISR_ID         DACC_IRQn
-
-/*
- * PWM
- */
-#define PWM_FREQUENCY		1000
-#define PWM_MAX_DUTY_CYCLE	255
-#define PWM_MIN_DUTY_CYCLE	0
-#define PWM_RESOLUTION		8
-
-/*
- * TC
- */
-#define TC_FREQUENCY        1000
-#define TC_MAX_DUTY_CYCLE   255
-#define TC_MIN_DUTY_CYCLE   0
-#define TC_RESOLUTION		8
 
 /*
  * Duet pins
@@ -211,9 +175,9 @@ static const uint8_t APINS_HSMCI_DATA = 111;
 // EMAC
 static const uint8_t APINS_EMAC = 112;
 
-static const uint32_t MaxPinNumber = 109; // X17
-static const uint32_t PwmFastClock = 25000 * 255;              // fast PWM clock for Intel spec PWM fans that need 25kHz PWM
-static const uint32_t PwmSlowClock = (25000 * 255) / 256;      // slow PWM clock to allow us to get slow speeds
+static const uint32_t MaxPinNumber = 109;					// X17
+static const uint32_t PwmFastClock = 25000 * 255;			// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
+static const uint32_t PwmSlowClock = (25000 * 255) / 256;	// slow PWM clock to allow us to get slow speeds
 
 #ifdef __cplusplus
 }
@@ -232,28 +196,5 @@ extern USARTClass Serial2;
 extern void ConfigurePin(const PinDescription& pinDesc);
 
 #endif
-
-// These serial port names are intended to allow libraries and architecture-neutral
-// sketches to automatically default to the correct port name for a particular type
-// of use.  For example, a GPS module would normally connect to SERIAL_PORT_HARDWARE_OPEN,
-// the first hardware serial port whose RX/TX pins are not dedicated to another use.
-//
-// SERIAL_PORT_MONITOR        Port which normally prints to the Arduino Serial Monitor
-//
-// SERIAL_PORT_USBVIRTUAL     Port which is USB virtual serial
-//
-// SERIAL_PORT_LINUXBRIDGE    Port which connects to a Linux system via Bridge library
-//
-// SERIAL_PORT_HARDWARE       Hardware serial port, physical RX & TX pins.
-//
-// SERIAL_PORT_HARDWARE_OPEN  Hardware serial ports which are open for use.  Their RX & TX
-//                            pins are NOT connected to anything by default.
-#define SERIAL_PORT_MONITOR         Serial
-#define SERIAL_PORT_USBVIRTUAL      SerialUSB
-#define SERIAL_PORT_HARDWARE_OPEN   Serial1
-#define SERIAL_PORT_HARDWARE_OPEN1  Serial2
-#define SERIAL_PORT_HARDWARE        Serial
-#define SERIAL_PORT_HARDWARE1       Serial1
-#define SERIAL_PORT_HARDWARE2       Serial2
 
 #endif /* _VARIANT_ARDUINO_DUET_X_ */

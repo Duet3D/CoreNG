@@ -40,8 +40,8 @@
 #include "Core.h"
 
 #ifdef __cplusplus
-#include "UARTClass.h"
-#include "USARTClass.h"
+# include "UARTClass.h"
+# include "USARTClass.h"
 #endif
 
 #ifdef __cplusplus
@@ -60,17 +60,7 @@ extern "C"{
  *----------------------------------------------------------------------------*/
 
 // Number of pins defined in PinDescription array
-#define APINS_COUNT				(103u)
-#define NUM_DIGITAL_PINS		(103u)
-
-#define digitalPinToPort(P)        ( g_APinDescription[P].pPort )
-#define digitalPinToBitMask(P)     ( g_APinDescription[P].ulPin )
-#define portOutputRegister(port)   ( &(port->PIO_ODSR) )
-#define portInputRegister(port)    ( &(port->PIO_PDSR) )
-#define digitalPinHasPWM(P)        ( g_APinDescription[P].ulPWMChannel != NOT_ON_PWM || g_APinDescription[P].ulTCChannel != NOT_ON_TIMER )
-
-// Interrupts
-#define digitalPinToInterrupt(p)  ((p) < NUM_DIGITAL_PINS ? (p) : -1)
+#define APINS_COUNT			(103u)
 
 /*
  * SPI Interfaces
@@ -117,30 +107,6 @@ extern "C"{
 #define APIN_UART1_TXD		(6u)
 
 /*
- * DACC
- */
-#define DACC_RESOLUTION		12
-#define DACC_ISR_HANDLER    DACC_Handler
-#define DACC_ISR_ID         DACC_IRQn
-static const uint8_t DAC1 = 31;
-
-/*
- * PWM
- */
-#define PWM_FREQUENCY		1000
-#define PWM_MAX_DUTY_CYCLE	255
-#define PWM_MIN_DUTY_CYCLE	0
-#define PWM_RESOLUTION		8
-
-/*
- * TC
- */
-#define TC_FREQUENCY        1000
-#define TC_MAX_DUTY_CYCLE   255
-#define TC_MIN_DUTY_CYCLE   0
-#define TC_RESOLUTION		8
-
-/*
  * Duet NG pins
  */
 
@@ -170,27 +136,4 @@ extern void ConfigurePin(const PinDescription& pinDesc);
 
 #endif
 
-// These serial port names are intended to allow libraries and architecture-neutral
-// sketches to automatically default to the correct port name for a particular type
-// of use.  For example, a GPS module would normally connect to SERIAL_PORT_HARDWARE_OPEN,
-// the first hardware serial port whose RX/TX pins are not dedicated to another use.
-//
-// SERIAL_PORT_MONITOR        Port which normally prints to the Arduino Serial Monitor
-//
-// SERIAL_PORT_USBVIRTUAL     Port which is USB virtual serial
-//
-// SERIAL_PORT_LINUXBRIDGE    Port which connects to a Linux system via Bridge library
-//
-// SERIAL_PORT_HARDWARE       Hardware serial port, physical RX & TX pins.
-//
-// SERIAL_PORT_HARDWARE_OPEN  Hardware serial ports which are open for use.  Their RX & TX
-//                            pins are NOT connected to anything by default.
-#define SERIAL_PORT_MONITOR         Serial
-#define SERIAL_PORT_USBVIRTUAL      SerialUSB
-#define SERIAL_PORT_HARDWARE_OPEN   Serial1
-#define SERIAL_PORT_HARDWARE_OPEN1  Serial2
-#define SERIAL_PORT_HARDWARE        Serial
-#define SERIAL_PORT_HARDWARE1       Serial1
-#define SERIAL_PORT_HARDWARE2       Serial2
-
-#endif /* _VARIANT_ARDUINO_DUET_X_ */
+#endif /* _VARIANT_DUET_NG_H */
