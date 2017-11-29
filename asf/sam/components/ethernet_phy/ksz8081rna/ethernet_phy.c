@@ -74,8 +74,10 @@ extern "C" {
 /* Max PHY number */
 #define ETH_PHY_MAX_ADDR   31
 
+#if 0	// chrishamm
 /* Ethernet PHY operation max retry count */
 #define ETH_PHY_RETRY_MAX 1000000
+#endif
 
 /* Ethernet PHY operation timeout */
 #define ETH_PHY_TIMEOUT 10
@@ -145,9 +147,11 @@ uint8_t ethernet_phy_init(Gmac *p_gmac, uint8_t uc_phy_addr, uint32_t mck)
 	uint8_t uc_rc;
 	uint8_t uc_phy;
 
+#if 0	// chrishamm
 	pio_set_output(PIN_GMAC_RESET_PIO, PIN_GMAC_RESET_MASK, 1,  false, true);
 	pio_set_input(PIN_GMAC_INT_PIO, PIN_GMAC_INT_MASK, PIO_PULLUP);
 	pio_set_peripheral(PIN_GMAC_PIO, PIN_GMAC_PERIPH, PIN_GMAC_MASK);
+#endif
 
 	ethernet_phy_reset(GMAC,uc_phy_addr);
 
@@ -264,72 +268,94 @@ uint8_t ethernet_phy_set_link(Gmac *p_gmac, uint8_t uc_phy_addr,
  *
  * Return GMAC_OK if successfully, GMAC_TIMEOUT if timeout.
  */
+static bool phyInitialized = false;
 uint8_t ethernet_phy_auto_negotiate(Gmac *p_gmac, uint8_t uc_phy_addr)
 {
+#if 0	// chrishamm
 	uint32_t ul_retry_max = ETH_PHY_RETRY_MAX;
+	uint32_t ul_retry_count = 0;
+#endif
 	uint32_t ul_value;
 	uint32_t ul_phy_anar;
 	uint32_t ul_phy_analpar;
-	uint32_t ul_retry_count = 0;
 	uint8_t uc_speed = 0;
 	uint8_t uc_fd=0;
 	uint8_t uc_rc;
 
 	gmac_enable_management(p_gmac, true);
 
-	/* Set up control register */
-	uc_rc = gmac_phy_read(p_gmac, uc_phy_addr, GMII_BMCR, &ul_value);
-	if (uc_rc != GMAC_OK) {
-		gmac_enable_management(p_gmac, false);
-		return uc_rc;
-	}
+	if (!phyInitialized)
+	{
+		/* Set up control register */
+		uc_rc = gmac_phy_read(p_gmac, uc_phy_addr, GMII_BMCR, &ul_value);
+		if (uc_rc != GMAC_OK) {
+			gmac_enable_management(p_gmac, false);
+			return uc_rc;
+		}
 
-	ul_value &= ~(uint32_t)GMII_AUTONEG; /* Remove auto-negotiation enable */
-	ul_value &= ~(uint32_t)(GMII_LOOPBACK | GMII_POWER_DOWN);
-	ul_value |= (uint32_t)GMII_ISOLATE; /* Electrically isolate PHY */
-	uc_rc = gmac_phy_write(p_gmac, uc_phy_addr, GMII_BMCR, ul_value);
-	if (uc_rc != GMAC_OK) {
-		gmac_enable_management(p_gmac, false);
-		return uc_rc;
-	}
+		ul_value &= ~(uint32_t)GMII_AUTONEG; /* Remove auto-negotiation enable */
+		ul_value &= ~(uint32_t)(GMII_LOOPBACK | GMII_POWER_DOWN);
+		ul_value |= (uint32_t)GMII_ISOLATE; /* Electrically isolate PHY */
+		uc_rc = gmac_phy_write(p_gmac, uc_phy_addr, GMII_BMCR, ul_value);
+		if (uc_rc != GMAC_OK) {
+			gmac_enable_management(p_gmac, false);
+			return uc_rc;
+		}
 
-	/*
-	 * Set the Auto_negotiation Advertisement Register.
-	 * MII advertising for Next page.
-	 * 100BaseTxFD and HD, 10BaseTFD and HD, IEEE 802.3.
-	 */
-	ul_phy_anar = GMII_100TX_FDX | GMII_100TX_HDX | GMII_10_FDX | GMII_10_HDX |
-			GMII_AN_IEEE_802_3;
-	uc_rc = gmac_phy_write(p_gmac, uc_phy_addr, GMII_ANAR, ul_phy_anar);
-	if (uc_rc != GMAC_OK) {
-		gmac_enable_management(p_gmac, false);
-		return uc_rc;
-	}
+		/*
+		 * Set the Auto_negotiation Advertisement Register.
+		 * MII advertising for Next page.
+		 * 100BaseTxFD and HD, 10BaseTFD and HD, IEEE 802.3.
+		 */
+		ul_phy_anar = GMII_100TX_FDX | GMII_100TX_HDX | GMII_10_FDX | GMII_10_HDX |
+				GMII_AN_IEEE_802_3;
+		uc_rc = gmac_phy_write(p_gmac, uc_phy_addr, GMII_ANAR, ul_phy_anar);
+		if (uc_rc != GMAC_OK) {
+			gmac_enable_management(p_gmac, false);
+			return uc_rc;
+		}
 
-	/* Read & modify control register */
-	uc_rc = gmac_phy_read(p_gmac, uc_phy_addr, GMII_BMCR, &ul_value);
-	if (uc_rc != GMAC_OK) {
-		gmac_enable_management(p_gmac, false);
-		return uc_rc;
-	}
+		/* Read & modify control register */
+		uc_rc = gmac_phy_read(p_gmac, uc_phy_addr, GMII_BMCR, &ul_value);
+		if (uc_rc != GMAC_OK) {
+			gmac_enable_management(p_gmac, false);
+			return uc_rc;
+		}
 
-	ul_value |= GMII_SPEED_SELECT | GMII_AUTONEG | GMII_DUPLEX_MODE;
-	uc_rc = gmac_phy_write(p_gmac, uc_phy_addr, GMII_BMCR, ul_value);
-	if (uc_rc != GMAC_OK) {
-		gmac_enable_management(p_gmac, false);
-		return uc_rc;
-	}
+		ul_value |= GMII_SPEED_SELECT | GMII_AUTONEG | GMII_DUPLEX_MODE;
+		uc_rc = gmac_phy_write(p_gmac, uc_phy_addr, GMII_BMCR, ul_value);
+		if (uc_rc != GMAC_OK) {
+			gmac_enable_management(p_gmac, false);
+			return uc_rc;
+		}
 
-	/* Restart auto negotiation */
-	ul_value |= (uint32_t)GMII_RESTART_AUTONEG;
-	ul_value &= ~(uint32_t)GMII_ISOLATE;
-	uc_rc = gmac_phy_write(p_gmac, uc_phy_addr, GMII_BMCR, ul_value);
-	if (uc_rc != GMAC_OK) {
-		gmac_enable_management(p_gmac, false);
-		return uc_rc;
+		/* Restart auto negotiation */
+		ul_value |= (uint32_t)GMII_RESTART_AUTONEG;
+		ul_value &= ~(uint32_t)GMII_ISOLATE;
+		uc_rc = gmac_phy_write(p_gmac, uc_phy_addr, GMII_BMCR, ul_value);
+		if (uc_rc != GMAC_OK) {
+			gmac_enable_management(p_gmac, false);
+			return uc_rc;
+		}
+
+		phyInitialized = true;
 	}
 
 	/* Check if auto negotiation is completed */
+#if 1	// chrishamm
+	uc_rc = gmac_phy_read(p_gmac, uc_phy_addr, GMII_BMSR, &ul_value);
+	if (uc_rc != GMAC_OK)
+	{
+		gmac_enable_management(p_gmac, false);
+		return uc_rc;
+	}
+
+	if ((ul_value & GMII_AUTONEG_COMP) == 0)
+	{
+		gmac_enable_management(p_gmac, false);
+		return GMAC_TIMEOUT;
+	}
+#else
 	while (1) {
 		uc_rc = gmac_phy_read(p_gmac, uc_phy_addr, GMII_BMSR, &ul_value);
 		if (uc_rc != GMAC_OK) {
@@ -349,6 +375,7 @@ uint8_t ethernet_phy_auto_negotiate(Gmac *p_gmac, uint8_t uc_phy_addr)
 			}
 		}
 	}
+#endif
 
 	/* Get the auto negotiate link partner base page */
 	uc_rc = gmac_phy_read(p_gmac, uc_phy_addr, GMII_ANLPAR, &ul_phy_analpar);
@@ -386,6 +413,7 @@ uint8_t ethernet_phy_auto_negotiate(Gmac *p_gmac, uint8_t uc_phy_addr)
 	gmac_enable_transmit(GMAC, true);
 	gmac_enable_receive(GMAC, true);
 
+	phyInitialized = false;		// in case the board loses link and needs to run this function again
 	gmac_enable_management(p_gmac, false);
 	return uc_rc;
 }

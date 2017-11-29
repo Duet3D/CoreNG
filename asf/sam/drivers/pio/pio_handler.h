@@ -1,6 +1,9 @@
-
 /**
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * \file
+ *
+ * \brief Parallel Input/Output (PIO) interrupt handler for SAM.
+ *
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -36,23 +39,31 @@
  *
  * \asf_license_stop
  *
- * \mainpage
- *
- * \section intro Introduction
- *  This documentation has been automatically generated, and documents the source
- *  code found in the Atmel Software Framework (ASF). <p>
- *  Use the above menu to navigate in the documentation, or use the links below: <br>
- *  <ul>
- *  <li> <a href="globals_func.html">Functions</a>
- *  <li> <a href="annotated.html">Data structures</a>
- *  <li> <a href="globals_type.html">Defines</a>
- *  </ul>
- *
- *  \section main_licence License
- *  <ul>
- *  <li>\ref License
- *  </ul>
- * \section contactinfo Contact Information
- * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
+#ifndef PIO_HANDLER_H_INCLUDED
+#define PIO_HANDLER_H_INCLUDED
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void pio_handler_process(Pio *p_pio, uint32_t ul_id);
+void pio_handler_set_priority(Pio *p_pio, IRQn_Type ul_irqn, uint32_t ul_priority);
+uint32_t pio_handler_set(Pio *p_pio, uint32_t ul_id, uint32_t ul_mask,
+		uint32_t ul_attr, void (*p_handler) (uint32_t, uint32_t));
+uint32_t pio_handler_set_pin(uint32_t ul_pin, uint32_t ul_flag,
+		void (*p_handler) (uint32_t, uint32_t));
+
+#if (SAM3S || SAM4S || SAM4E)
+void pio_capture_handler_set(void (*p_handler)(Pio *));
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* PIO_HANDLER_H_INCLUDED */

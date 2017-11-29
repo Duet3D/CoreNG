@@ -94,9 +94,10 @@
 #endif
 
 // Enable debug information for SD/MMC SPI module
+//#define HSMCI_DEBUG
 #ifdef HSMCI_DEBUG
-#  include <stdio.h>
-#  define hsmci_debug(...)      printf(__VA_ARGS__)
+extern void debugPrintf(const char* fmt, ...);
+#  define hsmci_debug(...)      debugPrintf(__VA_ARGS__)
 #else
 #  define hsmci_debug(...)
 #endif

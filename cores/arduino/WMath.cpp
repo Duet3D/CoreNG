@@ -22,9 +22,9 @@
 
 #include "WMath.h"
 
-#if SAM3XA
+#if SAM3XA || SAME70
 
-// SAM3X has a true random number generator
+// SAM3X and SAME70 have a true random number generator
 #include "trng/trng.h"
 
 extern "C" uint32_t trueRandom()
@@ -42,7 +42,7 @@ extern int32_t random(int32_t howbig)
 		return 0;
 	}
 
-#if SAM3XA
+#if SAM3XA || SAME70
 	return trueRandom() % (uint32_t)howbig;
 #else
 	static bool isInitialised = false;

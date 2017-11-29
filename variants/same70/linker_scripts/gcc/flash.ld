@@ -54,13 +54,6 @@ MEMORY
   ram (rwx) : ORIGIN = 0x20400000, LENGTH = 0x00060000
 }
 
-/* The stack size used by the application. NOTE: you need to adjust according to your application. */
-STACK_SIZE = DEFINED(STACK_SIZE) ? STACK_SIZE : 0x2000;
-__ram_end__ = ORIGIN(ram) + LENGTH(ram) - 4;
-
-/* The heapsize used by the application. NOTE: you need to adjust according to your application. */
-HEAP_SIZE = DEFINED(HEAP_SIZE) ? HEAP_SIZE : 0x200;
-
 /* Section Definitions */
 SECTIONS
 {
@@ -135,7 +128,7 @@ SECTIONS
     } > ram
 
     /* .bss section which is used for uninitialized data */
-    .bss (NOLOAD) :
+    .bss ALIGN(4) (NOLOAD) :
     {
         . = ALIGN(4);
         _sbss = . ;
@@ -147,28 +140,22 @@ SECTIONS
         _ezero = .;
     } > ram
 
-    /* stack section */
-    .stack (NOLOAD):
-    {
-        . = ALIGN(8);
-        _sstack = .;
-        . = . + STACK_SIZE;
-        . = ALIGN(8);
-        _estack = .;
-    } > ram
-
-    /* heap section */
-    .heap (NOLOAD):
-    {
-        . = ALIGN(8);
-         _sheap = .;
-        . = . + HEAP_SIZE;
-        . = ALIGN(8);
-        _eheap = .;
-    } > ram
-
     . = ALIGN(4);
     _end = . ;
-    _ram_end_ = ORIGIN(ram) + LENGTH(ram) -1 ;
+
+    /* .stack_dummy section doesn't contains any symbols. It is only
+       used for linker to calculate size of stack sections, and assign
+       values to stack symbols later */
+    .stack_dummy :
+    {
+        *(.stack*)
+    } > ram
+
+    /* Set stack top to end of ram, and stack limit move down by
+     * size of stack_dummy section */
+    __StackTop = ORIGIN(ram) + LENGTH(ram);
+    __StackLimit = __StackTop - SIZEOF(.stack_dummy);
+    PROVIDE(_sstack = __StackLimit);
+    PROVIDE(_estack = __StackTop);
 }
 
