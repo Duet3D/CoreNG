@@ -227,31 +227,17 @@ RingBuffer rx_buffer2;
 RingBuffer tx_buffer2;
 
 UARTClass Serial(UART0, UART0_IRQn, ID_UART0, &rx_buffer1, &tx_buffer1);
-void serialEvent() __attribute__((weak));
-void serialEvent() { }
 
-UARTClass Serial1(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2);
-void serialEvent1() __attribute__((weak));
-void serialEvent1() { }
-
-// IT handlers
 void UART0_Handler(void)
 {
   Serial.IrqHandler();
 }
 
-// IT handlers
+UARTClass Serial1(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2);
+
 void UART1_Handler(void)
 {
   Serial1.IrqHandler();
-}
-
-// ----------------------------------------------------------------------------
-
-void serialEventRun(void)
-{
-  if (Serial.available()) serialEvent();
-  if (Serial1.available()) serialEvent1();
 }
 
 // ----------------------------------------------------------------------------

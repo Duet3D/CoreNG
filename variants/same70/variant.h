@@ -59,16 +59,6 @@ extern "C"{
  *        Pins
  *----------------------------------------------------------------------------*/
 
-#define digitalPinToPort(P)        ( g_APinDescription[P].pPort )
-#define digitalPinToBitMask(P)     ( g_APinDescription[P].ulPin )
-#define portOutputRegister(port)   ( &(port->PIO_ODSR) )
-#define portInputRegister(port)    ( &(port->PIO_PDSR) )
-#define digitalPinHasPWM(P)        ( g_APinDescription[P].ulPWMChannel != NOT_ON_PWM || g_APinDescription[P].ulTCChannel != NOT_ON_TIMER )
-
-// Interrupts
-#define digitalPinToInterrupt(p)  ((p) < NUM_DIGITAL_PINS ? (p) : -1)
-
-
 /*
  * SPI Interfaces
  */
@@ -105,29 +95,6 @@ static const uint8_t APINS_UART1 = 56;
 static const uint8_t APIN_UART1_RXD = 5;
 static const uint8_t APIN_UART1_TXD = 6;
 #endif
-
-/*
- * DACC
- */
-#define DACC_RESOLUTION		12
-#define DACC_ISR_HANDLER    DACC_Handler
-#define DACC_ISR_ID         DACC_IRQn
-
-/*
- * PWM
- */
-#define PWM_FREQUENCY		1000
-#define PWM_MAX_DUTY_CYCLE	255
-#define PWM_MIN_DUTY_CYCLE	0
-#define PWM_RESOLUTION		8
-
-/*
- * TC
- */
-#define TC_FREQUENCY        1000
-#define TC_MAX_DUTY_CYCLE   255
-#define TC_MIN_DUTY_CYCLE   0
-#define TC_RESOLUTION		8
 
 /*
  * Duet NG2 pins

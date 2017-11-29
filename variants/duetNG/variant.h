@@ -40,8 +40,8 @@
 #include "Core.h"
 
 #ifdef __cplusplus
-#include "UARTClass.h"
-#include "USARTClass.h"
+# include "UARTClass.h"
+# include "USARTClass.h"
 #endif
 
 #ifdef __cplusplus
@@ -60,17 +60,7 @@ extern "C"{
  *----------------------------------------------------------------------------*/
 
 // Number of pins defined in PinDescription array
-#define APINS_COUNT				(103u)
-#define NUM_DIGITAL_PINS		(103u)
-
-#define digitalPinToPort(P)        ( g_APinDescription[P].pPort )
-#define digitalPinToBitMask(P)     ( g_APinDescription[P].ulPin )
-#define portOutputRegister(port)   ( &(port->PIO_ODSR) )
-#define portInputRegister(port)    ( &(port->PIO_PDSR) )
-#define digitalPinHasPWM(P)        ( g_APinDescription[P].ulPWMChannel != NOT_ON_PWM || g_APinDescription[P].ulTCChannel != NOT_ON_TIMER )
-
-// Interrupts
-#define digitalPinToInterrupt(p)  ((p) < NUM_DIGITAL_PINS ? (p) : -1)
+#define APINS_COUNT			(103u)
 
 /*
  * SPI Interfaces
@@ -115,30 +105,6 @@ extern "C"{
 #define APINS_UART1			(108u)
 #define APIN_UART1_RXD		(5u)
 #define APIN_UART1_TXD		(6u)
-
-/*
- * DACC
- */
-#define DACC_RESOLUTION		12
-#define DACC_ISR_HANDLER    DACC_Handler
-#define DACC_ISR_ID         DACC_IRQn
-static const uint8_t DAC1 = 31;
-
-/*
- * PWM
- */
-#define PWM_FREQUENCY		1000
-#define PWM_MAX_DUTY_CYCLE	255
-#define PWM_MIN_DUTY_CYCLE	0
-#define PWM_RESOLUTION		8
-
-/*
- * TC
- */
-#define TC_FREQUENCY        1000
-#define TC_MAX_DUTY_CYCLE   255
-#define TC_MIN_DUTY_CYCLE   0
-#define TC_RESOLUTION		8
 
 /*
  * Duet NG pins

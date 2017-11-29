@@ -60,17 +60,7 @@ extern "C"{
  *----------------------------------------------------------------------------*/
 
 // Number of pins defined in PinDescription array
-#define APINS_COUNT				(103u)
-#define NUM_DIGITAL_PINS		(103u)
-
-#define digitalPinToPort(P)        ( g_APinDescription[P].pPort )
-#define digitalPinToBitMask(P)     ( g_APinDescription[P].ulPin )
-#define portOutputRegister(port)   ( &(port->PIO_ODSR) )
-#define portInputRegister(port)    ( &(port->PIO_PDSR) )
-#define digitalPinHasPWM(P)        ( g_APinDescription[P].ulPWMChannel != NOT_ON_PWM || g_APinDescription[P].ulTCChannel != NOT_ON_TIMER )
-
-// Interrupts
-#define digitalPinToInterrupt(p)  ((p) < NUM_DIGITAL_PINS ? (p) : -1)
+#define APINS_COUNT			(68u)
 
 /*
  * SPI Interfaces
@@ -82,13 +72,9 @@ extern "C"{
 #define APIN_SPI_SCK		(14u)
 #define APIN_SPI_SS0		(11u)
 
-#define APIN_USART0_MOSI	(27u)
-#define APIN_USART0_MISO	(26u)
-#define APIN_USART0_SCK		(30u)
-
-#define APIN_USART1_MOSI	(22u)
-#define APIN_USART1_MISO	(21u)
-#define APIN_USART1_SCK		(23u)
+#define APIN_USART0_MOSI	(6u)
+#define APIN_USART0_MISO	(5u)
+#define APIN_USART0_SCK		(2u)
 
 /*
  * Wire Interfaces
@@ -105,53 +91,26 @@ extern "C"{
 /*
  * UART/USART Interfaces
  */
+
 // SerialUSB
-#define USB_VBUS_PIN		(54u)
-// Serial
-#define APINS_UART0			(107u)
+#define USB_VBUS_PIN		(47u)
+
+#define APINS_UART0			(71u)
 #define APIN_UART0_RXD		(9u)
 #define APIN_UART0_TXD		(10u)
-// Serial1
-#define APINS_UART1			(108u)
-#define APIN_UART1_RXD		(5u)
-#define APIN_UART1_TXD		(6u)
 
-/*
- * DACC
- */
-#define DACC_RESOLUTION		12
-#define DACC_ISR_HANDLER    DACC_Handler
-#define DACC_ISR_ID         DACC_IRQn
-static const uint8_t DAC1 = 31;
-
-/*
- * PWM
- */
-#define PWM_FREQUENCY		1000
-#define PWM_MAX_DUTY_CYCLE	255
-#define PWM_MIN_DUTY_CYCLE	0
-#define PWM_RESOLUTION		8
-
-/*
- * TC
- */
-#define TC_FREQUENCY        1000
-#define TC_MAX_DUTY_CYCLE   255
-#define TC_MIN_DUTY_CYCLE   0
-#define TC_RESOLUTION		8
-
-/*
- * Duet NG pins
- */
+#define APINS_UART1			(72u)
+#define APIN_UART1_RXD		(28u)
+#define APIN_UART1_TXD		(29u)
 
 // HSMCI
-static const uint8_t APIN_HSMCI_CLOCK = 104;
-static const uint8_t APINS_HSMCI_DATA = 105;
+const uint8_t APIN_HSMCI_CLOCK = 68;
+const uint8_t APINS_HSMCI_DATA = 69;
 
-static const uint32_t MaxPinNumber = 103;						// last GPIO pin
+const uint32_t MaxPinNumber = 67;						// last GPIO pin
 
-static const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
-static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds
+const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
+const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds
 
 #ifdef __cplusplus
 }
@@ -164,7 +123,7 @@ static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to 
 #ifdef __cplusplus
 
 extern UARTClass Serial;
-extern UARTClass Serial1;
+extern UARTClass SerialTMC;
 
 extern void ConfigurePin(const PinDescription& pinDesc);
 
