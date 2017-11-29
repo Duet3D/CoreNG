@@ -104,13 +104,13 @@ extern "C"{
 #define APIN_UART1_TXD		(29u)
 
 // HSMCI
-const uint8_t APIN_HSMCI_CLOCK = 68;
-const uint8_t APINS_HSMCI_DATA = 69;
+static const uint8_t APIN_HSMCI_CLOCK = 68;
+static const uint8_t APINS_HSMCI_DATA = 69;
 
-const uint32_t MaxPinNumber = 67;						// last GPIO pin
+static const uint32_t MaxPinNumber = 67;						// last GPIO pin
 
-const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
-const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds
+static const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
+static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds
 
 #ifdef __cplusplus
 }
