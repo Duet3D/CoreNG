@@ -18,23 +18,29 @@
 //! Device definition (mandatory)
 
 #if SAM3XA
-#define  USB_DEVICE_VENDOR_ID             0x1209			// pid.codes VID from which PIDs are allocated to open source projects
+# define  USB_DEVICE_VENDOR_ID			0x1209			// pid.codes VID from which PIDs are allocated to open source projects
 # ifdef __ALLIGATOR__
-#  define  USB_DEVICE_PRODUCT_ID            0xAB3D			// PID allocated for Alligator board
+#  define  USB_DEVICE_PRODUCT_ID		0xAB3D			// PID allocated for Alligator board
 # else
-#  define  USB_DEVICE_PRODUCT_ID            0xD3D8			// PID allocated to us for older Duets
+#  define  USB_DEVICE_PRODUCT_ID		0xD3D8			// PID allocated to us for older Duets
 # endif
 #endif
 
-#if SAM4E || SAM4S		//TODO need new PID for SAM4S
-#define  USB_DEVICE_VENDOR_ID             0x1D50			// openmoku.org VID from which PIDs are allocated to open source projects
-#define  USB_DEVICE_PRODUCT_ID            0x60EC			// PID allocated to us for Duet NG series
+#if SAM4E
+#define  USB_DEVICE_VENDOR_ID			0x1D50			// openmoku.org VID from which PIDs are allocated to open source projects
+#define  USB_DEVICE_PRODUCT_ID			0x60EC			// PID allocated to us for Duet NG series
+#endif
+
+#if SAM4S
+#define  USB_DEVICE_VENDOR_ID			0x1D50			// openmoku.org VID from which PIDs are allocated to open source projects
+#define  USB_DEVICE_PRODUCT_ID			0x60EC			// TEMPORARY!
+#warning using temporary USB PID for SAM4S
 #endif
 
 #if SAME70
-#define  USB_DEVICE_VENDOR_ID             0x1209			// pid.codes VID from which PIDs are allocated to open source projects
-#define  USB_DEVICE_PRODUCT_ID			  0x60ED			// TEMPORARY!
-#warning using temporary unallocated USB PID
+#define  USB_DEVICE_VENDOR_ID			0x1D50			// pid.codes VID from which PIDs are allocated to open source projects
+#define  USB_DEVICE_PRODUCT_ID			0x60EC			// TEMPORARY!
+#warning using temporary USB PID for SAME70
 #endif
 
 #define  USB_DEVICE_MAJOR_VERSION         1

@@ -31,7 +31,7 @@
 #define VARIANT_MAINOSC		12000000
 
 /** Master clock frequency */
-#define VARIANT_MCK			300000000
+#define VARIANT_MCK			150000000
 
 /*----------------------------------------------------------------------------
  *        Headers
@@ -64,9 +64,10 @@ extern "C"{
  */
 
 #define SPI_INTERFACE_ID	ID_SPI
-#define APIN_SPI_MOSI		(43u)
-#define APIN_SPI_MISO		(42u)
-#define APIN_SPI_SCK		(44u)
+#define APIN_SPI_MOSI		(42u)
+#define APIN_SPI_MISO		(41u)
+#define APIN_SPI_SCK		(43u)
+#define APIN_SPI_SS0		(20u)
 
 #if 0	// TODO
 /*
@@ -80,31 +81,36 @@ extern "C"{
 #define WIRE_INTERFACE_ID	ID_TWI0
 #define WIRE_ISR_HANDLER	TWI0_Handler
 #define WIRE_ISR_ID			TWI0_IRQn
+#endif
 
 /*
  * UART/USART Interfaces
  */
 // SerialUSB
-//#define USB_VBUS_PIN		(54u)		// not present on the XPLD, can be any free pin
+//#define USB_VBUS_PIN		(??)		// not present on the test board, can be any free pin
 // Serial
-static const uint8_t APINS_UART0 = 55;
-static const uint8_t APIN_UART0_RXD = 7;
-static const uint8_t APIN_UART0_TXD = 8;
+static const uint8_t APINS_UART0 = 56;
+static const uint8_t APIN_UART0_RXD = 5;
+static const uint8_t APIN_UART0_TXD = 6;
 // Serial1
-static const uint8_t APINS_UART1 = 56;
-static const uint8_t APIN_UART1_RXD = 5;
-static const uint8_t APIN_UART1_TXD = 6;
-#endif
+static const uint8_t APINS_UART1 = 57;
+static const uint8_t APIN_UART1_RXD = 3;
+static const uint8_t APIN_UART1_TXD = 4;
 
 /*
- * Duet NG2 pins
+ * SAM E70 test board pins
  */
 
 // HSMCI
-static const uint8_t APIN_HSMCI_CLOCK = 52;
-static const uint8_t APINS_HSMCI_DATA = 53;
+static const uint8_t APIN_HSMCI_CLOCK = 51;
+static const uint8_t APIN_HSMCI_DATA = 52;
 
-static const uint32_t MaxPinNumber = 51;						// last GPIO pin
+// PHY
+static const uint8_t APIN_GMAC_PHY_INTERRUPT = 53;
+static const uint8_t APIN_GMAC_PHY_RESET = 54;
+static const uint8_t APINS_GMAC_PHY = 55;
+
+static const uint32_t MaxPinNumber = 50;						// last GPIO pin
 
 static const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
 static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds

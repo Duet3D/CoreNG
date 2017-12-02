@@ -33,7 +33,6 @@
 // We have to tell the processor which NPCS output we are using, even though we use other pins for CS
 #if SAME70
 // We choose NPCS2 because on the SAME70, it is not physically connected
-// chrishamm 10-11-17: I am not sure if this is really needed, but CH2 is N/C anyway. Better leave this here for now
 # define PERIPHERAL_CHANNEL_ID		2
 # define PERIPHERAL_CHANNEL_CS_PIN	APIN_SPI_SS2
 #elif SAM3XA

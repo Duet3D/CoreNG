@@ -44,6 +44,7 @@
 
 #include "same70.h"
 #include "system_same70.h"
+#include "wdt/wdt.h"
 
 
 #if __FPU_USED /* CMSIS defined value to indicate usage of FPU */
@@ -52,23 +53,27 @@
 
 /* Initialize segments */
 extern uint32_t _sfixed;
-extern uint32_t _efixed;
+//extern uint32_t _efixed;
 extern uint32_t _etext;
 extern uint32_t _srelocate;
 extern uint32_t _erelocate;
 extern uint32_t _szero;
 extern uint32_t _ezero;
-extern uint32_t _sstack;
+//extern uint32_t _sstack;
 extern uint32_t _estack;
 
 /** \cond DOXYGEN_SHOULD_SKIP_THIS */
 int main(void);
 /** \endcond */
 
-void __libc_init_array(void);
+//void __libc_init_array(void);
 
 /* Default empty handler */
 void Dummy_Handler(void);
+
+/* Calls to the core */
+extern int sysTickHook(void);
+extern void TimeTick_Increment(void);
 
 /* Cortex-M7 core handlers */
 void NMI_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
@@ -79,7 +84,15 @@ void UsageFault_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void SVC_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void DebugMon_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void PendSV_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SysTick_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+
+void SysTick_Handler(void)
+{
+	if (sysTickHook())
+		return;
+
+	wdt_restart(WDT);							// kick the watchdog
+	TimeTick_Increment();						// increment tick count each ms
+}
 
 /* Peripherals handlers */
 void SUPC_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
@@ -332,9 +345,6 @@ void Reset_Handler(void)
 #if __FPU_USED
 	fpu_enable();
 #endif
-
-        /* Initialize the C library */
-        __libc_init_array();
 
         /* Branch to main function */
         main();

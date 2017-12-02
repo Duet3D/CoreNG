@@ -361,8 +361,10 @@ static inline void xdmac_channel_enable(Xdmac *xdmac, uint32_t channel_num)
 	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
 	
+#if 0	// chrishamm: This causes occasional hard faults. Not good
 	/* Update DCache before DMA transmit */
 	SCB_CleanInvalidateDCache();
+#endif
 	
 	xdmac->XDMAC_GE = (XDMAC_GE_EN0 << channel_num);
 }

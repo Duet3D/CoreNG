@@ -44,8 +44,8 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_EMAC_H_INCLUDED
-#define CONF_EMAC_H_INCLUDED
+#ifndef CONF_ETH_H_INCLUDED
+#define CONF_ETH_H_INCLUDED
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -55,19 +55,53 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/** EMAC PHY address */
-#define BOARD_EMAC_PHY_ADDR  2
-/*! EMAC RMII mode */
-#define BOARD_EMAC_MODE_RMII 1
+
+#ifdef __SAME70Q21__
+
+# include "gmac.h"
+
+/**
+ * LWIP_NETIF_TX_SINGLE_PBUF: if this is set to 1, lwIP tries to put all data
+ * to be sent into one single pbuf. This is for compatibility with DMA-enabled
+ * MACs that do not support scatter-gather.
+ */
+#define LWIP_NETIF_TX_SINGLE_PBUF                     1
 
 /** Number of buffer for RX */
-#define EMAC_RX_BUFFERS  (32)
+# define GMAC_RX_BUFFERS  3
 
 /** Number of buffer for TX */
-#define EMAC_TX_BUFFERS  (8)
+# define GMAC_TX_BUFFERS  3
 
 /** MAC PHY operation max retry count */
-#define MAC_PHY_RETRY_MAX 1000000
+# define MAC_PHY_RETRY_MAX 1000000
+
+/** Ethernet MII/RMII mode */
+# define ETH_PHY_MODE                                  GMAC_PHY_RMII
+
+/** GMAC HW configurations */
+# define BOARD_GMAC_PHY_ADDR   0
+
+#else
+
+/** EMAC PHY address */
+# define BOARD_EMAC_PHY_ADDR  2
+/*! EMAC RMII mode */
+# define BOARD_EMAC_MODE_RMII 1
+
+/** Number of buffer for RX */
+# define EMAC_RX_BUFFERS  (32)
+
+/** Number of buffer for TX */
+# define EMAC_TX_BUFFERS  (8)
+
+/** MAC PHY operation max retry count */
+# define MAC_PHY_RETRY_MAX 1000000
+
+/** Ethernet MII/RMII mode */
+# define ETH_PHY_MODE                                  BOARD_EMAC_MODE_RMII
+
+#endif
 
 /** MAC address definition.  The MAC address must be unique on the network. */
 #define ETHERNET_CONF_ETHADDR0                        0xBE
@@ -99,9 +133,6 @@ extern "C" {
 
 #endif
 
-/** Ethernet MII/RMII mode */
-#define ETH_PHY_MODE                                  BOARD_EMAC_MODE_RMII
-
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus
@@ -110,4 +141,4 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-#endif /* CONF_EMAC_H_INCLUDED */
+#endif /* CONF_ETH_H_INCLUDED */

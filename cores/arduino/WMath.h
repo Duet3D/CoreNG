@@ -20,17 +20,19 @@
 #define _WIRING_MATH_
 
 #include <stdint.h>
+#include <compiler.h>
+
+#if SAM3XA || SAME70
 
 #ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __SAM3X8E__
+extern "C" uint32_t trueRandom();
+#else
 extern uint32_t trueRandom();
 #endif
 
+#endif	// SAM3XA || SAME70
+
 #ifdef __cplusplus
-}
 
 #include <cmath>
 
@@ -41,11 +43,11 @@ extern int32_t map(int32_t, int32_t, int32_t, int32_t, int32_t);
 // std::min and std::max don't seem to work with this variant of gcc, so define our own ones here
 // We use these only with primitive types, so pass them directly instead of by const reference
 #ifdef min
-#undef min
+# undef min
 #endif
 
 #ifdef max
-#undef max
+# undef max
 #endif
 
 template<class X> inline X min(X _a, X _b)
