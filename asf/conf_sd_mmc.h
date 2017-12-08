@@ -74,7 +74,6 @@
 
 #define SD_MMC_SPI_MAX_CLOCK		(2000000)	// Max 2MHz clock for SPI cards, to allow a reasonable cable length
 
-#define SD_MMC_CD_DETECT_VALUE		false
 #define SD_MMC_WP_DETECT_VALUE		false
 
 #elif defined(__ALLIGATOR__)
@@ -84,7 +83,6 @@
 
 #define SD_MMC_SPI_MAX_CLOCK		(20000000)	// Max 20MHz clock for onboard SPI cards
 
-#define SD_MMC_CD_DETECT_VALUE		false
 #define SD_MMC_WP_DETECT_VALUE		false
 
 
@@ -97,7 +95,6 @@
 
 #define SD_MMC_SPI_MAX_CLOCK		(2000000)	// Max 2MHz clock for SPI cards, to allow a reasonable cable length
 
-#define SD_MMC_CD_DETECT_VALUE		false
 #define SD_MMC_WP_DETECT_VALUE		false
 
 #endif

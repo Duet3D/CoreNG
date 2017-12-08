@@ -118,7 +118,7 @@ typedef uint8_t card_version_t; //!< Type of card version
 /**
  * \brief Initialize the SD/MMC stack and low level driver required
  */
-void sd_mmc_init(const Pin cdPins[], const Pin wpPins[], const Pin spiCsPins[]);
+void sd_mmc_init(const Pin wpPins[], const Pin spiCsPins[]);
 
 /** \brief Return the number of slot available
  *
@@ -170,9 +170,6 @@ uint32_t sd_mmc_get_capacity(uint8_t slot);
 bool sd_mmc_is_write_protected(uint8_t slot);
 
 #if 1		// dc42
-
-// Get the Card Detect status, returning true if the CD pin is present and active
-bool sd_mmc_card_detected(uint8_t slot);
 
 // Unmount the card. Must call this to force it to be re-initialised when changing card.
 void sd_mmc_unmount(uint8_t slot);

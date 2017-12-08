@@ -20,22 +20,24 @@
 
 const uint32_t pioInterruptPriority = 5;
 
-typedef void (*interruptCB)(void*);
+typedef void (*interruptCB)(CallbackParameter);
 
 struct InterruptCallback
 {
 	interruptCB func;
-	void *param;
+	CallbackParameter param;
+
+	InterruptCallback() : func(nullptr) { }
 };
 
-static InterruptCallback callbacksPioA[32] = { 0 };
-static InterruptCallback callbacksPioB[32] = { 0 };
-static InterruptCallback callbacksPioC[32] = { 0 };
+static InterruptCallback callbacksPioA[32];
+static InterruptCallback callbacksPioB[32];
+static InterruptCallback callbacksPioC[32];
 #ifdef ID_PIOD
-static InterruptCallback callbacksPioD[32] = { 0 };
+static InterruptCallback callbacksPioD[32];
 #endif
 #ifdef ID_PIOE
-static InterruptCallback callbacksPioE[32] = { 0 };
+static InterruptCallback callbacksPioE[32];
 #endif
 
 /* Configure PIO interrupt sources */
@@ -95,7 +97,7 @@ static unsigned int GetHighestBit(uint32_t bits)
 	return bitNum;
 }
 
-extern "C" void attachInterrupt(uint32_t pin, void (*callback)(void*), uint32_t mode, void *param)
+void attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), uint32_t mode, CallbackParameter param)
 {
 	static bool enabled = false;
 	if (!enabled)
@@ -182,12 +184,13 @@ extern "C" void attachInterrupt(uint32_t pin, void (*callback)(void*), uint32_t 
 	}
 
 	// Enable interrupt
-	pio->PIO_IER = mask;
+	pio->PIO_IFER = mask;			// enable glitch filter on this pin
+	pio->PIO_IER = mask;			// enable interrupt on this pin
 
 	cpu_irq_restore(flags);
 }
 
-extern "C" void detachInterrupt(uint32_t pin)
+void detachInterrupt(uint32_t pin)
 {
 	// Retrieve pin information
 	Pio * const pio = g_APinDescription[pin].pPort;

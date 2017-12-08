@@ -21,17 +21,19 @@
 
 #include "Core.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+union CallbackParameter
+{
+	void *vp;
+	uint32_t ip;
 
-void attachInterrupt(uint32_t pin, void (*callback)(void*), uint32_t mode, void *param);
+	CallbackParameter(void *pp) : vp(pp) { }
+	CallbackParameter(uint32_t pp) : ip(pp) { }
+	CallbackParameter() : ip(0) { }
+};
+
+void attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), uint32_t mode, CallbackParameter param);
 
 void detachInterrupt(uint32_t pin);
-
-#ifdef __cplusplus
-}
-#endif
 
 // Return true if we are in an interrupt service routine
 bool inInterrupt();
