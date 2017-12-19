@@ -328,14 +328,14 @@ void Reset_Handler(void)
         pDest = &_srelocate;
 
         if (pSrc != pDest) {
-                for (; pDest < &_erelocate;) {
-                        *pDest++ = *pSrc++;
-                }
+			for (; pDest < &_erelocate;) {
+				*pDest++ = *pSrc++;
+			}
         }
 
         /* Clear the zero segment */
         for (pDest = &_szero; pDest < &_ezero;) {
-                *pDest++ = 0;
+        	*pDest++ = 0;
         }
 
         /* Set the vector table base address */
@@ -344,6 +344,8 @@ void Reset_Handler(void)
 
 #if __FPU_USED
 	fpu_enable();
+#else
+# warning Compiling without FPU support
 #endif
 
         /* Branch to main function */

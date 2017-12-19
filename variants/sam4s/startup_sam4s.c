@@ -170,19 +170,16 @@ void Reset_Handler(void)
 	pSrc = &_etext;
 	pDest = &_srelocate;
 
-	if (pSrc > pDest) {
+	if (pSrc != pDest) {
 		for (; pDest < &_erelocate;) {
 			*pDest++ = *pSrc++;
 		}
-	} else if (pSrc < pDest) {
-		uint32_t nb_bytes = (uint32_t)&_erelocate - (uint32_t)&_srelocate;
-		pSrc = (uint32_t*)((uint32_t)pSrc + nb_bytes) - 1;
-		pDest = (uint32_t*)((uint32_t)pDest + nb_bytes) - 1;
-		for (;nb_bytes;nb_bytes -= 4) {
-			*pDest-- = *pSrc--;
-		}
 	}
-	__NOP();
+
+	/* Clear the zero segment */
+	for (pDest = &_szero; pDest < &_ezero;) {
+		*pDest++ = 0;
+	}
 
 	/* Set the vector table base address */
 	pSrc = (uint32_t *) & _sfixed;

@@ -103,6 +103,10 @@ extern "C"{
 #define APIN_UART1_RXD		(28u)
 #define APIN_UART1_TXD		(29u)
 
+// UART interface to stepper drivers
+static const uint8_t DriversRxPin = 9;
+static const uint8_t DriversTxPin = 10;
+
 // HSMCI
 static const uint8_t APIN_HSMCI_CLOCK = 68;
 static const uint8_t APINS_HSMCI_DATA = 69;

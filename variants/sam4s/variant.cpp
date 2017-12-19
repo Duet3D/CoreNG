@@ -168,13 +168,7 @@ RingBuffer tx_buffer1;
 RingBuffer rx_buffer2;
 RingBuffer tx_buffer2;
 
-// UART0 is used to control the stepper drivers
-UARTClass SerialTMC(UART0, UART0_IRQn, ID_UART0, &rx_buffer1, &tx_buffer1);
-
-void UART0_Handler(void)
-{
-  SerialTMC.IrqHandler();
-}
+// UART0 is used to control the stepper drivers. We don't use the core support for this.
 
 // UART1 is used to interface with PanelDue
 UARTClass Serial(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2);
