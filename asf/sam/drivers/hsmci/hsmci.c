@@ -225,7 +225,7 @@ static void hsmci_set_speed(uint32_t speed, uint32_t mck)
 }
 
 #if 1  // dc42
-// Get the speed of the HSMCI clock for reporting purposes, in bytes/sec
+// Get the speed of the HSMCI interface for reporting purposes, in bytes/sec
 uint32_t hsmci_get_speed()
 {
 #if SAM4E || SAME70

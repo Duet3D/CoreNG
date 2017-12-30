@@ -100,6 +100,9 @@ struct DriverInterface
 	bool (*wait_end_of_read_blocks)(void);
 	bool (*start_write_blocks)(const void *src, uint16_t nb_block);
 	bool (*wait_end_of_write_blocks)(void);
+#if 1	//dc42
+	uint32_t (*getInterfaceSpeed)(void);
+#endif
 	driverIdleFunc_t (*set_idle_func)(driverIdleFunc_t);
 	bool is_spi;			// true if the interface is SPI, false if it is HSMCI
 };
@@ -124,6 +127,9 @@ static const struct DriverInterface hsmciInterface = {
 	.wait_end_of_read_blocks = hsmci_wait_end_of_read_blocks,
 	.start_write_blocks = hsmci_start_write_blocks,
 	.wait_end_of_write_blocks = hsmci_wait_end_of_write_blocks,
+#if 1	//dc42
+	.getInterfaceSpeed = hsmci_get_speed,
+#endif
 	.set_idle_func = hsmci_set_idle_func,
 	.is_spi = false
 };
@@ -149,6 +155,9 @@ static const struct DriverInterface spiInterface = {
 	.wait_end_of_read_blocks = sd_mmc_spi_wait_end_of_read_blocks,
 	.start_write_blocks = sd_mmc_spi_start_write_blocks,
 	.wait_end_of_write_blocks = sd_mmc_spi_wait_end_of_write_blocks,
+#if 1	//dc42
+	.getInterfaceSpeed = spi_mmc_get_speed,
+#endif
 	.set_idle_func = sd_mmc_spi_set_idle_func,
 	.is_spi = true
 };
@@ -1880,6 +1889,12 @@ bool sd_mmc_is_write_protected(uint8_t slot)
 void sd_mmc_unmount(uint8_t slot)
 {
 	sd_mmc_cards[slot].state = SD_MMC_CARD_STATE_NO_CARD;
+}
+
+// Get the interface speed in bytes/sec
+uint32_t sd_mmc_get_interface_speed(uint8_t slot)
+{
+	return sd_mmc_cards[slot].iface->getInterfaceSpeed();
 }
 
 #endif

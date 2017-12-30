@@ -174,6 +174,9 @@ bool sd_mmc_is_write_protected(uint8_t slot);
 // Unmount the card. Must call this to force it to be re-initialised when changing card.
 void sd_mmc_unmount(uint8_t slot);
 
+// Get the interface speed in bytes/sec
+uint32_t sd_mmc_get_interface_speed(uint8_t slot);
+
 #endif
 
 /**

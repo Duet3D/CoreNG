@@ -310,6 +310,12 @@ static bool sd_mmc_spi_stop_multiwrite_block(void)
 
 #if 1	//dc42
 
+// Get the speed of the SPI SD card interface for reporting purposes, in bytes/sec
+uint32_t spi_mmc_get_speed(void)
+{
+	return SD_MMC_SPI_MAX_CLOCK/8;
+}
+
 static spiIdleFunc_t spiIdleFunc = NULL;
 
 // Set the idle function and return the old one
