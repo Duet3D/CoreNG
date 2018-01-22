@@ -97,8 +97,14 @@ static unsigned int GetHighestBit(uint32_t bits)
 	return bitNum;
 }
 
-void attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), uint32_t mode, CallbackParameter param)
+// Attach an interrupt to the specified pin returning true if successful
+bool attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), uint32_t mode, CallbackParameter param)
 {
+	if (pin > MaxPinNumber)
+	{
+		return false;
+	}
+
 	static bool enabled = false;
 	if (!enabled)
 	{
@@ -188,6 +194,7 @@ void attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), uint32_t
 	pio->PIO_IER = mask;			// enable interrupt on this pin
 
 	cpu_irq_restore(flags);
+	return true;
 }
 
 void detachInterrupt(uint32_t pin)

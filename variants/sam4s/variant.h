@@ -79,7 +79,7 @@ extern "C"{
 /*
  * Wire Interfaces
  */
-#define WIRE_INTERFACES_COUNT 1
+#define WIRE_INTERFACES_COUNT (1)		// SAM4S supports two I2C interfaces but we only have the first one available
 
 #define APIN_WIRE_SDA		(3u)
 #define APIN_WIRE_SCL		(4u)
