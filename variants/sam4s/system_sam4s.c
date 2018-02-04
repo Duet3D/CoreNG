@@ -46,8 +46,8 @@
  */
 
 #include "system_sam4s.h"
-
 #include "sam4s.h"
+#include "sysclk.h"
 
 /* @cond 0 */
 /**INDENT-OFF**/
@@ -78,52 +78,7 @@ uint32_t SystemCoreClock = CHIP_FREQ_MAINCK_RC_4MHZ;
  */
 void SystemInit( void )
 {
-	/* Set FWS according to default clock configuration */
-	EFC0->EEFC_FMR = EEFC_FMR_FWS(1)|EEFC_FMR_CLOE;
-#if defined(ID_EFC1)
-	EFC1->EEFC_FMR = EEFC_FMR_FWS(1)|EEFC_FMR_CLOE;
-#endif
-
-	/* Initialize main oscillator */
-	if ( !(PMC->CKGR_MOR & CKGR_MOR_MOSCSEL) ) {
-		PMC->CKGR_MOR = SYS_CKGR_MOR_KEY_VALUE | SYS_BOARD_OSCOUNT |
-				CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN;
-
-		while ( !(PMC->PMC_SR & PMC_SR_MOSCXTS) ) {
-		}
-	}
-
-	/* Switch to 3-20MHz Xtal oscillator */
-	PMC->CKGR_MOR = SYS_CKGR_MOR_KEY_VALUE | SYS_BOARD_OSCOUNT |
-			CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN |
-			CKGR_MOR_MOSCSEL;
-
-	while ( !(PMC->PMC_SR & PMC_SR_MOSCSELS) ) {
-	}
-
-	PMC->PMC_MCKR = (PMC->PMC_MCKR & ~(uint32_t)PMC_MCKR_CSS_Msk) |
-			PMC_MCKR_CSS_MAIN_CLK;
-
-	while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) ) {
-	}
-
-	/* Initialize PLLA */
-	PMC->CKGR_PLLAR = SYS_BOARD_PLLAR;
-	while ( !(PMC->PMC_SR & PMC_SR_LOCKA) ) {
-	}
-
-	/* Switch to main clock */
-	PMC->PMC_MCKR = (SYS_BOARD_MCKR & ~PMC_MCKR_CSS_Msk) |
-			PMC_MCKR_CSS_MAIN_CLK;
-	while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) ) {
-	}
-
-	/* Switch to PLLA */
-	PMC->PMC_MCKR = SYS_BOARD_MCKR;
-	while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) ) {
-	}
-
-	SystemCoreClock = CHIP_FREQ_CPU_MAX;
+	sysclk_init();		// DC
 }
 
 void SystemCoreClockUpdate( void )

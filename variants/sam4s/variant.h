@@ -95,13 +95,10 @@ extern "C"{
 // SerialUSB
 #define USB_VBUS_PIN		(47u)
 
-#define APINS_UART0			(71u)
-#define APIN_UART0_RXD		(9u)
-#define APIN_UART0_TXD		(10u)
-
-#define APINS_UART1			(72u)
-#define APIN_UART1_RXD		(28u)
-#define APIN_UART1_TXD		(29u)
+// Serial. We only use the core support for UART1.
+#define APINS_UART			(71u)
+#define APIN_UART_RXD		(28u)
+#define APIN_UART_TXD		(29u)
 
 // UART interface to stepper drivers
 static const uint8_t DriversRxPin = 9;
@@ -110,6 +107,9 @@ static const uint8_t DriversTxPin = 10;
 // HSMCI
 static const uint8_t APIN_HSMCI_CLOCK = 68;
 static const uint8_t APINS_HSMCI_DATA = 69;
+
+// TWI
+static const uint8_t APINS_TWI = 70;
 
 static const uint32_t MaxPinNumber = 67;						// last GPIO pin
 
@@ -127,7 +127,6 @@ static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to 
 #ifdef __cplusplus
 
 extern UARTClass Serial;
-extern UARTClass SerialTMC;
 
 extern void ConfigurePin(const PinDescription& pinDesc);
 

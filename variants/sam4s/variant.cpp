@@ -70,8 +70,8 @@ extern const PinDescription g_APinDescription[]=
   { PIOA, PIO_PA16C_PWML2,		ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_PWM),   	NO_ADC, PWM_CH2,	 NOT_ON_TIMER }, // Heater 2
   { PIOA, PIO_PA17X1_AD0, 		ID_PIOA, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_ANALOG,					ADC0,   NOT_ON_PWM,  NOT_ON_TIMER }, // VREF_MON
   { PIOA, PIO_PA18X1_AD1,		ID_PIOA, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_ANALOG,					ADC1,   NOT_ON_PWM,  NOT_ON_TIMER }, // E2 dir
-  { PIOA, PIO_PA19B_PWML0,		ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_PWM),	NO_ADC, PWM_CH0,  	 NOT_ON_TIMER }, // VSSA_MON
-  { PIOA, PIO_PA20B_PWML1,		ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_PWM),	NO_ADC, PWM_CH1,	 NOT_ON_TIMER }, // Thermistor 0
+  { PIOA, PIO_PA19X1_AD2,		ID_PIOA, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_ANALOG,					ADC2,	NOT_ON_PWM,  NOT_ON_TIMER }, // VSSA_MON
+  { PIOA, PIO_PA20X1_AD3,		ID_PIOA, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_ANALOG,					ADC3,	NOT_ON_PWM,	 NOT_ON_TIMER }, // Thermistor 0
 
   // 21-23 SPI bus 1
   { PIOA, PIO_PA21A_RXD1,		ID_PIOA, PIO_PERIPH_A, PIO_PULLUP,   PIN_ATTR_ANALOG,					ADC8,   NOT_ON_PWM,  NOT_ON_TIMER }, // Analogue, digital or UART expansion
@@ -91,8 +91,8 @@ extern const PinDescription g_APinDescription[]=
   // 26-33
   { PIOB, PIO_PB0X1_AD4,		ID_PIOB, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_ANALOG,					ADC4,   NOT_ON_PWM,  NOT_ON_TIMER }, // Thermistor 1
   { PIOB, PIO_PB1X1_AD5,		ID_PIOB, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_ANALOG,					ADC5,   NOT_ON_PWM,  NOT_ON_TIMER }, // Thermistor 3
-  { PIOB, PIO_PB2A_URXD1,		ID_PIOB, PIO_PERIPH_A, PIO_PULLUP,   PIN_ATTR_DIGITAL,					ADC6,   NOT_ON_PWM,  NOT_ON_TIMER }, // URXD0 PanelDue Dout
-  { PIOB, PIO_PB3A_UTXD1,		ID_PIOB, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					ADC7,   NOT_ON_PWM,  NOT_ON_TIMER }, // UTXD0 PanelDue Din
+  { PIOB, PIO_PB2A_URXD1,		ID_PIOB, PIO_PERIPH_A, PIO_PULLUP,   PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // URXD0 PanelDue Dout
+  { PIOB, PIO_PB3A_UTXD1,		ID_PIOB, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // UTXD0 PanelDue Din
   { PIOB, PIO_PB4,      		ID_PIOB, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // Z dir
   { PIOB, PIO_PB5,		  		ID_PIOB, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // LCD ENC_A
   { PIOB, PIO_PB6,      		ID_PIOB, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // Y stop
@@ -154,10 +154,8 @@ extern const PinDescription g_APinDescription[]=
 
   // 70 - TWI0 all pins
   { PIOA, PIO_PA3A_TWD0|PIO_PA4A_TWCK0, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER },
-  // 71 - UART0 all pins
-  { PIOA, PIO_PA9A_URXD0|PIO_PA10A_UTXD0, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER },
-  // 72 - UART1 all pins
-  { PIOA, PIO_PB2A_URXD1|PIO_PB3A_UTXD1, ID_PIOB, PIO_PERIPH_A, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER }
+  // 71 - UART1 all pins
+  { PIOB, PIO_PB2A_URXD1|PIO_PB3A_UTXD1, ID_PIOB, PIO_PERIPH_A, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER }
 };
 
 /*
@@ -165,13 +163,11 @@ extern const PinDescription g_APinDescription[]=
  */
 RingBuffer rx_buffer1;
 RingBuffer tx_buffer1;
-RingBuffer rx_buffer2;
-RingBuffer tx_buffer2;
 
 // UART0 is used to control the stepper drivers. We don't use the core support for this.
 
 // UART1 is used to interface with PanelDue
-UARTClass Serial(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2);
+UARTClass Serial(UART1, UART1_IRQn, ID_UART1, &rx_buffer1, &tx_buffer1);
 
 void UART1_Handler(void)
 {
@@ -207,8 +203,8 @@ extern "C" void init( void )
 	// We no longer disable pullups on all pins here, better to leave them enabled until the port is initialised
 
 	// Initialize Serial port U(S)ART pins
-	ConfigurePin(g_APinDescription[APINS_UART0]);
-	setPullup(APIN_UART0_RXD, true); 							// Enable pullup for RX0
+	ConfigurePin(g_APinDescription[APINS_UART]);				// PanelDue uses UART1
+	setPullup(APIN_UART_RXD, true); 							// Enable pullup for RX0
 
 	// No need to initialize the USB pins on the SAM4E because they are USB by default
 

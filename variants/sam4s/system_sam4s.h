@@ -45,8 +45,8 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef SYSTEM_SAM4E_H_INCLUDED
-#define SYSTEM_SAM4E_H_INCLUDED
+#ifndef SYSTEM_SAM4S_H_INCLUDED
+#define SYSTEM_SAM4S_H_INCLUDED
 
 /* @cond 0 */
 /**INDENT-OFF**/
@@ -85,4 +85,4 @@ void system_init_flash(uint32_t dw_clk);
 /**INDENT-ON**/
 /* @endcond */
 
-#endif /* SYSTEM_SAM4E_H_INCLUDED */
+#endif /* SYSTEM_SAM4S_H_INCLUDED */

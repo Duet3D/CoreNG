@@ -16,19 +16,25 @@
 
 #if SAM4E
 
-# include "usart/usart.h"		// On Duet NG the general SPI channel is on a USART
+#define USART_SPI		1
+
+# include "usart/usart.h"		// On Duet NG the general SPI channel is on USART 0
 
 #  define USART_SSPI	USART0
 #  define ID_SSPI		ID_USART0
 
 #elif SAM4S
 
-# include "usart/usart.h"		// On Duet NG the general SPI channel is on a USART
+#define USART_SPI		1
+
+# include "usart/usart.h"		// On Duet Maestro the general SPI channel is on USART 0
 
 #  define USART_SSPI	USART0
 #  define ID_SSPI		ID_USART0
 
 #else
+
+#define USART_SPI		0
 
 // We have to tell the processor which NPCS output we are using, even though we use other pins for CS
 #if SAME70
@@ -48,6 +54,7 @@
 // Which SPI channel we use
 # define SSPI		SPI0
 # define ID_SSPI	ID_SPI0
+
 #endif
 
 // Lock for the SPI subsystem
@@ -82,7 +89,7 @@ void sspi_release()
 static inline bool waitForTxReady()
 {
 	uint32_t timeout = SPI_TIMEOUT;
-#if SAM4E || SAM4S
+#if USART_SPI
 	while (!usart_is_tx_ready(USART_SSPI))
 #else
 	while (!spi_is_tx_ready(SSPI))
@@ -100,7 +107,7 @@ static inline bool waitForTxReady()
 static inline bool waitForTxEmpty()
 {
 	uint32_t timeout = SPI_TIMEOUT;
-#if SAM4E || SAM4S
+#if USART_SPI
 	while (!usart_is_tx_empty(USART_SSPI))
 #else
 		while (!spi_is_tx_empty(SSPI))
@@ -118,7 +125,7 @@ static inline bool waitForTxEmpty()
 static inline bool waitForRxReady()
 {
 	uint32_t timeout = SPI_TIMEOUT;
-#if SAM4E || SAM4S
+#if USART_SPI
 	while (!usart_is_rx_ready(USART_SSPI))
 #else
 	while (!spi_is_rx_ready(SSPI))
@@ -135,13 +142,13 @@ static inline bool waitForRxReady()
 // Set up the Shared SPI subsystem
 void sspi_master_init(struct sspi_device *device, uint32_t bits)
 {
-	static bool init_comms = true;
+	static bool commsInitDone = false;
 
-	pinMode(device->csPin, OUTPUT_HIGH);
+	pinMode(device->csPin, (device->csPolarity) ? OUTPUT_LOW : OUTPUT_HIGH);
 
-	if (init_comms)
+	if (!commsInitDone)
 	{
-#if SAM4E || SAM4S
+#if USART_SPI
 		ConfigurePin(g_APinDescription[APIN_USART0_SCK]);
 		ConfigurePin(g_APinDescription[APIN_USART0_MOSI]);
 		ConfigurePin(g_APinDescription[APIN_USART0_MISO]);
@@ -175,10 +182,10 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
 # endif
 
 #endif
-		init_comms = false;
+		commsInitDone = true;
 	}
 
-#if SAM4E || SAM4S
+#if USART_SPI
 	// On USARTs we only support 8-bit transfers. 5, 6, 7 and 9 are also available.
 	device->bitsPerTransferControl = US_MR_CHRL_8_BIT;
 #else
@@ -206,7 +213,7 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
  */
 void sspi_master_setup_device(const struct sspi_device *device)
 {
-#if SAM4E || SAM4S
+#if USART_SPI
 	USART_SSPI->US_CR = US_CR_RXDIS | US_CR_TXDIS;			// disable transmitter and receiver
 	USART_SSPI->US_BRGR = SystemCoreClock/device->clockFrequency;
 	uint32_t mr = US_MR_USART_MODE_SPI_MASTER
@@ -262,7 +269,7 @@ void sspi_select_device(const struct sspi_device *device)
 #endif
 
 	// Enable the CS line
-	digitalWrite(device->csPin, LOW);
+	digitalWrite(device->csPin, device->csPolarity);
 }
 
 /**
@@ -279,7 +286,7 @@ void sspi_deselect_device(const struct sspi_device *device)
 	waitForTxEmpty();
 
 	// Disable the CS line
-	digitalWrite(device->csPin, HIGH);
+	digitalWrite(device->csPin, !device->csPolarity);
 }
 
 /**
@@ -302,7 +309,7 @@ spi_status_t sspi_transceive_packet(const uint8_t *tx_data, uint8_t *rx_data, si
 		}
 
 		// Write to transmit register
-#if SAM4E || SAM4S
+#if USART_SPI
 		USART_SSPI->US_THR = dOut;
 #else
 		if (i + 1 == len)
@@ -311,23 +318,37 @@ spi_status_t sspi_transceive_packet(const uint8_t *tx_data, uint8_t *rx_data, si
 		}
 		SSPI->SPI_TDR = dOut;
 #endif
-		// Wait for receive register
-		if (waitForRxReady())
-		{
-			return SPI_ERROR_TIMEOUT;
-		}
 
-		// Get data from receive register
-		uint8_t dIn =
-#if SAM4E || SAM4S
-				(uint8_t)USART_SSPI->US_RHR;
-#else
-				(uint8_t)SSPI->SPI_RDR;
-#endif
+		// Some devices are transmit-only e.g. 12864 display, so don't wait for received data if we don't need to
 		if (rx_data != nullptr)
 		{
+			// Wait for receive register
+			if (waitForRxReady())
+			{
+				return SPI_ERROR_TIMEOUT;
+			}
+
+			// Get data from receive register
+			const uint8_t dIn =
+#if USART_SPI
+					(uint8_t)USART_SSPI->US_RHR;
+#else
+					(uint8_t)SSPI->SPI_RDR;
+#endif
 			*rx_data++ = dIn;
 		}
+	}
+
+	// If we didn't wait to receive, then we need to wait for transmit to finish and clear the receive buffer and
+	if (rx_data == nullptr)
+	{
+		waitForTxEmpty();
+#if USART_SPI
+		(void)USART_SSPI->US_RHR;
+#else
+		(void)SSPI->SPI_RDR;
+#endif
+
 	}
 
 	return SPI_OK;

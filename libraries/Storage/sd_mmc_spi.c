@@ -341,6 +341,7 @@ void sd_mmc_spi_init(const Pin csPins[SD_MMC_SPI_MEM_CNT])
 	for (size_t i = 0; i < SD_MMC_SPI_MEM_CNT; ++i)
 	{
 		sd_mmc_spi_devices[i].csPin = csPins[i];
+		sd_mmc_spi_devices[i].csPolarity = false;
 		sspi_master_init(&sd_mmc_spi_devices[i], 8);
 	}
 }
