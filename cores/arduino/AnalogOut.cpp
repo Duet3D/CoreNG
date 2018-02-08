@@ -319,34 +319,23 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)
 			pmc_enable_periph_clk(channelToId[chan]);
 
 			// Set up the timer mode and top count
-#if SAME70
-			tc_init(chTC, chNo,
-							TC_CMR_TCCLKS_TIMER_CLOCK3 |			// clock is MCLK/32 to avoid overflow later on
-							TC_CMR_WAVE |         					// Waveform mode
-							TC_CMR_WAVSEL_UP_RC | 					// Counter running up and reset when equals to RC
-							TC_CMR_EEVT_XC0 |     					// Set external events from XC0 (this setup TIOB as output)
-							TC_CMR_ACPA_CLEAR | TC_CMR_ACPC_CLEAR |
-							TC_CMR_BCPB_CLEAR | TC_CMR_BCPC_CLEAR |
-							TC_CMR_ASWTRG_SET | TC_CMR_BSWTRG_SET);	// Software trigger will let us set the output high
-			const uint32_t top = (VARIANT_MCK/32)/(uint32_t)freq;	// with 300MHz clock this varies between 143 @ 65.535kHz and 9.3 million @ 1Hz
-#elif SAM4S
-			// The timer/counters are only 16 bits wide on the SAM4S so we need to use a higher prescaler
-			// Also we count both up and down to halve the frequency so that we can get below 10Hz
+#if SAM4S || SAME70
+			// The timer/counters are only 16 bits wide on the SAM4S and SAME70 so we need to use a higher prescaler
 			tc_init(chTC, chNo,
 							TC_CMR_TCCLKS_TIMER_CLOCK4 |			// clock is MCLK/128
 							TC_CMR_WAVE |         					// Waveform mode
-							TC_CMR_WAVSEL_UPDOWN_RC | 				// Counter running up and then down when equals to RC
-							TC_CMR_EEVT_XC0 |     					// Set external events from XC0 (this setup TIOB as output)
+							TC_CMR_WAVSEL_UP_RC | 					// Counter running up and then down when equals to RC
+							TC_CMR_EEVT_XC0 |     					// Set external events from XC0 (this allows TIOB to be an output)
 							TC_CMR_ACPA_CLEAR | TC_CMR_ACPC_CLEAR |
 							TC_CMR_BCPB_CLEAR | TC_CMR_BCPC_CLEAR |
 							TC_CMR_ASWTRG_SET | TC_CMR_BSWTRG_SET);	// Software trigger will let us set the output high
-			const uint32_t top = min<uint32_t>((VARIANT_MCK/(2 * 128))/(uint32_t)freq, 65535);	// with 120MHz clock this varies between 7 @ 65.535kHz and 65535 @ 7.15Hz
+			const uint32_t top = min<uint32_t>((VARIANT_MCK/128)/(uint32_t)freq, 65535);	// with 120MHz clock (SAM4S) this varies between 14 @ 65.535kHz and 65535 @ 14.3Hz
 #else
 			tc_init(chTC, chNo,
 							TC_CMR_TCCLKS_TIMER_CLOCK2 |			// clock is MCLK/8 to save a little power and avoid overflow later on
 							TC_CMR_WAVE |         					// Waveform mode
 							TC_CMR_WAVSEL_UP_RC | 					// Counter running up and reset when equals to RC
-							TC_CMR_EEVT_XC0 |     					// Set external events from XC0 (this setup TIOB as output)
+							TC_CMR_EEVT_XC0 |     					// Set external events from XC0 (this allows TIOB to be an output)
 							TC_CMR_ACPA_CLEAR | TC_CMR_ACPC_CLEAR |
 							TC_CMR_BCPB_CLEAR | TC_CMR_BCPC_CLEAR |
 							TC_CMR_ASWTRG_SET | TC_CMR_BSWTRG_SET);	// Software trigger will let us set the output high
