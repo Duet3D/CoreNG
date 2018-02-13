@@ -114,8 +114,6 @@ static void TWI_StartRead(
     pTwi->TWI_CR = TWI_CR_START;
 }
 
-#if 0	// dc42 unused static function
-
 /**
  * \brief Starts a write operation on the TWI to access the selected slave, then
  *  returns immediately. A byte of data must be provided to start the write;
@@ -150,8 +148,6 @@ static void TWI_StartWrite(
     /* Write first byte to send.*/
     twi_write_byte(pTwi, byte);
 }
-
-#endif
 
 /**
  * \brief  Sends a STOP condition. STOP Condition is sent just after completing
@@ -351,6 +347,7 @@ void TwoWire::beginTransmission(int address) {
 uint8_t TwoWire::endTransmission(uint8_t sendStop) {
 	uint8_t error = 0;
 	// transmit buffer (blocking)
+	TWI_StartWrite(twi, txAddress, 0, 0, txBuffer[0]);
 	if (!TWI_WaitByteSent(twi, XMIT_TIMEOUT))
 		error = 2;	// error, got NACK on address transmit
 
