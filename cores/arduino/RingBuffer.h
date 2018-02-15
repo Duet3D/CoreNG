@@ -55,6 +55,10 @@ inline void RingBuffer::store_char(uint8_t c)
     _aucBuffer[_iHead] = c;
     _iHead = i;
   }
+  else
+  {
+	  _aucBuffer[(_iHead - 1) % SERIAL_BUFFER_SIZE] = 0x7F;		// replace the previous character by DEL to signal an overflow error
+  }
 }
 
 inline size_t RingBuffer::roomLeft() const

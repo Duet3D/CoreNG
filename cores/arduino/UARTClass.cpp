@@ -222,8 +222,8 @@ void UARTClass::IrqHandler()
   // Acknowledge errors
   if ((status & (UART_SR_OVRE | UART_SR_FRAME)) != 0)
   {
-    // TODO: error reporting outside ISR
     _pUart->UART_CR = UART_CR_RSTSTA;
+    _rx_buffer->store_char(0x7F);				// store a DEL character so that the receiving process knows there has been an error
   }
 }
 
