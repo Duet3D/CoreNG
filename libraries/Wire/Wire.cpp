@@ -529,9 +529,9 @@ static void Wire_Init(void) {
 	ConfigurePin(g_APinDescription[APIN_WIRE_SDA]);
 	ConfigurePin(g_APinDescription[APIN_WIRE_SCL]);
 
-	NVIC_DisableIRQ(TWI1_IRQn);
-	NVIC_ClearPendingIRQ(TWI1_IRQn);
-	NVIC_EnableIRQ(TWI1_IRQn);
+	NVIC_DisableIRQ(WIRE_ISR_ID);
+	NVIC_ClearPendingIRQ(WIRE_ISR_ID);
+	NVIC_EnableIRQ(WIRE_ISR_ID);
 }
 
 TwoWire Wire = TwoWire(WIRE_INTERFACE, Wire_Init);
@@ -547,9 +547,9 @@ static void Wire1_Init(void) {
 	ConfigurePin(g_APinDescription[APIN_WIRE1_SDA]);
 	ConfigurePin(g_APinDescription[APIN_WIRE1_SCL]);
 
-	NVIC_DisableIRQ(TWI0_IRQn);
-	NVIC_ClearPendingIRQ(TWI0_IRQn);
-	NVIC_EnableIRQ(TWI0_IRQn);
+	NVIC_DisableIRQ(WIRE1_ISR_ID);
+	NVIC_ClearPendingIRQ(WIRE1_ISR_ID);
+	NVIC_EnableIRQ(WIRE1_ISR_ID);
 }
 
 TwoWire Wire1 = TwoWire(WIRE1_INTERFACE, Wire1_Init);
