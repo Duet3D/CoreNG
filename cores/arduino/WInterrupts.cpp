@@ -98,7 +98,7 @@ static unsigned int GetHighestBit(uint32_t bits)
 }
 
 // Attach an interrupt to the specified pin returning true if successful
-bool attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), uint32_t mode, CallbackParameter param)
+bool attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), enum InterruptMode mode, CallbackParameter param)
 {
 	if (pin > MaxPinNumber)
 	{
@@ -151,7 +151,7 @@ bool attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), uint32_t
 #endif
 
 	// Configure the interrupt mode
-	if (mode == CHANGE)
+	if (mode == INTERRUPT_MODE_CHANGE)
 	{
 		// Disable additional interrupt mode (detects both rising and falling edges)
 		pio->PIO_AIMDR = mask;
@@ -164,22 +164,22 @@ bool attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), uint32_t
 		// Select mode of operation
 		switch(mode)
 		{
-		case LOW:
+		case INTERRUPT_MODE_LOW:
 			pio->PIO_LSR = mask;    // "Level" Select Register
 			pio->PIO_FELLSR = mask; // "Falling Edge / Low Level" Select Register
 			break;
 
-		case HIGH:
+		case INTERRUPT_MODE_HIGH:
 			pio->PIO_LSR = mask;    // "Level" Select Register
 			pio->PIO_REHLSR = mask; // "Rising Edge / High Level" Select Register
 			break;
 
-		case FALLING:
+		case INTERRUPT_MODE_FALLING:
 			pio->PIO_ESR = mask;    // "Edge" Select Register
 			pio->PIO_FELLSR = mask; // "Falling Edge / Low Level" Select Register
 			break;
 
-		case RISING:
+		case INTERRUPT_MODE_RISING:
 			pio->PIO_ESR = mask;    // "Edge" Select Register
 			pio->PIO_REHLSR = mask; // "Rising Edge / High Level" Select Register
 			break;

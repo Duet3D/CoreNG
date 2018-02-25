@@ -22,7 +22,7 @@ Further modified up by David Crocker
 #include "sam/services/flash_efc/flash_efc.h"
 
 // 1Kb of data
-#define FLASH_DATA_LENGTH   ((IFLASH1_PAGE_SIZE/sizeof(byte))*4)
+#define FLASH_DATA_LENGTH   ((IFLASH1_PAGE_SIZE/sizeof(uint8_t))*4)
 
 // Choose a start address close to the top of the Flash 1 memory space
 #define  FLASH_START  ((uint8_t *)(IFLASH1_ADDR + IFLASH1_SIZE - FLASH_DATA_LENGTH))

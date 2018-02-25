@@ -21,7 +21,7 @@ void core_vbus_off(CallbackParameter);
 SerialCDC::SerialCDC() : /* _cdc_tx_buffer(), */ txBufsize(1), isConnected(false)
 {
 #if SAM4E || SAM4S
-	attachInterrupt(USB_VBUS_PIN, core_vbus_off, FALLING, nullptr);
+	attachInterrupt(USB_VBUS_PIN, core_vbus_off, INTERRUPT_MODE_FALLING, nullptr);
 #endif
 }
 

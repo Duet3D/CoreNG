@@ -31,7 +31,7 @@ union CallbackParameter
 	CallbackParameter() : ip(0) { }
 };
 
-bool attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), uint32_t mode, CallbackParameter param);
+bool attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), enum InterruptMode mode, CallbackParameter param);
 
 void detachInterrupt(uint32_t pin);
 
