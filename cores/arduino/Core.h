@@ -53,16 +53,10 @@ extern "C"{
 
 void yield(void);
 
-/* sketch */
-extern void setup(void);
-extern void loop(void);
-
 typedef uint8_t Pin;
 static const Pin NoPin = 0xFF;
 
-//#define NOT_A_PIN 0  // defined in pio.h/EPioType
 #define NOT_A_PORT			(0)
-
 #define NOT_AN_INTERRUPT	(-1)
 
 typedef enum _EExt_Interrupts

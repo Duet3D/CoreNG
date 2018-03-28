@@ -242,8 +242,6 @@ void UART1_Handler(void)
 
 // ----------------------------------------------------------------------------
 
-extern "C" void __libc_init_array(void);
-extern void UrgentInit();
 
 void ConfigurePin(const PinDescription& pinDesc)
 {
@@ -252,20 +250,6 @@ void ConfigurePin(const PinDescription& pinDesc)
 
 extern "C" void init( void )
 {
-	SystemInit();
-
-	// Set Systick to 1ms interval, common to all SAM4 variants
-	if (SysTick_Config(SystemCoreClock / 1000))
-	{
-		// Capture error
-		while (true);
-	}
-
-	UrgentInit();			// initialise anything in the main application that can't wait
-
-	// Initialize C library (I think this calls C++ constructors for static data too)
-	__libc_init_array();
-
 	// We no longer disable pullups on all pins here, better to leave them enabled until the port is initialised
 
 	// Initialize Serial port U(S)ART pins

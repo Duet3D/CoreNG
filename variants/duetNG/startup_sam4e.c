@@ -50,10 +50,15 @@
 
 // Eclipse doesn't get the state of __FPU_USED right
 #if __FPU_USED /* CMSIS defined value to indicate usage of FPU */
-#include "fpu/fpu.h"
+# include "fpu/fpu.h"
 #else
 # warning Compiling without FPU support
 #endif
+
+extern void __libc_init_array(void);
+extern void init(void);
+extern void UrgentInit(void);
+extern void AppMain();
 
 /* Initialize segments */
 extern uint32_t _sfixed;
@@ -65,12 +70,6 @@ extern uint32_t _szero;
 extern uint32_t _ezero;
 //extern uint32_t _sstack;
 extern uint32_t _estack;
-
-/** \cond DOXYGEN_SHOULD_SKIP_THIS */
-int main(void);
-/** \endcond */
-
-//void __libc_init_array(void);
 
 /* Exception Table */
 __attribute__ ((section(".vectors")))
@@ -209,9 +208,19 @@ void Reset_Handler(void)
 # warning Compiling without FPU support
 #endif
 
-	/* Branch to main function */
-	main();
+	SystemInit();			// set up the clock
+	UrgentInit();			// initialise anything in the main application that can't wait
+	__libc_init_array();	// initialize C library and call C++ constructors for static data
+	init();					// initialise variant
 
-	/* Infinite loop */
-	while (1);
+#ifndef RTOS
+	// Set Systick to 1ms interval, common to all SAM4 variants
+	if (SysTick_Config(SystemCoreClock / 1000))
+	{
+		// Capture error
+		for (;;){}
+	}
+#endif
+
+	AppMain();
 }

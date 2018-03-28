@@ -83,11 +83,19 @@ void HardFault_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void MemManage_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void BusFault_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void UsageFault_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SVC_Handler		( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void DebugMon_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void PendSV_Handler		( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 
+#ifndef RTOS
+void SVC_Handler		( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void PendSV_Handler		( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+
+void DebugMon_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+
+#ifdef RTOS
+void vApplicationTickHook(void)
+#else
 void SysTick_Handler(void)
+#endif
 {
 	if (sysTickHook())
 		return;
