@@ -80,7 +80,7 @@ extern void debugPrintf(const char* fmt, ...);
 #  error SD_MMC_SPI_MEM_CNT not defined
 #endif
 
-typedef void (*driverIdleFunc_t)(void);
+typedef void (*driverIdleFunc_t)(uint32_t);
 
 struct DriverInterface
 {

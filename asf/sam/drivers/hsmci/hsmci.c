@@ -611,7 +611,7 @@ bool hsmci_read_word(uint32_t* value)
 #if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
-			hsmciIdleFunc();
+			hsmciIdleFunc(HSMCI_SR_UNRE | HSMCI_SR_OVRE | HSMCI_SR_DTOE | HSMCI_SR_DCRCE | HSMCI_SR_XFRDONE);
 		}
 #endif
 		sr = HSMCI->HSMCI_SR;
@@ -657,7 +657,7 @@ bool hsmci_write_word(uint32_t value)
 #if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
-			hsmciIdleFunc();
+			hsmciIdleFunc(HSMCI_SR_UNRE | HSMCI_SR_OVRE | HSMCI_SR_DTOE | HSMCI_SR_DCRCE | HSMCI_SR_NOTBUSY);
 		}
 #endif
 		sr = HSMCI->HSMCI_SR;
@@ -892,7 +892,7 @@ bool hsmci_wait_end_of_read_blocks(void)
 #if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
-			hsmciIdleFunc();
+			hsmciIdleFunc(HSMCI_SR_UNRE | HSMCI_SR_OVRE | HSMCI_SR_DTOE | HSMCI_SR_DCRCE | HSMCI_SR_RXBUFF);
 		}
 #endif
 		sr = HSMCI->HSMCI_SR;
@@ -916,7 +916,7 @@ bool hsmci_wait_end_of_read_blocks(void)
 #if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
-			hsmciIdleFunc();
+			hsmciIdleFunc(HSMCI_SR_UNRE | HSMCI_SR_OVRE | HSMCI_SR_DTOE | HSMCI_SR_DCRCE | HSMCI_SR_XFRDONE);
 		}
 #endif
 		sr = HSMCI->HSMCI_SR;
@@ -967,7 +967,7 @@ bool hsmci_wait_end_of_write_blocks(void)
 #if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
-			hsmciIdleFunc();
+			hsmciIdleFunc(HSMCI_SR_UNRE | HSMCI_SR_OVRE | HSMCI_SR_DTOE | HSMCI_SR_DCRCE | HSMCI_SR_TXBUFE);
 		}
 #endif
 		sr = HSMCI->HSMCI_SR;
@@ -992,7 +992,7 @@ bool hsmci_wait_end_of_write_blocks(void)
 #if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
-			hsmciIdleFunc();
+			hsmciIdleFunc(HSMCI_SR_UNRE | HSMCI_SR_OVRE | HSMCI_SR_DTOE | HSMCI_SR_DCRCE | HSMCI_SR_NOTBUSY);
 		}
 #endif
 		sr = HSMCI->HSMCI_SR;

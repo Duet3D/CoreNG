@@ -70,7 +70,7 @@ uint32_t micros( void )
     // a runtime multiplication and shift, saving a few cycles
 }
 
-void delay( uint32_t ms )
+void coreDelay( uint32_t ms )
 {
     if (ms != 0)
     {

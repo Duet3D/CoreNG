@@ -60,7 +60,8 @@ extern uint32_t micros( void ) ;
  *
  * \param dwMs the number of milliseconds to pause (uint32_t)
  */
-extern void delay( uint32_t dwMs ) ;
+// This has been renamed from delay to coreDelay so that RTOS-based applications can use a different definition of delay()
+extern void coreDelay( uint32_t dwMs ) ;
 
 /**
  * \brief Pauses the program for the amount of time (in microseconds) specified as parameter.
