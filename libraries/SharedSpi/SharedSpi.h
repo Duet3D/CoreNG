@@ -63,16 +63,9 @@ struct sspi_device {
 };
 
 #ifdef __cplusplus
-// Use C linkage because the RADDS port may need to call these functions from the ASF SD card code
+// Use C linkage because these functions are called from the ASF SPI SD card code
 extern "C" {
 #endif
-
-// Gain exclusive use of the GSPI bus
-// Returning true if successful, false if GSPI bus is busy
-extern bool sspi_acquire();
-
-// Release the GSPI bus
-extern void sspi_release();
 
 /** \brief Initialize the SPI in master mode.
  *

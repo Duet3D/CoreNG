@@ -57,34 +57,6 @@
 
 #endif
 
-// Lock for the SPI subsystem
-static bool sspiLocked = false;
-
-// Gain exclusive use of the GSPI bus
-// Returning true if successful, false if GSPI bus is busy
-bool sspi_acquire()
-{
-	irqflags_t flags = cpu_irq_save();
-	bool rslt;
-	if (sspiLocked)
-	{
-		rslt = false;
-	}
-	else
-	{
-		sspiLocked = true;
-		rslt = true;
-	}
-	cpu_irq_restore(flags);
-	return rslt;
-}
-
-// Release the GSPI bus
-void sspi_release()
-{
-	sspiLocked = false;
-}
-
 // Wait for transmitter ready returning true if timed out
 static inline bool waitForTxReady()
 {
