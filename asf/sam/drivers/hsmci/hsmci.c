@@ -1065,13 +1065,13 @@ bool hsmci_wait_end_of_read_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI
 	do {
+		sr = HSMCI->HSMCI_SR;
 #if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
-			hsmciIdleFunc();
+			hsmciIdleFunc(sr);
 		}
 #endif
-		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
 			hsmci_debug("%s: DMA sr 0x%08x error\n\r",
@@ -1147,13 +1147,13 @@ bool hsmci_wait_end_of_write_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI
 	do {
+		sr = HSMCI->HSMCI_SR;
 #if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
-			hsmciIdleFunc();
+			hsmciIdleFunc(sr);
 		}
 #endif
-		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 		HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
 			hsmci_debug("%s: DMA sr 0x%08x error\n\r",
