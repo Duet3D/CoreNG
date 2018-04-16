@@ -48,6 +48,11 @@
 #include "exceptions.h"
 #include "system_sam4s.h"
 
+extern void __libc_init_array(void);
+extern void init(void);
+extern void UrgentInit(void);
+extern void AppMain();
+
 /* Initialize segments */
 extern uint32_t _sfixed;
 //extern uint32_t _efixed;
@@ -185,9 +190,19 @@ void Reset_Handler(void)
 	pSrc = (uint32_t *) & _sfixed;
 	SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 
-	/* Branch to main function */
-	main();
+	SystemInit();			// set up the clock
+	UrgentInit();			// initialise anything in the main application that can't wait
+	__libc_init_array();	// initialize C library and call C++ constructors for static data
+	init();					// initialise variant
 
-	/* Infinite loop */
-	while (1);
+#ifndef RTOS
+	// Set Systick to 1ms interval, common to all SAM4 variants
+	if (SysTick_Config(SystemCoreClock / 1000))
+	{
+		// Capture error
+		for (;;){}
+	}
+#endif
+
+	AppMain();
 }
