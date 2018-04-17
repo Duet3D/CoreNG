@@ -233,7 +233,7 @@ bool sd_mmc_spi_wait_end_of_write_blocks(void);
 // Get the speed of the SPI SD card interface for reporting purposes, in bytes/sec
 uint32_t spi_mmc_get_speed(void);
 
-typedef void (*spiIdleFunc_t)(uint32_t);
+typedef void (*spiIdleFunc_t)(uint32_t, uint32_t);
 
 // Set the idle function and return the old one
 spiIdleFunc_t sd_mmc_spi_set_idle_func(spiIdleFunc_t);

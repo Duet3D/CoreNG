@@ -46,10 +46,14 @@
 #include "system_same70.h"
 #include "wdt/wdt.h"
 
-
 #if __FPU_USED /* CMSIS defined value to indicate usage of FPU */
 #include "fpu/fpu.h"
 #endif
+
+extern void __libc_init_array(void);
+extern void init(void);
+extern void UrgentInit(void);
+extern void AppMain();
 
 /* Initialize segments */
 extern uint32_t _sfixed;
@@ -61,12 +65,6 @@ extern uint32_t _szero;
 extern uint32_t _ezero;
 //extern uint32_t _sstack;
 extern uint32_t _estack;
-
-/** \cond DOXYGEN_SHOULD_SKIP_THIS */
-int main(void);
-/** \endcond */
-
-//void __libc_init_array(void);
 
 /* Default empty handler */
 void Dummy_Handler(void);
@@ -81,11 +79,19 @@ void HardFault_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void MemManage_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void BusFault_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void UsageFault_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void SVC_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void DebugMon_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void PendSV_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 
+#ifndef RTOS
+void SVC_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void PendSV_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+
+void DebugMon_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+
+#ifdef RTOS
+void vApplicationTickHook(void)
+#else
 void SysTick_Handler(void)
+#endif
 {
 	if (sysTickHook())
 		return;
@@ -321,26 +327,26 @@ const DeviceVectors exception_table = {
  */
 void Reset_Handler(void)
 {
-        uint32_t *pSrc, *pDest;
+	uint32_t *pSrc, *pDest;
 
-        /* Initialize the relocate segment */
-        pSrc = &_etext;
-        pDest = &_srelocate;
+	/* Initialize the relocate segment */
+	pSrc = &_etext;
+	pDest = &_srelocate;
 
-        if (pSrc != pDest) {
-			for (; pDest < &_erelocate;) {
-				*pDest++ = *pSrc++;
-			}
-        }
+	if (pSrc != pDest) {
+		for (; pDest < &_erelocate;) {
+			*pDest++ = *pSrc++;
+		}
+	}
 
-        /* Clear the zero segment */
-        for (pDest = &_szero; pDest < &_ezero;) {
-        	*pDest++ = 0;
-        }
+	/* Clear the zero segment */
+	for (pDest = &_szero; pDest < &_ezero;) {
+		*pDest++ = 0;
+	}
 
-        /* Set the vector table base address */
-        pSrc = (uint32_t *) & _sfixed;
-        SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
+	/* Set the vector table base address */
+	pSrc = (uint32_t *) & _sfixed;
+	SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 
 #if __FPU_USED
 	fpu_enable();
@@ -348,11 +354,21 @@ void Reset_Handler(void)
 # warning Compiling without FPU support
 #endif
 
-        /* Branch to main function */
-        main();
+	SystemInit();			// set up the clock
+	UrgentInit();			// initialise anything in the main application that can't wait
+	__libc_init_array();	// initialize C library and call C++ constructors for static data
+	init();					// initialise variant
 
-        /* Infinite loop */
-        while (1);
+#ifndef RTOS
+	// Set Systick to 1ms interval, common to all SAME70 variants
+	if (SysTick_Config(SystemCoreClock / 1000))
+	{
+		// Capture error
+		while (true);
+	}
+#endif
+
+	AppMain();
 }
 
 /**
