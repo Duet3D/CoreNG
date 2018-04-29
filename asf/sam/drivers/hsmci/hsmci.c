@@ -739,7 +739,7 @@ bool hsmci_wait_end_of_read_blocks(void)
 #if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
-			hsmciIdleFunc();
+			hsmciIdleFunc(HSMCI_SR_UNRE | HSMCI_SR_OVRE | HSMCI_SR_DTOE | HSMCI_SR_DCRCE | HSMCI_SR_DMADONE, 0);
 		}
 #endif
 		sr = HSMCI->HSMCI_SR;
@@ -828,7 +828,7 @@ bool hsmci_wait_end_of_write_blocks(void)
 #if 1  // dc42 changes
 		if (hsmciIdleFunc != NULL)
 		{
-			hsmciIdleFunc();
+			hsmciIdleFunc(HSMCI_SR_UNRE | HSMCI_SR_OVRE | HSMCI_SR_DTOE | HSMCI_SR_DCRCE | HSMCI_SR_DMADONE | HSMCI_SR_NOTBUSY, 0);
 		}
 #endif
 		sr = HSMCI->HSMCI_SR;

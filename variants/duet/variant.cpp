@@ -374,20 +374,6 @@ void ConfigurePin(const PinDescription& pinDesc)
 
 extern "C" void init( void )
 {
-	SystemInit();
-
-	// Set Systick to 1ms interval, common to all SAM3 variants
-	if (SysTick_Config(SystemCoreClock / 1000))
-	{
-		// Capture error
-		while (true);
-	}
-
-	UrgentInit();			// initialise anything in the main application that can't wait
-
-	// Initialize C library
-	__libc_init_array();
-
 	// Initialize Serial port 0 U(S)ART pins
 	ConfigurePin(g_APinDescription[APINS_UART]);
 	setPullup(APIN_UART_RXD, true); 							// Enable pullup for RX0
