@@ -61,6 +61,11 @@ int SerialCDC::read()
 	return (udi_cdc_is_rx_ready()) ? udi_cdc_getc() : -1;
 }
 
+size_t SerialCDC::readBytes(char *buffer, size_t length)
+{
+	return (udi_cdc_is_rx_ready()) ? udi_cdc_read_buf(buffer, length) : 0;
+}
+
 void SerialCDC::flush(void)
 {
 	while (isConnected && udi_cdc_get_free_tx_buffer() < txBufsize) {}
@@ -75,7 +80,7 @@ size_t SerialCDC::write(uint8_t c)
 	return 1;
 }
 
-// Non-blocking write to USB. Returns number of bytes written. If we are not connected, pretend that all bytes hacve been written.
+// Non-blocking write to USB. Returns number of bytes written. If we are not connected, pretend that all bytes have been written.
 size_t SerialCDC::write(const uint8_t *buffer, size_t size)
 {
 	if (isConnected && size != 0)
