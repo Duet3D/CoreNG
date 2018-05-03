@@ -106,7 +106,7 @@ SECTIONS
         . = ALIGN(4);
         _srelocate = .;
         *(.ramfunc .ramfunc.*);
-		. = ALIGN(4);
+ 		. = ALIGN(4);
 		_eramfunc = .;
         *(.data .data.*);
         . = ALIGN(4);

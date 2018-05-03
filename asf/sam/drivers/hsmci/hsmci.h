@@ -207,7 +207,8 @@ bool hsmci_wait_end_of_write_blocks(void);
 // Get the speed of the HSMCI interface for reporting purposes, in bytes/sec
 uint32_t hsmci_get_speed(void);
 
-typedef void (*hsmciIdleFunc_t)(uint32_t);
+// Define the type of the HSMCI idle function
+typedef void (*hsmciIdleFunc_t)(uint32_t, uint32_t);
 
 // Set the idle function and return the old one
 hsmciIdleFunc_t hsmci_set_idle_func(hsmciIdleFunc_t);

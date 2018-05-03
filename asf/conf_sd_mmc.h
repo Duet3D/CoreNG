@@ -97,6 +97,10 @@
 
 #define SD_MMC_WP_DETECT_VALUE		false
 
+#if SAME70
+# define CONF_HSMCI_XDMAC_CHANNEL	0			// Which XDMAC channel we use for HSMCI
+#endif
+
 #endif
 
 #define SD_MMC_MEM_CNT				(SD_MMC_HSMCI_MEM_CNT + SD_MMC_SPI_MEM_CNT)

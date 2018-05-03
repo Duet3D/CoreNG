@@ -46,7 +46,6 @@
 #include "system_same70.h"
 #include "wdt/wdt.h"
 
-
 #if __FPU_USED /* CMSIS defined value to indicate usage of FPU */
 #include "fpu/fpu.h"
 #endif
