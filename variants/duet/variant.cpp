@@ -364,9 +364,6 @@ void USART1_Handler(void)
 
 // ----------------------------------------------------------------------------
 
-extern "C" void __libc_init_array(void);
-extern void UrgentInit();
-
 void ConfigurePin(const PinDescription& pinDesc)
 {
 	pio_configure(pinDesc.pPort, pinDesc.ulPinType, pinDesc.ulPin, pinDesc.ulPinConfiguration);

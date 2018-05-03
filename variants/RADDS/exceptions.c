@@ -38,11 +38,19 @@ void HardFault_Handler  ( void ) __attribute__ ((weak, alias("__halt")));
 void MemManage_Handler  ( void ) __attribute__ ((weak, alias("__halt")));
 void BusFault_Handler   ( void ) __attribute__ ((weak, alias("__halt")));
 void UsageFault_Handler ( void ) __attribute__ ((weak, alias("__halt")));
-void SVC_Handler		( void ) __attribute__ ((weak, alias("__halt")));
-void DebugMon_Handler   ( void ) __attribute__ ((weak, alias("__halt")));
-void PendSV_Handler		( void ) __attribute__ ((weak, alias("__halt")));
 
+#ifndef RTOS
+void SVC_Handler		( void ) __attribute__ ((weak, alias("__halt")));
+void PendSV_Handler		( void ) __attribute__ ((weak, alias("__halt")));
+#endif
+
+void DebugMon_Handler   ( void ) __attribute__ ((weak, alias("__halt")));
+
+#ifdef RTOS
+void vApplicationTickHook(void)
+#else
 void SysTick_Handler(void)
+#endif
 {
 	if (sysTickHook())
 		return;

@@ -48,6 +48,11 @@
 #include "sam3xa.h"
 #include "system_sam3x.h"
 
+extern void __libc_init_array(void);
+extern void init(void);
+extern void UrgentInit(void);
+extern void AppMain();
+
 /* Initialize segments */
 extern uint32_t _sfixed;
 //unused extern uint32_t _efixed;
@@ -58,10 +63,6 @@ extern uint32_t _szero;
 extern uint32_t _ezero;
 //unused extern uint32_t _sstack;
 extern uint32_t _estack;
-
-/** \cond DOXYGEN_SHOULD_SKIP_THIS */
-int main(void);
-/** \endcond */
 
 /* Exception Table */
 __attribute__ ((section(".vectors")))
@@ -211,12 +212,19 @@ void Reset_Handler(void)
 		SCB->VTOR |= (1UL << SCB_VTOR_TBLBASE_Pos);
 	}
 
-	/* Initialization of the C library is now done in main() after variant initialization */
-	//__libc_init_array();
+	SystemInit();			// set up the clock
+	UrgentInit();			// initialise anything in the main application that can't wait
+	__libc_init_array();	// initialize C library and call C++ constructors for static data
+	init();					// initialise variant
 
-	/* Branch to main function */
-	main();
+#ifndef RTOS
+	// Set Systick to 1ms interval, common to all SAM4 variants
+	if (SysTick_Config(SystemCoreClock / 1000))
+	{
+		// Capture error
+		for (;;){}
+	}
+#endif
 
-	/* Infinite loop */
-	while (1);
+	AppMain();
 }

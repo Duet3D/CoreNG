@@ -28,6 +28,7 @@ public:
 	int available() override;
 	int peek() override;
 	int read() override;
+	size_t readBytes(char *buffer, size_t length) override;
 	void flush() override;
 	size_t write(uint8_t) override;
 	size_t write(const uint8_t *buffer, size_t size) override;
