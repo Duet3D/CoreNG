@@ -45,6 +45,8 @@ extern uint32_t millis( void ) ;
  */
 extern uint64_t millis64( void ) ;
 
+#if 0	// this function is not reliable if other ISRs can preempt the Systick interrupt
+
 /**
  * \brief Returns the number of microseconds since the core started.
  *
@@ -53,6 +55,8 @@ extern uint64_t millis64( void ) ;
  * \note There are 1,000 microseconds in a millisecond and 1,000,000 microseconds in a second.
  */
 extern uint32_t micros( void ) ;
+
+#endif
 
 /**
  * \brief Pauses the program for the amount of time (in miliseconds) specified as parameter.
