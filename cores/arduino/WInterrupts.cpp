@@ -115,11 +115,10 @@ bool attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), enum Int
 	// Retrieve pin information
 	Pio * const pio = g_APinDescription[pin].pPort;
 	const uint32_t mask = g_APinDescription[pin].ulPin;
+	pio->PIO_IDR = mask;			// ensure the interrupt is disabled before we start changing the tables
 	const uint32_t pos = GetHighestBit(mask);
 
 	// Set callback function and parameter
-	const irqflags_t flags = cpu_irq_save();
-
 	if (pio == PIOA)
 	{
 		callbacksPioA[pos].func = callback;
@@ -190,21 +189,26 @@ bool attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), enum Int
 	}
 
 	// Enable interrupt
-	pio->PIO_IFER = mask;			// enable glitch filter on this pin
-	pio->PIO_IER = mask;			// enable interrupt on this pin
+	if (mode != INTERRUPT_MODE_NONE)
+	{
+		pio->PIO_IFER = mask;		// enable glitch filter on this pin
+		pio->PIO_IER = mask;		// enable interrupt on this pin
+	}
 
-	cpu_irq_restore(flags);
 	return true;
 }
 
 void detachInterrupt(uint32_t pin)
 {
-	// Retrieve pin information
-	Pio * const pio = g_APinDescription[pin].pPort;
-	const uint32_t mask = g_APinDescription[pin].ulPin;
+	if (pin <= MaxPinNumber)
+	{
+		// Retrieve pin information
+		Pio * const pio = g_APinDescription[pin].pPort;
+		const uint32_t mask = g_APinDescription[pin].ulPin;
 
-	// Disable interrupt
-	pio->PIO_IDR = mask;
+		// Disable interrupt
+		pio->PIO_IDR = mask;
+	}
 }
 
 // Return true if we are in any interrupt service routine

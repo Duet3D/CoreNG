@@ -49,7 +49,7 @@ extern int32_t random(int32_t howbig)
 
 	if (!isInitialised)
 	{
-		srand(micros());
+		srand(SysTick->VAL);
 		isInitialised = true;
 	}
 

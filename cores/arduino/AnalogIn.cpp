@@ -19,15 +19,18 @@
 #include "pmc/pmc.h"
 
 #if SAM3XA || SAM4S
-const unsigned int numChannels = 16;
+constexpr unsigned int NumChannels = 16;
 #elif SAM4E
-const unsigned int numChannels = 32;
+constexpr unsigned int NumChannels = 31;
+constexpr uint32_t AfecLowChannelMask = 0x0000FFFF;
+constexpr uint32_t AfecHighChannelMask = 0x7FFF0000;
 #elif SAME70
-const unsigned int numChannels = 23;
+constexpr unsigned int NumChannels = 27;				// but channels 12-15 don't exist
+constexpr uint32_t AfecLowChannelMask = 0x00000FFF;
+constexpr uint32_t AfecHighChannelMask = 0x07FF0000;
 #endif
 
 static uint32_t activeChannels = 0;
-static AnalogCallback_t callbackFn = nullptr;
 
 #if SAM3XA || SAM4S
 static inline adc_channel_num_t GetAdcChannel(AnalogChannelNumber channel)
@@ -36,7 +39,7 @@ static inline adc_channel_num_t GetAdcChannel(AnalogChannelNumber channel)
 }
 #endif
 
-#if SAM4E
+#if SAM4E || SAME70
 static inline Afec *GetAfec(AnalogChannelNumber channel)
 {
 	return (channel >= 16) ? AFEC1 : AFEC0;
@@ -45,21 +48,6 @@ static inline Afec *GetAfec(AnalogChannelNumber channel)
 static inline afec_channel_num GetAfecChannel(AnalogChannelNumber channel)
 {
 	return static_cast<afec_channel_num>((unsigned int)channel & 15);
-}
-#elif SAME70
-static inline Afec *GetAfec(AnalogChannelNumber channel)
-{
-	// ADC0-ADC10 (AD0-AD10) are on the AFEC0, ADC11-ADC22 (AD0-AD11) are on AFEC1
-	return (channel >= ADC11) ? AFEC1 : AFEC0;
-}
-
-static inline afec_channel_num GetAfecChannel(AnalogChannelNumber channel)
-{
-	if (channel >= ADC11)
-	{
-		return static_cast<afec_channel_num>((unsigned int)channel - ADC11);
-	}
-	return static_cast<afec_channel_num>(channel);
 }
 #endif
 
@@ -79,9 +67,9 @@ void AnalogInInit()
 	afec_config cfg;
 	afec_get_config_defaults(&cfg);
 
-#if 0	// these are probably not needed, the defaults should be OK
-//	cfg.afec_clock = 2000000UL;						// reduce clock frequency
-//	cfg.settling_time = AFEC_SETTLING_TIME_3;
+#if 0	// these are not needed, the defaults should be OK
+	cfg.afec_clock = 2000000UL;						// reduce clock frequency
+	cfg.settling_time = AFEC_SETTLING_TIME_3;
 #endif
 
 	while (afec_init(AFEC0, &cfg) != STATUS_OK)
@@ -102,7 +90,7 @@ void AnalogInInit()
 // Enable or disable a channel. Use AnalogCheckReady to make sure the ADC is ready before calling this.
 void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 {
-	if ((unsigned int)channel < numChannels)
+	if ((unsigned int)channel < NumChannels)
 	{
 		if (enable)
 		{
@@ -146,16 +134,22 @@ void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 // Read the most recent 12-bit result from a channel
 uint16_t AnalogInReadChannel(AnalogChannelNumber channel)
 {
-	if ((unsigned int)channel < numChannels)
+	if ((unsigned int)channel < NumChannels)
 	{
 #if SAM3XA || SAM4S
-		return adc_get_channel_value(ADC, GetAdcChannel(channel));
+		return *(ADC->ADC_CDR + GetAdcChannel(channel));
 #elif SAM4E || SAME70
-		return afec_channel_get_value(GetAfec(channel), GetAfecChannel(channel));
+		Afec * const afec = GetAfec(channel);
+		afec->AFEC_CSELR = GetAfecChannel(channel);
+		return afec->AFEC_CDR;
 #endif
 	}
 	return 0;
 }
+
+#if 0	// not currently used
+
+static AnalogCallback_t callbackFn = nullptr;
 
 // Set up a callback for when all conversions have been completed. Returns the previous callback pointer.
 AnalogCallback_t AnalogInSetCallback(AnalogCallback_t fn)
@@ -173,19 +167,27 @@ AnalogCallback_t AnalogInSetCallback(AnalogCallback_t fn)
 	return oldFn;
 }
 
+#endif
+
 #if SAM4E || SAME70
+
 static void StartConversion(Afec *afec)
 {
 	// Clear out any existing conversion complete bits in the status register
-	for (uint32_t chan = 0; chan < 16; ++chan)
+	for (uint32_t chan = 0;
+#if SAM4E
+		chan < 16;
+#elif SAME70
+		chan < 12;
+#endif
+			++chan)
 	{
-		if ((afec_get_interrupt_status(afec) & (1 << chan)) != 0)
-		{
-			(void)afec_channel_get_value(afec, static_cast<afec_channel_num>(chan));
-		}
+		afec->AFEC_CSELR = chan;
+		(void) afec->AFEC_CDR;
 	}
 	afec_start_software_conversion(afec);
 }
+
 #endif
 
 // Start converting the enabled channels
@@ -195,29 +197,16 @@ void AnalogInStartConversion(uint32_t channels)
 	// Clear out any existing conversion complete bits in the status register
 	for (uint32_t chan = 0; chan < 16; ++chan)
 	{
-		if ((adc_get_status(ADC) & (1 << chan)) != 0)
-		{
-			(void)adc_get_channel_value(ADC, static_cast<adc_channel_num_t>(chan));
-		}
+		(void)(*(ADC->ADC_CDR + chan));
 	}
-	adc_start(ADC);
-#elif SAM4E
+	ADC->ADC_CR = ADC_CR_START;
+#elif SAM4E || SAME70
 	channels &= activeChannels;
-	if ((channels & 0x0000FFFF) != 0)
+	if ((channels & AfecLowChannelMask) != 0)
 	{
 		StartConversion(AFEC0);
 	}
-	if ((channels & 0xFFFF0000) != 0)
-	{
-		StartConversion(AFEC1);
-	}
-#elif SAME70
-	channels &= activeChannels;
-	if ((channels & 0x000003FF) != 0)
-	{
-		StartConversion(AFEC0);
-	}
-	if ((channels & 0x003FF800) != 0)
+	if ((channels & AfecHighChannelMask) != 0)
 	{
 		StartConversion(AFEC1);
 	}
@@ -230,16 +219,10 @@ bool AnalogInCheckReady(uint32_t channels)
 #if SAM3XA || SAM4S
 	const uint32_t mask = channels & activeChannels;
 	return (adc_get_status(ADC) & mask) == mask;
-#elif SAM4E
+#elif SAM4E || SAME70
 	channels &= activeChannels;
-	const uint32_t afec0Mask = channels & 0x0000FFFF;
-	const uint32_t afec1Mask = (channels >> 16) & 0x0000FFFF;
-	return (afec_get_interrupt_status(AFEC0) & afec0Mask) == afec0Mask
-		&& (afec_get_interrupt_status(AFEC1) & afec1Mask) == afec1Mask;
-#elif SAME70
-	channels &= activeChannels;
-	const uint32_t afec0Mask = channels & 0x000003FF;
-	const uint32_t afec1Mask = (channels >> 10) & 0x000003FF;
+	const uint32_t afec0Mask = channels & AfecLowChannelMask;
+	const uint32_t afec1Mask = (channels & AfecHighChannelMask) >> 16;
 	return (afec_get_interrupt_status(AFEC0) & afec0Mask) == afec0Mask
 		&& (afec_get_interrupt_status(AFEC1) & afec1Mask) == afec1Mask;
 #endif
