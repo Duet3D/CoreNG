@@ -20,9 +20,6 @@ void core_vbus_off(CallbackParameter);
 
 SerialCDC::SerialCDC() : /* _cdc_tx_buffer(), */ txBufsize(1), isConnected(false)
 {
-#if SAM4E || SAM4S
-	attachInterrupt(USB_VBUS_PIN, core_vbus_off, INTERRUPT_MODE_FALLING, nullptr);
-#endif
 }
 
 void SerialCDC::begin(uint32_t baud_count)
@@ -30,6 +27,15 @@ void SerialCDC::begin(uint32_t baud_count)
 	// suppress "unused parameter" warning
 	(void)baud_count;
 	udc_start();
+
+#if SAM4E || SAM4S
+	static bool isInterruptAttached = false;
+	if (!isInterruptAttached)
+	{
+		attachInterrupt(USB_VBUS_PIN, core_vbus_off, INTERRUPT_MODE_FALLING, nullptr);
+		isInterruptAttached = true;
+	}
+#endif
 }
 
 void SerialCDC::begin(uint32_t baud_count, uint8_t config)

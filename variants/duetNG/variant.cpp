@@ -134,7 +134,7 @@ extern const PinDescription g_APinDescription[]=
   { PIOC, PIO_PC19,            ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI0 CS3
   { PIOC, PIO_PC20,            ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI0 CS4
   { PIOC, PIO_PC21,            ID_PIOC, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // HSMCI CD
-  { PIOC, PIO_PC22,            ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // VBUS
+  { PIOC, PIO_PC22,            ID_PIOC, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // VBUS
   { PIOC, PIO_PC23B_TIOA3,     ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),   NO_ADC, NOT_ON_PWM,  TC1_CHA3     }, // Fan 0
 
   // 56-63
@@ -256,7 +256,8 @@ extern "C" void init( void )
 	ConfigurePin(g_APinDescription[APINS_UART0]);
 	setPullup(APIN_UART0_RXD, true); 							// Enable pullup for RX0
 
-	// No need to initialize the USB pins on the SAM4E because they are USB by default
+	// Initialize USB VBUS pin
+	ConfigurePin(g_APinDescription[USB_VBUS_PIN]);
 
 	// Initialize Analog Controller
 	AnalogInInit();
