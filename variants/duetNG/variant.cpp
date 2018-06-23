@@ -134,7 +134,7 @@ extern const PinDescription g_APinDescription[]=
   { PIOC, PIO_PC19,            ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI0 CS3
   { PIOC, PIO_PC20,            ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI0 CS4
   { PIOC, PIO_PC21,            ID_PIOC, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // HSMCI CD
-  { PIOC, PIO_PC22,            ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // VBUS
+  { PIOC, PIO_PC22,            ID_PIOC, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // VBUS
   { PIOC, PIO_PC23B_TIOA3,     ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),   NO_ADC, NOT_ON_PWM,  TC1_CHA3     }, // Fan 0
 
   // 56-63
@@ -205,16 +205,21 @@ extern const PinDescription g_APinDescription[]=
   // 103 PB7 - now used as the VSSA sense pin
   { PIOB, PIO_PB7,				ID_PIOB, PIO_INPUT,	  PIO_DEFAULT,	PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // VSSA sense
 
-  // 104-105 HSMCI
+  // 104 PB4 - used by the ATE
+  { PIOB, PIO_PB4,				ID_PIOB, PIO_INPUT,	  PIO_DEFAULT,	PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // ATE
+
+  // 105 PB5 - used by the ATE
+  { PIOB, PIO_PB5,				ID_PIOB, PIO_INPUT,	  PIO_DEFAULT,	PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // ATE
+
+  // 106-107 HSMCI
   { PIOA, PIO_PA29C_MCCK,      ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // HSMCI MCCK
   { PIOA, PIO_PA28C_MCCDA | PIO_PA30C_MCDA0 | PIO_PA31C_MCDA1 | PIO_PA26C_MCDA2 | PIO_PA27C_MCDA3,
 		  	  	  	  	  	   ID_PIOA, PIO_PERIPH_C, PIO_PULLUP,   PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // HSMCI MCCDA, MCDA0-3
-
-  // 106 - TWI0 all pins
+  // 108 - TWI0 all pins
   { PIOA, PIO_PA3A_TWD0|PIO_PA4A_TWCK0, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER },
-  // 107 - UART0 all pins
+  // 109 - UART0 all pins
   { PIOA, PIO_PA9A_URXD0|PIO_PA10A_UTXD0, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER },
-  // 108 - UART1 all pins
+  // 110 - UART1 all pins
   { PIOA, PIO_PA5C_URXD1|PIO_PA6C_UTXD1, ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER }
 };
 
@@ -256,9 +261,10 @@ extern "C" void init( void )
 	ConfigurePin(g_APinDescription[APINS_UART0]);
 	setPullup(APIN_UART0_RXD, true); 							// Enable pullup for RX0
 
-	// No need to initialize the USB pins on the SAM4E because they are USB by default
+	// Initialize USB VBUS pin
+	ConfigurePin(g_APinDescription[USB_VBUS_PIN]);
 
-	// Initialize Analog Controller
+ 	// Initialize Analog Controller
 	AnalogInInit();
 
 	// Initialize analogOutput module
