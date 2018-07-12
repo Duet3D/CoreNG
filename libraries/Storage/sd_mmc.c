@@ -186,7 +186,7 @@ enum card_state {
 
 //! SD/MMC card information structure
 struct sd_mmc_card {
-	const struct DriverInterface const *iface;	// Pointer to driver interface functions
+	const struct DriverInterface *iface;	// Pointer to driver interface functions
 	uint32_t clock;				//!< Card access clock
 	uint32_t capacity;			//!< Card capacity in KBytes
 #if 0	// dc42
