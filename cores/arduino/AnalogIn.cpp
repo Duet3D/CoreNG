@@ -90,7 +90,7 @@ void AnalogInInit()
 // Enable or disable a channel. Use AnalogCheckReady to make sure the ADC is ready before calling this.
 void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 {
-	if ((unsigned int)channel < NumChannels)
+	if (channel >= 0 && (unsigned int)channel < NumChannels)
 	{
 		if (enable)
 		{
@@ -134,7 +134,7 @@ void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 // Read the most recent 12-bit result from a channel
 uint16_t AnalogInReadChannel(AnalogChannelNumber channel)
 {
-	if ((unsigned int)channel < NumChannels)
+	if (channel >= 0 && (unsigned int)channel < NumChannels)
 	{
 #if SAM3XA || SAM4S
 		return *(ADC->ADC_CDR + GetAdcChannel(channel));
@@ -238,7 +238,7 @@ AnalogChannelNumber PinToAdcChannel(uint32_t pin)
 		pin += A0;
 	}
 #endif
-	return g_APinDescription[pin].ulADCChannelNumber;
+	return (pin <= MaxPinNumber) ? g_APinDescription[pin].ulADCChannelNumber : NO_ADC;
 }
 
 // Get the temperature measurement channel
