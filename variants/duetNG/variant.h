@@ -59,8 +59,7 @@ extern "C"{
  *        Pins
  *----------------------------------------------------------------------------*/
 
-// Number of pins defined in PinDescription array
-#define APINS_COUNT			(103u)
+static const uint32_t MaxPinNumber = 105;						// last GPIO pin
 
 /*
  * SPI Interfaces
@@ -92,17 +91,20 @@ extern "C"{
 #define WIRE_ISR_HANDLER	TWI0_Handler
 #define WIRE_ISR_ID			TWI0_IRQn
 
+
 /*
  * UART/USART Interfaces
  */
 // SerialUSB
 #define USB_VBUS_PIN		(54u)
+
 // Serial
-#define APINS_UART0			(107u)
+#define APINS_UART0			(109u)
 #define APIN_UART0_RXD		(9u)
 #define APIN_UART0_TXD		(10u)
+
 // Serial1
-#define APINS_UART1			(108u)
+#define APINS_UART1			(110u)
 #define APIN_UART1_RXD		(5u)
 #define APIN_UART1_TXD		(6u)
 
@@ -111,10 +113,11 @@ extern "C"{
  */
 
 // HSMCI
-static const uint8_t APIN_HSMCI_CLOCK = 104;
-static const uint8_t APINS_HSMCI_DATA = 105;
+static const uint8_t APIN_HSMCI_CLOCK = 106;
+static const uint8_t APINS_HSMCI_DATA = 107;
 
-static const uint32_t MaxPinNumber = 103;						// last GPIO pin
+// TWI
+static const uint8_t APINS_TWI = 108;
 
 static const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
 static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds

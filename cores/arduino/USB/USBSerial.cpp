@@ -11,7 +11,7 @@
 #include "udc.h"
 
 #if SAM4E || SAM4S
-#include "WInterrupts.h"
+# include "WInterrupts.h"
 
 void core_vbus_off(CallbackParameter);
 #endif
@@ -32,8 +32,8 @@ void SerialCDC::begin(uint32_t baud_count)
 	static bool isInterruptAttached = false;
 	if (!isInterruptAttached)
 	{
-		attachInterrupt(USB_VBUS_PIN, core_vbus_off, INTERRUPT_MODE_FALLING, nullptr);
 		isInterruptAttached = true;
+		attachInterrupt(USB_VBUS_PIN, core_vbus_off, INTERRUPT_MODE_FALLING, nullptr);
 	}
 #endif
 }

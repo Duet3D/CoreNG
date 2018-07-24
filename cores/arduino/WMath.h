@@ -50,53 +50,53 @@ extern int32_t map(int32_t, int32_t, int32_t, int32_t, int32_t);
 # undef max
 #endif
 
-template<class X> inline X min(X _a, X _b)
+template<class X> inline constexpr X min(X _a, X _b)
 {
 	return (_a < _b) ? _a : _b;
 }
 
-template<class X> inline X max(X _a, X _b)
+template<class X> inline constexpr X max(X _a, X _b)
 {
 	return (_a > _b) ? _a : _b;
 }
 
 // Specialisations for float and double to handle NaNs properly
-template<> inline float min(float _a, float _b)
+template<> inline constexpr float min(float _a, float _b)
 {
 	return (std::isnan(_a) || _a < _b) ? _a : _b;
 }
 
-template<> inline float max(float _a, float _b)
+template<> inline constexpr float max(float _a, float _b)
 {
 	return (std::isnan(_a) || _a > _b) ? _a : _b;
 }
 
-template<> inline double min(double _a, double _b)
+template<> inline constexpr double min(double _a, double _b)
 {
 	return (std::isnan(_a) || _a < _b) ? _a : _b;
 }
 
-template<> inline double max(double _a, double _b)
+template<> inline constexpr double max(double _a, double _b)
 {
 	return (std::isnan(_a) || _a > _b) ? _a : _b;
 }
 
-inline float fsquare(float arg)
+inline constexpr float fsquare(float arg)
 {
 	return arg * arg;
 }
 
-inline double dsquare(double arg)
+inline constexpr double dsquare(double arg)
 {
 	return arg * arg;
 }
 
-inline uint64_t isquare64(int32_t arg)
+inline constexpr uint64_t isquare64(int32_t arg)
 {
 	return (uint64_t)((int64_t)arg * arg);
 }
 
-inline uint64_t isquare64(uint32_t arg)
+inline constexpr uint64_t isquare64(uint32_t arg)
 {
 	return (uint64_t)arg * arg;
 }
@@ -109,7 +109,7 @@ inline void swap(float& a, float& b)
 }
 
 // Note that constrain<float> will return NaN for a NaN input because of the way we define min<float> and max<float>
-template<class T> inline T constrain(T val, T vmin, T vmax)
+template<class T> inline constexpr T constrain(T val, T vmin, T vmax)
 {
 	return max<T>(min<T>(val, vmax), vmin);
 }

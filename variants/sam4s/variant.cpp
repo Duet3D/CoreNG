@@ -20,15 +20,11 @@
 #include "udc.h"
 #include "matrix/matrix.h"
 
-/* For the Duet NG we use a logical pin numbering scheme:
+/* For the SAM4S boards we use a logical pin numbering scheme:
  * Pins   0-25  PA0-25
- * Pins  26-31  PB0-3,13,14
- * Pins  32-63  PC0-31
- * Pins  64-95  PD0-31
- * Pins  96-101 PE0-5
- * Pin  102     PB6 (this got added late)
- * Pins 103-107 Various composite devices
- * Pins 200-215	IO0-IO15 on the SX1509B port expander on the DueXn
+ * Pins  26-33  PB0-7
+ * Pins  34-35	PB13-14
+ * Pins  36-67  PC0-31
  */
 
 /*
@@ -77,7 +73,11 @@ extern const PinDescription g_APinDescription[]=
   // 21-23 SPI bus 1
   { PIOA, PIO_PA21A_RXD1,		ID_PIOA, PIO_PERIPH_A, PIO_PULLUP,   PIN_ATTR_ANALOG,					ADC8,   NOT_ON_PWM,  NOT_ON_TIMER }, // Analogue, digital or UART expansion
   { PIOA, PIO_PA22A_TXD1,		ID_PIOA, PIO_PERIPH_A, PIO_PULLUP,   PIN_ATTR_ANALOG,					ADC9,   NOT_ON_PWM,  NOT_ON_TIMER }, // Analogue, digital or UART expansion
+#ifdef PCCB
+  { PIOA, PIO_PA23A_SCK1,		ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // USART 1 SCLK (DotStar LED)
+#else
   { PIOA, PIO_PA23,				ID_PIOA, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // W5500 interrupt
+#endif
 
   // 24-25
   { PIOA, PIO_PA24,				ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // X stop
@@ -112,7 +112,11 @@ extern const PinDescription g_APinDescription[]=
   { PIOC, PIO_PC0B_PWML0,		ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT,  (PIN_ATTR_DIGITAL|PIN_ATTR_PWM),	NO_ADC, PWM_CH0,  	 NOT_ON_TIMER }, // Heater 0
   { PIOC, PIO_PC1B_PWML1,		ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT,  (PIN_ATTR_DIGITAL|PIN_ATTR_PWM),	NO_ADC, PWM_CH1,  	 NOT_ON_TIMER }, // Heater 1
   { PIOC, PIO_PC2B_PWML2,		ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  (PIN_ATTR_DIGITAL|PIN_ATTR_PWM),	NO_ADC, PWM_CH2,  	 NOT_ON_TIMER }, // Y step
+#ifdef PCCB
+  { PIOC, PIO_PC3B_PWML3,		ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT,  (PIN_ATTR_DIGITAL|PIN_ATTR_PWM),	NO_ADC, PWM_CH3,	 NOT_ON_TIMER }, // Fan 1
+#else
   { PIOC, PIO_PC3,				ID_PIOC, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // ENC_B
+#endif
   { PIOC, PIO_PC4,				ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                  NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // E0 step
   { PIOC, PIO_PC5,				ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // E1 step
   { PIOC, PIO_PC6,				ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // E1 dir
@@ -124,7 +128,11 @@ extern const PinDescription g_APinDescription[]=
   { PIOC, PIO_PC10,				ID_PIOC, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // Z stop
   { PIOC, PIO_PC11,				ID_PIOC, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // USB Vbus monitor
   { PIOC, PIO_PC12X1_AD12,		ID_PIOC, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_ANALOG,					ADC12,  NOT_ON_PWM,  NOT_ON_TIMER }, // VIN voltage monitor
+#ifdef PCCB
+  { PIOC, PIO_PC13X1_AD10,		ID_PIOC, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_ANALOG,					ADC10,  NOT_ON_PWM,  NOT_ON_TIMER }, // Thermistor 1
+#else
   { PIOC, PIO_PC13,				ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // W5500 reset
+#endif
   { PIOC, PIO_PC14,				ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // MUX0
   { PIOC, PIO_PC15X1_AD11,		ID_PIOC, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_ANALOG,					ADC11,  NOT_ON_PWM,  NOT_ON_TIMER }, // Z probe input
 
@@ -135,7 +143,11 @@ extern const PinDescription g_APinDescription[]=
   { PIOC, PIO_PC19,				ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SPI0_CS2
   { PIOC, PIO_PC20,				ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // X step
   { PIOC, PIO_PC21,				ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // E3 step
+#ifdef PCCB
+  { PIOC, PIO_PC22,				ID_PIOC, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // Step 4
+#else
   { PIOC, PIO_PC22B_PWML3,		ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_PWM),	NO_ADC, PWM_CH3,  	 NOT_ON_TIMER }, // Fan 1
+#endif
   { PIOC, PIO_PC23B_TIOA3,		ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),	NO_ADC, NOT_ON_PWM,  TC1_CHA3     }, // Fan 0
 
   // 60-67
@@ -155,25 +167,33 @@ extern const PinDescription g_APinDescription[]=
 
   // 70 - TWI0 all pins
   { PIOA, PIO_PA3A_TWD0|PIO_PA4A_TWCK0, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER },
-  // 71 - UART1 all pins
+  // 71 - UART0 all pins
+  { PIOA, PIO_PA9A_URXD0|PIO_PA10A_UTXD0, ID_PIOA, PIO_PERIPH_A, PIO_PULLUP, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO),	NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER},
+  // 72 - UART1 all pins
   { PIOB, PIO_PB2A_URXD1|PIO_PB3A_UTXD1, ID_PIOB, PIO_PERIPH_A, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER }
 };
 
 /*
  * UART objects
  */
+
+#ifndef PCCB
+
+// On the Duet Maestro:
+// UART0 is used to control the stepper drivers. We don't use the core support for this.
+// UART1 is used to interface with PanelDue.
+
 RingBuffer rx_buffer1;
 RingBuffer tx_buffer1;
 
-// UART0 is used to control the stepper drivers. We don't use the core support for this.
-
-// UART1 is used to interface with PanelDue
 UARTClass Serial(UART1, UART1_IRQn, ID_UART1, &rx_buffer1, &tx_buffer1);
 
 void UART1_Handler(void)
 {
   Serial.IrqHandler();
 }
+
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -184,13 +204,13 @@ void ConfigurePin(const PinDescription& pinDesc)
 
 extern "C" void init( void )
 {
-	// We no longer disable pullups on all pins here, better to leave them enabled until the port is initialised
-
+#ifndef PCCB
 	// Initialize Serial port U(S)ART pins
-	ConfigurePin(g_APinDescription[APINS_UART]);				// PanelDue uses UART1
-	setPullup(APIN_UART_RXD, true); 							// Enable pullup for RX0
+	ConfigurePin(g_APinDescription[APINS_UART1]);				// PanelDue uses UART1
+	setPullup(APIN_UART1_RXD, true); 							// Enable pullup for RxD
+#endif
 
-	// No need to initialize the USB pins on the SAM4E because they are USB by default
+	// No need to initialize the USB pins on the SAM4S because they are USB by default
 
 	// Initialize Analog Controller
 	AnalogInInit();
@@ -202,8 +222,10 @@ extern "C" void init( void )
 	ConfigurePin(g_APinDescription[APIN_HSMCI_CLOCK]);
 	ConfigurePin(g_APinDescription[APINS_HSMCI_DATA]);
 
+#ifndef PCCB
 	// Set up PB4..PB7 as normal I/O, not JTAG
 	matrix_set_system_io(CCFG_SYSIO_SYSIO4 | CCFG_SYSIO_SYSIO5 | CCFG_SYSIO_SYSIO6 | CCFG_SYSIO_SYSIO7);
+#endif
 }
 
 // End
