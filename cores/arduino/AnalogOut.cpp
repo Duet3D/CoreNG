@@ -34,7 +34,7 @@ static inline uint32_t ConvertRange(float f, uint32_t top)
 pre(0.0 <= ulValue; ulValue <= 1.0)
 post(result <= top)
 {
-	return lround(f * (float)top);
+	return lrintf(f * (float)top);
 }
 
 // AnalogWrite to a DAC pin

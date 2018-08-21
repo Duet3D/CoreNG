@@ -61,6 +61,8 @@ extern "C" {
 
 extern uint32_t SystemCoreClock;	/* System Clock Frequency (Core Clock) */
 
+inline uint32_t SystemPeripheralClock() { return SystemCoreClock; }
+
 /**
  * @brief Setup the microcontroller system.
  * Initialize the System and update the SystemCoreClock variable.
