@@ -67,11 +67,6 @@ void AnalogInInit()
 	afec_config cfg;
 	afec_get_config_defaults(&cfg);
 
-#if 0	// these are not needed, the defaults should be OK
-	cfg.afec_clock = 2000000UL;						// reduce clock frequency
-	cfg.settling_time = AFEC_SETTLING_TIME_3;
-#endif
-
 	while (afec_init(AFEC0, &cfg) != STATUS_OK)
 	{
 		(void)afec_get_latest_value(AFEC0);
@@ -92,40 +87,59 @@ void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
 {
 	if (channel >= 0 && (unsigned int)channel < NumChannels)
 	{
+#if SAM3XA || SAM4S
+		const adc_channel_num_t chan = GetAdcChannel(channel);
+#else
+		Afec * const afec = GetAfec(channel);
+		const afec_channel_num chan = GetAfecChannel(channel);
+#endif
 		if (enable)
 		{
 			activeChannels |= (1u << channel);
 #if SAM3XA || SAM4S
-			adc_enable_channel(ADC, GetAdcChannel(channel));
-#if SAM4S
-			adc_set_calibmode(ADC);										// auto calibrate at start of next sequence
-#endif
-			if (GetAdcChannel(channel) == ADC_TEMPERATURE_SENSOR)
+			adc_enable_channel(ADC, chan);
+# if SAM4S
+			adc_set_calibmode(ADC);								// auto calibrate at start of next sequence
+# endif
+			if (channel == GetTemperatureAdcChannel())
 			{
 				adc_enable_ts(ADC);
 			}
 #elif SAM4E || SAME70
 			afec_ch_config cfg;
 			afec_ch_get_config_defaults(&cfg);
-			afec_ch_set_config(GetAfec(channel), GetAfecChannel(channel), &cfg);
-			afec_channel_set_analog_offset(GetAfec(channel), GetAfecChannel(channel), 2048);	// need this to get the full ADC range
-			afec_channel_enable(GetAfec(channel), GetAfecChannel(channel));
-#if SAM4E
-			afec_start_calibration(GetAfec(channel));					// do automatic calibration
-#endif
+# if SAME70
+			cfg.gain = AFEC_GAINVALUE_0;						// SAME70 defaults to gain 2
+# endif
+			afec_ch_set_config(afec, chan, &cfg);
+# if SAM4E
+			afec_channel_set_analog_offset(afec, chan, 2048);	// 2048 means zero offset compensation
+# elif SAME70
+			afec_channel_set_analog_offset(afec, chan, 512);	// 512 means zero offset compensation
+			if (channel == GetTemperatureAdcChannel())
+			{
+				afec_temp_sensor_config afec_temp_sensor_cfg;
+				afec_temp_sensor_get_config_defaults(&afec_temp_sensor_cfg);
+				afec_temp_sensor_set_config(afec, &afec_temp_sensor_cfg);
+			}
+# endif
+			afec_channel_enable(afec, chan);
+# if SAM4E
+			afec_start_calibration(afec);						// do automatic calibration
+# endif
 #endif
 		}
 		else
 		{
 			activeChannels &= ~(1u << channel);
 #if SAM3XA || SAM4S
-			adc_disable_channel(ADC, GetAdcChannel(channel));
-			if (GetAdcChannel(channel) == ADC_TEMPERATURE_SENSOR)
+			adc_disable_channel(ADC, chan);
+			if (channel == GetTemperatureAdcChannel())
 			{
 				adc_disable_ts(ADC);
 			}
 #elif SAM4E || SAME70
-			afec_channel_disable(GetAfec(channel), GetAfecChannel(channel));
+			afec_channel_disable(afec, chan);
 #endif
 		}
 	}
