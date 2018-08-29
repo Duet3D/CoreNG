@@ -411,7 +411,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_xPSR(void)
  */
 __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_PSP(void)
 {
-  register uint32_t result;
+  /*register*/ uint32_t result;		//dc42 removed 'register' because it is not compatible with C++17
 
   __ASM volatile ("MRS %0, psp\n"  : "=r" (result) );
   return(result);
@@ -438,7 +438,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE void __set_PSP(uint32_t topOf
  */
 __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_MSP(void)
 {
-  register uint32_t result;
+  /*register*/ uint32_t result;		//dc42 removed 'register'
 
   __ASM volatile ("MRS %0, msp\n" : "=r" (result) );
   return(result);
