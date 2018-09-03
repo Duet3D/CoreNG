@@ -47,10 +47,6 @@ extern "C"{
 
 #include "wiring_constants.h"
 
-#define clockCyclesPerMicrosecond() ( SystemCoreClock / 1000000L )
-#define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (SystemCoreClock / 1000L) )
-#define microsecondsToClockCycles(a) ( (a) * (SystemCoreClock / 1000000L) )
-
 void yield(void);
 
 typedef uint8_t Pin;

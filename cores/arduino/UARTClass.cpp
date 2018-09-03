@@ -65,7 +65,7 @@ void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg)
 
   // Configure baudrate (asynchronous, no oversampling)
   const uint32_t br16 = dwBaudRate * 16;
-  _pUart->UART_BRGR = (SystemCoreClock + (br16/2) - 1) / br16;
+  _pUart->UART_BRGR = (SystemPeripheralClock() + (br16/2) - 1) / br16;
 
   // Make sure both ring buffers are initialized back to empty.
   _rx_buffer->_iHead = _rx_buffer->_iTail = 0;

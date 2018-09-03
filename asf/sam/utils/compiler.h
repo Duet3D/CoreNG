@@ -760,7 +760,6 @@ typedef struct
 
 //! @}
 
-
 /*! \name Mathematics
  *
  * The same considerations as for clz and ctz apply here but GCC does not
@@ -808,6 +807,7 @@ typedef struct
 
 // abs() is already defined by stdlib.h
 
+#if 0	//dc42 removed these, they are an abomination
 /*! \brief Takes the minimal value of \a a and \a b.
  *
  * \param a Input value.
@@ -831,6 +831,7 @@ typedef struct
 #define max(a, b)   Max(a, b)
 
 //! @}
+#endif
 
 
 /*! \brief Calls the routine at address \a addr.

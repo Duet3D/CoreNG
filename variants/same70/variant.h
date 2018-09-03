@@ -89,28 +89,28 @@ extern "C"{
 // SerialUSB
 //#define USB_VBUS_PIN		(??)		// not present on the test board, can be any free pin
 // Serial
-static const uint8_t APINS_UART0 = 56;
-static const uint8_t APIN_UART0_RXD = 5;
-static const uint8_t APIN_UART0_TXD = 6;
+static const uint8_t APINS_UART0 = 99;
+static const uint8_t APIN_UART0_RXD = 9;
+static const uint8_t APIN_UART0_TXD = 10;
 // Serial1
-static const uint8_t APINS_UART1 = 57;
-static const uint8_t APIN_UART1_RXD = 3;
-static const uint8_t APIN_UART1_TXD = 4;
+static const uint8_t APINS_UART1 = 100;
+static const uint8_t APIN_UART1_RXD = 5;
+static const uint8_t APIN_UART1_TXD = 6;
 
 /*
  * SAM E70 test board pins
  */
 
 // HSMCI
-static const uint8_t APIN_HSMCI_CLOCK = 51;
-static const uint8_t APIN_HSMCI_DATA = 52;
+static const uint8_t APIN_HSMCI_CLOCK = 94;
+static const uint8_t APIN_HSMCI_DATA = 95;
 
 // PHY
-static const uint8_t APIN_GMAC_PHY_INTERRUPT = 53;
-static const uint8_t APIN_GMAC_PHY_RESET = 54;
-static const uint8_t APINS_GMAC_PHY = 55;
+static const uint8_t APIN_GMAC_PHY_INTERRUPT = 96;
+static const uint8_t APIN_GMAC_PHY_RESET = 97;
+static const uint8_t APINS_GMAC_PHY = 98;
 
-static const uint32_t MaxPinNumber = 50;						// last GPIO pin
+static const uint32_t MaxPinNumber = 93;						// last GPIO pin (PE05)
 
 static const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
 static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds

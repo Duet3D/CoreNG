@@ -89,7 +89,7 @@ static usb_iface_desc_t UDC_DESC_STORAGE *udc_ptr_iface;
  * \brief Language ID of USB device (US ID by default)
  */
 COMPILER_WORD_ALIGNED
-static UDC_DESC_STORAGE usb_str_lgid_desc_t udc_string_desc_languageid = {
+static const UDC_DESC_STORAGE usb_str_lgid_desc_t udc_string_desc_languageid = {	//dc42 added const
 	.desc.bLength = sizeof(usb_str_lgid_desc_t),
 	.desc.bDescriptorType = USB_DT_STRING,
 	.string = {LE16(USB_LANGID_EN_US)}
@@ -101,7 +101,7 @@ static UDC_DESC_STORAGE usb_str_lgid_desc_t udc_string_desc_languageid = {
  * by usb application configuration
  */
 #ifdef USB_DEVICE_MANUFACTURE_NAME
-static uint8_t udc_string_manufacturer_name[] = USB_DEVICE_MANUFACTURE_NAME;
+static const uint8_t udc_string_manufacturer_name[] = USB_DEVICE_MANUFACTURE_NAME;	//dc42 added const
 #  define USB_DEVICE_MANUFACTURE_NAME_SIZE  \
 	(sizeof(udc_string_manufacturer_name)-1)
 #else
@@ -114,7 +114,7 @@ static uint8_t udc_string_manufacturer_name[] = USB_DEVICE_MANUFACTURE_NAME;
  * by usb application configuration
  */
 #ifdef USB_DEVICE_PRODUCT_NAME
-static uint8_t udc_string_product_name[] = USB_DEVICE_PRODUCT_NAME;
+static const uint8_t udc_string_product_name[] = USB_DEVICE_PRODUCT_NAME;			//dc42 added const
 #  define USB_DEVICE_PRODUCT_NAME_SIZE  (sizeof(udc_string_product_name)-1)
 #else
 #  define USB_DEVICE_PRODUCT_NAME_SIZE  0

@@ -209,7 +209,7 @@ void sspi_master_setup_device(const struct sspi_device *device)
     SSPI->SPI_MR = SPI_MR_MSTR | SPI_MR_MODFDIS;
 
 	// Set SPI mode, clock frequency, CS not active after transfer, delay between transfers
-	uint16_t baud_div = (uint16_t)spi_calc_baudrate_div(device->clockFrequency, SystemCoreClock);
+	uint16_t baud_div = (uint16_t)spi_calc_baudrate_div(device->clockFrequency, SystemPeripheralClock());
 	uint32_t csr = SPI_CSR_SCBR(baud_div)				// Baud rate
 					| device->bitsPerTransferControl	// Transfer bit width
 					| SPI_CSR_DLYBCT(0);      			// Transfer delay
