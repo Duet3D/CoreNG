@@ -105,7 +105,13 @@ typedef enum _ETCChannel
   TC2_CHA7,
   TC2_CHB7,
   TC2_CHA8,
-  TC2_CHB8
+  TC2_CHB8,
+#if SAME70
+  TC3_CHA9,
+  TC3_CHB9,
+  TC3_CHA10,
+  TC3_CHA11
+#endif
 } ETCChannel ;
 
 #ifdef __cplusplus

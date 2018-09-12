@@ -20,11 +20,9 @@
 
 const uint32_t pioInterruptPriority = 5;
 
-typedef void (*interruptCB)(CallbackParameter);
-
 struct InterruptCallback
 {
-	interruptCB func;
+	StandardCallbackFunction func;
 	CallbackParameter param;
 
 	InterruptCallback() : func(nullptr) { }
@@ -98,7 +96,7 @@ static unsigned int GetHighestBit(uint32_t bits)
 }
 
 // Attach an interrupt to the specified pin returning true if successful
-bool attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), enum InterruptMode mode, CallbackParameter param)
+bool attachInterrupt(uint32_t pin, StandardCallbackFunction callback, enum InterruptMode mode, CallbackParameter param)
 {
 	if (pin > MaxPinNumber)
 	{
