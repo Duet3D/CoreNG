@@ -80,28 +80,44 @@ extern "C"{
  * UART/USART Interfaces
  */
 
-// SerialUSB
-#ifdef DUET3
-# define USB_VBUS_PIN		(PORTC_PIN(21))		// this is for Duet 3, not present on the XPLD
-#endif
+static const uint8_t APINS_Serial0 = 137;
+static const uint8_t APINS_Serial1 = 138;
+
+#ifdef SAME70XPLD
+
+// No USB_VBUS_PIN on the XPLD
+static const uint8_t APIN_GMAC_PHY_INTERRUPT = PORTA_PIN(14);
+static const uint8_t APIN_GMAC_PHY_RESET = PORTC_PIN(10);
 
 // Serial
-static const uint8_t APINS_UART0 = 139;
-static const uint8_t APIN_UART0_RXD = 9;
-static const uint8_t APIN_UART0_TXD = 10;
+static const uint8_t APIN_Serial0_RXD = PORTA_PIN(9);
+static const uint8_t APIN_Serial0_TXD = PORTA_PIN(10);
+
 // Serial1
-static const uint8_t APINS_UART1 = 140;
-static const uint8_t APIN_UART1_RXD = 5;
-static const uint8_t APIN_UART1_TXD = 6;
+static const uint8_t APIN_Serial1_RXD = PORTA_PIN(5);
+static const uint8_t APIN_Serial1_TXD = PORTA_PIN(6);
+
+#else
+
+# define USB_VBUS_PIN		(PORTC_PIN(21))		// this is for Duet 3, not present on the XPLD
+static const uint8_t APIN_GMAC_PHY_INTERRUPT = PORTC_PIN(6);
+static const uint8_t APIN_GMAC_PHY_RESET = PORTD_PIN(11);
+
+// Serial
+static const uint8_t APIN_Serial0_RXD = PORTD_PIN(25);
+static const uint8_t APIN_Serial0_TXD = PORTD_PIN(26);
+
+// Serial1
+static const uint8_t APIN_Serial1_RXD = PORTD_PIN(18);
+static const uint8_t APIN_Serial1_TXD = PORTD_PIN(19);
+
+#endif
 
 // HSMCI
 static const uint8_t APIN_HSMCI_CLOCK = 134;
 static const uint8_t APIN_HSMCI_DATA = 135;
 
-// PHY
-static const uint8_t APIN_GMAC_PHY_INTERRUPT = 136;
-static const uint8_t APIN_GMAC_PHY_RESET = 137;
-static const uint8_t APINS_GMAC_PHY = 138;
+static const uint8_t APINS_GMAC_PHY = 136;
 
 static const uint32_t MaxPinNumber = 133;						// last GPIO pin (PE05)
 

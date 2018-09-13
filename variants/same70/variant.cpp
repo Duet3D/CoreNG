@@ -35,7 +35,7 @@ extern const PinDescription g_APinDescription[] =
   // PIO A
 
   // 0-2
-  { PIOA, PIO_PA0B_TIOA0,      ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  TC0_CHA0 },
+  { PIOA, PIO_PA0,			   ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOA, PIO_PA1,             ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOA, PIO_PA2,             ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
@@ -44,16 +44,26 @@ extern const PinDescription g_APinDescription[] =
   { PIOA, PIO_PA4A_TWCK0,      ID_PIOA, PIO_NOT_A_PIN, PIO_DEFAULT, PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 5-6 UART1
+#ifdef SAME70XPLD
   { PIOA, PIO_PA5C_URXD1,      ID_PIOA, PIO_PERIPH_C, PIO_PULLUP,   PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // URXD1
   { PIOA, PIO_PA6C_UTXD1,      ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // UTXD1
+#else
+  { PIOA, PIO_PA5,		       ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOA, PIO_PA6,		       ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+#endif
 
   // 7-8  connected to XTAL32 on the XPLD
   { PIOA, PIO_PA7B_PWMC0_PWMH3, ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT, PIN_ATTR_DIGITAL,                   NO_ADC, PWM_CH3,	 NOT_ON_TIMER },
   { PIOA, PIO_PA8A_PWMC1_PWMH3, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT, PIN_ATTR_DIGITAL,                   NO_ADC, PWM_CH7,	 NOT_ON_TIMER },
 
   // 9-10 UART0
+#ifdef SAME70XPLD
   { PIOA, PIO_PA9A_URXD0,      ID_PIOA, PIO_PERIPH_A, PIO_PULLUP,   PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // URXD0
   { PIOA, PIO_PA10A_UTXD0,     ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // UTXD0
+#else
+  { PIOA, PIO_PA9,		       ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOA, PIO_PA10,		       ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+#endif
 
   // 11-13
   // PA11 is connected to USER SWITCH on the XPLD
@@ -61,8 +71,12 @@ extern const PinDescription g_APinDescription[] =
   { PIOA, PIO_PA12C_PWMC1_PWMH0, ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT, PIN_ATTR_DIGITAL,                  NO_ADC, PWM_CH4,     NOT_ON_TIMER },
   { PIOA, PIO_PA13A_QIO0,      ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
-  // 14 (PA14 is PHY_INTERRUPT on the XPLD
-  { PIOA, PIO_PA14A_QSCK,      ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // PHY_INTERRUPT on XPLD
+  // 14
+#ifdef SAME70XPLD
+  { PIOA, PIO_PA14,            ID_PIOA, PIO_INPUT,    PIO_PULLUP,   PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // PHY INTERRUPT
+#else
+  { PIOA, PIO_PA14A_QSCK,      ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+#endif
 
   // PA15-16 are connected to RAM on the XPLD
   { PIOA, PIO_PA15B_TIOA1,     ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  TC0_CHA1 },
@@ -159,7 +173,11 @@ extern const PinDescription g_APinDescription[] =
   { PIOC, PIO_PC3,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOC, PIO_PC4,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOC, PIO_PC5B_TIOA6,      ID_PIOC, PIO_PERIPH_B,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  TC2_CHA6 },
-  { PIOC, PIO_PC6,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // PHY_INTERRUPT on Duet 3
+#ifdef SAME70XPLD
+  { PIOC, PIO_PC6,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+#else
+  { PIOC, PIO_PC6,             ID_PIOC, PIO_INPUT,	   PIO_PULLUP,   PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // PHY_INTERRUPT on Duet 3
+#endif
   { PIOC, PIO_PC7,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 72-73 PC8-9
@@ -168,7 +186,11 @@ extern const PinDescription g_APinDescription[] =
   { PIOC, PIO_PC9,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 74-75 PC10-11 (connected to EEPROM on the XPLD)
+#ifdef SAME70XPLD
+  { PIOC, PIO_PC10,            ID_PIOC, PIO_OUTPUT_1,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // PHY RESET (active low)
+#else
   { PIOC, PIO_PC10,            ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+#endif
   { PIOC, PIO_PC11B_TIOA8,     ID_PIOC, PIO_PERIPH_B,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  TC2_CHA8 },
 
   // 76-79 PC12-15 (PC15 is connected to RAM on the XPLD)
@@ -178,7 +200,7 @@ extern const PinDescription g_APinDescription[] =
   { PIOC, PIO_PC15,            ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   ADC18,  NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 80
-  { PIOC, PIO_PC16,            ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },	// HSMCI CD on the test board
+  { PIOC, PIO_PC16,            ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // HSMCI CD on the XPLD
 
   // 81-82 PC17-18 (PC18 is connected to RAM on the XPLD)
   { PIOC, PIO_PC17,            ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
@@ -219,8 +241,13 @@ extern const PinDescription g_APinDescription[] =
 
   // 106-108
   { PIOD, PIO_PD10,            ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOD, PIO_PD11,            ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },	// PHY_RESET on Duet 3
-  { PIOD, PIO_PD12B_CANTX1,    ID_PIOD, PIO_PERIPH_B, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },	// CANTX1
+#ifdef SAME70XPLD
+  { PIOD, PIO_PD11,            ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOD, PIO_PD12,			   ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+#else
+  { PIOD, PIO_PD11,            ID_PIOD, PIO_OUTPUT_1, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // PHY_RESET on Duet 3
+  { PIOD, PIO_PD12B_CANTX1,    ID_PIOD, PIO_PERIPH_B, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // CANTX1
+#endif
 
   // 109-113 PD13-17 (connected to RAM on the XPLD)
   { PIOD, PIO_PD13,            ID_PIOD, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
@@ -230,8 +257,13 @@ extern const PinDescription g_APinDescription[] =
   { PIOD, PIO_PD17,            ID_PIOD, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 114-115
-  { PIOD, PIO_PD18C_URXD4,     ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOD, PIO_PD19C_UTXD4,     ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+#ifdef SAME70XPLD
+  { PIOD, PIO_PD18,			   ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOD, PIO_PD19,			   ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+#else
+  { PIOD, PIO_PD18C_URXD4,     ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOD, PIO_PD19C_UTXD4,     ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+#endif
 
   // 116-118 SPI0
   { PIOD, PIO_PD20B_SPI0_MISO, ID_PIOD, PIO_PERIPH_B, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
@@ -243,12 +275,23 @@ extern const PinDescription g_APinDescription[] =
 
   // 120-124
   { PIOD, PIO_PD24,            ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOD, PIO_PD25C_URXD2,     ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOD, PIO_PD26C_UTXD2,     ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOD, PIO_PD27,            ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOD, PIO_PD28B_CANRX1,    ID_PIOD, PIO_PERIPH_B, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },	// CANRX1
+#ifdef SAME70XPLD
+  { PIOD, PIO_PD25,		       ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOD, PIO_PD26,			   ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+#else
+  { PIOD, PIO_PD25C_URXD2,     ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // UART2
+  { PIOD, PIO_PD26C_UTXD2,     ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // UART2
+#endif
 
-  // 125 PD29 ( connected to RAM on the XPLD)
+  { PIOD, PIO_PD27,            ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+
+#ifdef SAME70XPLD
+  { PIOD, PIO_PD28,			   ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+#else
+  { PIOD, PIO_PD28B_CANRX1,    ID_PIOD, PIO_PERIPH_B, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // CANRX1
+#endif
+
+  // 125 PD29 (connected to RAM on the XPLD)
   { PIOD, PIO_PD29,            ID_PIOD, PIO_NOT_A_PIN, PIO_DEFAULT, PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 126-127
@@ -272,20 +315,26 @@ extern const PinDescription g_APinDescription[] =
   { PIOA, PIO_PA28C_MCCDA | PIO_PA30C_MCDA0 | PIO_PA31C_MCDA1 | PIO_PA26C_MCDA2 | PIO_PA27C_MCDA3,
 		  	  	  	  	  	   ID_PIOA, PIO_PERIPH_C, PIO_PULLUP,   PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // HSMCI MCCDA, MCDA0-3
 
-  // 136-138 GMAC PHY
-  { PIOA, PIO_PA14,            ID_PIOA, PIO_INPUT,    PIO_PULLUP,   PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // PHY INTERRUPT
-  { PIOC, PIO_PC10,            ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // PHY RESET (active low)
+  // 136 GMAC PHY
   { PIOD, (PIO_PD0A_GTXCK | PIO_PD1A_GTXEN | PIO_PD2A_GTX0 | PIO_PD3A_GTX1 | PIO_PD4A_GRXDV | PIO_PD5A_GRX0 | PIO_PD6A_GRX1 | PIO_PD7A_GRXER | PIO_PD8A_GMDC | PIO_PD9A_GMDIO),
 		  	  	  	  	  	   ID_PIOD, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // PHY ETHERNET
 
-  // 139 UART0 all pins
-  { PIOA, PIO_PA9A_URXD0|PIO_PA10A_UTXD0, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER },
+  // 137 UART0 or 2 all pins
+#ifdef SAME70XPLD
+  { PIOA, PIO_PA9A_URXD0|PIO_PA10A_UTXD0,  ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER },
+#else
+  { PIOA, PIO_PD25C_URXD2|PIO_PD26C_UTXD2, ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER },
+#endif
 
-  // 140 UART1 all pins
-  { PIOA, PIO_PA5C_URXD1|PIO_PA6C_UTXD1,  ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER }
+  // 138 UART1 or 4 all pins
+#ifdef SAME70XPLD
+  { PIOA, PIO_PA5C_URXD1|PIO_PA6C_UTXD1,   ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER }
+#else
+  { PIOA, PIO_PD18C_URXD4|PIO_PD19C_UTXD4, ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER }
+#endif
 };
 
-static_assert(ARRAY_SIZE(g_APinDescription) == 141, "incorrect pin count");		// check on pin numbering
+static_assert(ARRAY_SIZE(g_APinDescription) == 139, "incorrect pin count");		// check on pin numbering
 
 /*
  * UART objects
@@ -294,6 +343,8 @@ RingBuffer rx_buffer1;
 RingBuffer tx_buffer1;
 RingBuffer rx_buffer2;
 RingBuffer tx_buffer2;
+
+#ifdef SAME70XPLD
 
 UARTClass Serial(UART0, UART0_IRQn, ID_UART0, &rx_buffer1, &tx_buffer1);
 
@@ -309,6 +360,24 @@ void UART1_Handler(void)
   Serial1.IrqHandler();
 }
 
+#else
+
+UARTClass Serial(UART2, UART2_IRQn, ID_UART2, &rx_buffer1, &tx_buffer1);
+
+void UART2_Handler(void)
+{
+  Serial.IrqHandler();
+}
+
+UARTClass Serial1(UART4, UART4_IRQn, ID_UART4, &rx_buffer2, &tx_buffer2);
+
+void UART4_Handler(void)
+{
+  Serial1.IrqHandler();
+}
+
+#endif
+
 // ----------------------------------------------------------------------------
 
 void ConfigurePin(const PinDescription& pinDesc)
@@ -319,8 +388,8 @@ void ConfigurePin(const PinDescription& pinDesc)
 extern "C" void init( void )
 {
 	// Initialize Serial port U(S)ART pins
-	ConfigurePin(g_APinDescription[APINS_UART0]);
-	setPullup(APIN_UART0_RXD, true); 							// Enable pullup for RX0
+	ConfigurePin(g_APinDescription[APINS_Serial0]);
+	setPullup(APIN_Serial0_RXD, true); 							// Enable pullup for RX0
 
 	// No need to initialize the USB pins on the SAME70 because they are USB by default
 
