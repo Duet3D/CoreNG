@@ -970,6 +970,7 @@
 								<option id="gnu.cpp.compiler.option.debugging.level.1762368315" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.default" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.462203892" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__SAME70Q21__"/>
+									<listOptionValue builtIn="false" value="RTOS"/>
 									<listOptionValue builtIn="false" value="UDD_ENABLE"/>
 									<listOptionValue builtIn="false" value="UDD_NO_SLEEP_MGR"/>
 								</option>
@@ -1200,6 +1201,7 @@
 								<option id="gnu.cpp.compiler.option.preprocessor.def.674386308" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__SAME70Q21__"/>
 									<listOptionValue builtIn="false" value="SAME70XPLD"/>
+									<listOptionValue builtIn="false" value="RTOS"/>
 									<listOptionValue builtIn="false" value="UDD_ENABLE"/>
 									<listOptionValue builtIn="false" value="UDD_NO_SLEEP_MGR"/>
 								</option>

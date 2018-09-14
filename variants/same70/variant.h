@@ -65,20 +65,7 @@ extern "C"{
 #define PORTD_PIN(n)	(96+n)
 #define PORTE_PIN(n)	(128+n)
 
-/*
- * SPI Interfaces
- */
-
-// The following are correct for the XPLD, not for Duet 3
-#define SPI_INTERFACE_ID	ID_SPI
-#define APIN_SPI_MOSI		(117u)
-#define APIN_SPI_MISO		(116u)
-#define APIN_SPI_SCK		(118u)
-#define APIN_SPI_SS0		(34u)
-
-/*
- * UART/USART Interfaces
- */
+// UART/USART and SPI Interfaces
 
 static const uint8_t APINS_Serial0 = 137;
 static const uint8_t APINS_Serial1 = 138;
@@ -97,6 +84,13 @@ static const uint8_t APIN_Serial0_TXD = PORTA_PIN(10);
 static const uint8_t APIN_Serial1_RXD = PORTA_PIN(5);
 static const uint8_t APIN_Serial1_TXD = PORTA_PIN(6);
 
+// ESP SPI
+#define SPI_INTERFACE_ID	ID_SPI0
+static const uint8_t APIN_SPI_MOSI = PORTD_PIN(21);
+static const uint8_t APIN_SPI_MISO = PORTD_PIN(20);
+static const uint8_t APIN_SPI_SCK = PORTD_PIN(22);
+static const uint8_t APIN_SPI_SS0 = PORTB_PIN(2);
+
 #else
 
 # define USB_VBUS_PIN		(PORTC_PIN(21))		// this is for Duet 3, not present on the XPLD
@@ -110,6 +104,18 @@ static const uint8_t APIN_Serial0_TXD = PORTD_PIN(26);
 // Serial1
 static const uint8_t APIN_Serial1_RXD = PORTD_PIN(18);
 static const uint8_t APIN_Serial1_TXD = PORTD_PIN(19);
+
+// Shared SPI (USART 1 on Duet 3)
+static const uint8_t APIN_USART_SSPI_SCK = PORTB_PIN(13);
+static const uint8_t APIN_USART_SSPI_MOSI = PORTB_PIN(1);
+static const uint8_t APIN_USART_SSPI_MISO = PORTB_PIN(0);
+
+// ESP SPI
+#define SPI_INTERFACE_ID	ID_SPI0
+static const uint8_t APIN_SPI_MOSI = PORTD_PIN(21);
+static const uint8_t APIN_SPI_MISO = PORTD_PIN(20);
+static const uint8_t APIN_SPI_SCK = PORTD_PIN(22);
+static const uint8_t APIN_SPI_SS0 = PORTB_PIN(2);
 
 #endif
 
