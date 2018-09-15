@@ -41,8 +41,8 @@ extern const PinDescription g_APinDescription[] =
   { PIOA, PIO_PA2,             ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 3-4 TWI0, connected to EEPROM on the XPLD
-  { PIOA, PIO_PA3A_TWD0,       ID_PIOA, PIO_NOT_A_PIN, PIO_DEFAULT, PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOA, PIO_PA4A_TWCK0,      ID_PIOA, PIO_NOT_A_PIN, PIO_DEFAULT, PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOA, PIO_PA3,		       ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT, PIN_ATTR_DIGITAL,                    NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOA, PIO_PA4,		       ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT, PIN_ATTR_DIGITAL,                    NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 5-6 UART1
 #ifdef SAME70XPLD
