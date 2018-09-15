@@ -25,9 +25,9 @@ constexpr unsigned int NumChannels = 31;
 constexpr uint32_t AfecLowChannelMask = 0x0000FFFF;
 constexpr uint32_t AfecHighChannelMask = 0x7FFF0000;
 #elif SAME70
-constexpr unsigned int NumChannels = 27;				// but channels 12-15 don't exist
+constexpr unsigned int NumChannels = 28;				// but channels 12-15 don't exist
 constexpr uint32_t AfecLowChannelMask = 0x00000FFF;
-constexpr uint32_t AfecHighChannelMask = 0x07FF0000;
+constexpr uint32_t AfecHighChannelMask = 0x0FFF0000;
 #endif
 
 static uint32_t activeChannels = 0;

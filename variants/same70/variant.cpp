@@ -18,6 +18,7 @@
 
 #include "variant.h"
 #include "udc.h"
+#include "matrix/matrix.h"
 
 /* For the SAME70Q20/21 we use a logical pin numbering scheme:
  * Pins   0-31  PA0-31
@@ -61,8 +62,8 @@ extern const PinDescription g_APinDescription[] =
   { PIOA, PIO_PA9A_URXD0,      ID_PIOA, PIO_PERIPH_A, PIO_PULLUP,   PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // URXD0
   { PIOA, PIO_PA10A_UTXD0,     ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // UTXD0
 #else
-  { PIOA, PIO_PA9,		       ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOA, PIO_PA10,		       ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOA, PIO_PA9,		       ID_PIOA, PIO_OUTPUT_1, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // Driver ENN
+  { PIOA, PIO_PA10,		       ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // PS_ON
 #endif
 
   // 11-13
@@ -87,7 +88,7 @@ extern const PinDescription g_APinDescription[] =
   { PIOA, PIO_PA18,            ID_PIOA, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC7,   NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 19 (ESP transfer request)
-  { PIOA, PIO_PA19,            ID_PIOA, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   ADC8,  NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOA, PIO_PA19,            ID_PIOA, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC8,  NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 20 PA20 (connected to RAM on the xpld)
   { PIOA, PIO_PA20,            ID_PIOA, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC9,  NOT_ON_PWM,  NOT_ON_TIMER },
@@ -121,7 +122,7 @@ extern const PinDescription g_APinDescription[] =
   { PIOB, PIO_PB2D_SPI0_NPCS0, ID_PIOB, PIO_PERIPH_D, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // ESP CS
 
   // 35 PB03
-  { PIOB, PIO_PB3,             ID_PIOB, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   ADC2,   NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOB, PIO_PB3,             ID_PIOB, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC2,   NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 36-37 (TWI1?)
   { PIOB, PIO_PB4D_TXD1,       ID_PIOB, PIO_PERIPH_D, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
@@ -167,7 +168,7 @@ extern const PinDescription g_APinDescription[] =
   // PIO C
 
   // 64-71 PC0-7 (connected to RAM on the XPLD)
-  { PIOC, PIO_PC0,             ID_PIOC, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   ADC25,  NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOC, PIO_PC0,             ID_PIOC, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC25,  NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOC, PIO_PC1,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOC, PIO_PC2,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOC, PIO_PC3,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
@@ -197,7 +198,7 @@ extern const PinDescription g_APinDescription[] =
   { PIOC, PIO_PC12,            ID_PIOC, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC19,  NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOC, PIO_PC13,            ID_PIOC, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC17,  NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOC, PIO_PC14,            ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOC, PIO_PC15,            ID_PIOC, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   ADC18,  NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOC, PIO_PC15,            ID_PIOC, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC18,  NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 80
   { PIOC, PIO_PC16,            ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // HSMCI CD on the XPLD
@@ -219,7 +220,7 @@ extern const PinDescription g_APinDescription[] =
   { PIOC, PIO_PC26C_SPI1_MISO, ID_PIOC, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOC, PIO_PC27C_SPI1_MOSI, ID_PIOC, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOC, PIO_PC28,            ID_PIOC, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOC, PIO_PC29B_TIOA5,     ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   ADC20,  NOT_ON_PWM,  TC1_CHA5 },
+  { PIOC, PIO_PC29B_TIOA5,     ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC20,  NOT_ON_PWM,  TC1_CHA5 },
 
   // 94-95
   { PIOC, PIO_PC30,            ID_PIOC, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC21,  NOT_ON_PWM,  NOT_ON_TIMER },
@@ -254,7 +255,7 @@ extern const PinDescription g_APinDescription[] =
   { PIOD, PIO_PD14,            ID_PIOD, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOD, PIO_PD15,            ID_PIOD, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOD, PIO_PD16,            ID_PIOD, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOD, PIO_PD17,            ID_PIOD, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOD, PIO_PD17,            ID_PIOD, PIO_OUTPUT_1, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 114-115
 #ifdef SAME70XPLD
@@ -301,12 +302,12 @@ extern const PinDescription g_APinDescription[] =
   // PIO E
 
   // 128-133 PE0-5 (connected to RAM on the XPLD)
-  { PIOE, PIO_PE0,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   ADC27,  NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOE, PIO_PE0,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC27,  NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOE, PIO_PE1B_TIOB9,      ID_PIOE, PIO_PERIPH_B, PIO_DEFAULT, PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  TC3_CHA10 },
   { PIOE, PIO_PE2,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOE, PIO_PE3,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   ADC26,  NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOE, PIO_PE4,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   ADC4,   NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOE, PIO_PE5,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   ADC3,   NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOE, PIO_PE3,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC26,  NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOE, PIO_PE4,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC4,   NOT_ON_PWM,  NOT_ON_TIMER },
+  { PIOE, PIO_PE5,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC3,   NOT_ON_PWM,  NOT_ON_TIMER },
 
   // Combinations
 
@@ -412,6 +413,13 @@ extern "C" void init( void )
 	pmc_enable_periph_clk(ID_TRNG);
 	TRNG->TRNG_IDR = TRNG_IDR_DATRDY;							// Disable all interrupts
 	TRNG->TRNG_CR = TRNG_CR_KEY(0x524e47) | TRNG_CR_ENABLE;		// Enable TRNG with security key (required)
+
+#ifndef SAME70XPLD
+	// Set up PB4..PB5 as normal I/O, not JTAG
+	matrix_set_system_io(CCFG_SYSIO_SYSIO4 | CCFG_SYSIO_SYSIO5);
+	// Set up PB4..PB7 as normal I/O, not JTAG/SWDEBUG
+//	matrix_set_system_io(CCFG_SYSIO_SYSIO4 | CCFG_SYSIO_SYSIO5 | CCFG_SYSIO_SYSIO6 | CCFG_SYSIO_SYSIO7);
+#endif
 }
 
 // End
