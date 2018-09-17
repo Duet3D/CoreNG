@@ -51,66 +51,81 @@ extern "C"{
 /**
  * Libc porting layers
  */
-#if defined (  __GNUC__  ) /* GCC CS3 */
-#    include <syscalls.h> /** RedHat Newlib minimal stub */
+#if defined (__GNUC__) /* GCC CS3 */
+# include <syscalls.h> /** RedHat Newlib minimal stub */
 #endif
 
 /*----------------------------------------------------------------------------
  *        Pins
  *----------------------------------------------------------------------------*/
 
-/*
- * SPI Interfaces
- */
+#define PORTA_PIN(n)	(n)
+#define PORTB_PIN(n)	(32+n)
+#define PORTC_PIN(n)	(64+n)
+#define PORTD_PIN(n)	(96+n)
+#define PORTE_PIN(n)	(128+n)
 
-#define SPI_INTERFACE_ID	ID_SPI
-#define APIN_SPI_MOSI		(42u)
-#define APIN_SPI_MISO		(41u)
-#define APIN_SPI_SCK		(43u)
-#define APIN_SPI_SS0		(20u)
+// UART/USART and SPI Interfaces
 
-#if 0	// TODO
-/*
- * Wire Interfaces
- */
-#define WIRE_INTERFACES_COUNT 1
+static const uint8_t APINS_Serial0 = 137;
+static const uint8_t APINS_Serial1 = 138;
 
-#define APIN_WIRE_SDA		(3u)
-#define APIN_WIRE_SCL		(4u)
-#define WIRE_INTERFACE		TWI0
-#define WIRE_INTERFACE_ID	ID_TWI0
-#define WIRE_ISR_HANDLER	TWI0_Handler
-#define WIRE_ISR_ID			TWI0_IRQn
+#ifdef SAME70XPLD
+
+// No USB_VBUS_PIN on the XPLD
+static const uint8_t APIN_GMAC_PHY_INTERRUPT = PORTA_PIN(14);
+static const uint8_t APIN_GMAC_PHY_RESET = PORTC_PIN(10);
+
+// Serial
+static const uint8_t APIN_Serial0_RXD = PORTA_PIN(9);
+static const uint8_t APIN_Serial0_TXD = PORTA_PIN(10);
+
+// Serial1
+static const uint8_t APIN_Serial1_RXD = PORTA_PIN(5);
+static const uint8_t APIN_Serial1_TXD = PORTA_PIN(6);
+
+// ESP SPI
+#define SPI_INTERFACE_ID	ID_SPI0
+static const uint8_t APIN_SPI_MOSI = PORTD_PIN(21);
+static const uint8_t APIN_SPI_MISO = PORTD_PIN(20);
+static const uint8_t APIN_SPI_SCK = PORTD_PIN(22);
+static const uint8_t APIN_SPI_SS0 = PORTB_PIN(2);
+
+#else
+
+# define USB_VBUS_PIN		(PORTC_PIN(21))		// this is for Duet 3, not present on the XPLD
+static const uint8_t APIN_GMAC_PHY_INTERRUPT = PORTC_PIN(6);
+static const uint8_t APIN_GMAC_PHY_RESET = PORTD_PIN(11);
+
+// Serial
+static const uint8_t APIN_Serial0_RXD = PORTD_PIN(25);
+static const uint8_t APIN_Serial0_TXD = PORTD_PIN(26);
+
+// Serial1
+static const uint8_t APIN_Serial1_RXD = PORTD_PIN(18);
+static const uint8_t APIN_Serial1_TXD = PORTD_PIN(19);
+
+// Shared SPI (USART 1 on Duet 3)
+static const uint8_t APIN_USART_SSPI_SCK = PORTB_PIN(13);
+static const uint8_t APIN_USART_SSPI_MOSI = PORTB_PIN(1);
+static const uint8_t APIN_USART_SSPI_MISO = PORTB_PIN(0);
+
+// ESP SPI
+#define SPI_INTERFACE_ID	ID_SPI0
+static const uint8_t APIN_SPI_MOSI = PORTD_PIN(21);
+static const uint8_t APIN_SPI_MISO = PORTD_PIN(20);
+static const uint8_t APIN_SPI_SCK = PORTD_PIN(22);
+static const uint8_t APIN_SPI_SS0 = PORTB_PIN(2);
+
 #endif
 
-/*
- * UART/USART Interfaces
- */
-// SerialUSB
-//#define USB_VBUS_PIN		(??)		// not present on the test board, can be any free pin
-// Serial
-static const uint8_t APINS_UART0 = 99;
-static const uint8_t APIN_UART0_RXD = 9;
-static const uint8_t APIN_UART0_TXD = 10;
-// Serial1
-static const uint8_t APINS_UART1 = 100;
-static const uint8_t APIN_UART1_RXD = 5;
-static const uint8_t APIN_UART1_TXD = 6;
-
-/*
- * SAM E70 test board pins
- */
-
 // HSMCI
-static const uint8_t APIN_HSMCI_CLOCK = 94;
-static const uint8_t APIN_HSMCI_DATA = 95;
+static const uint8_t APIN_HSMCI_CLOCK = 134;
+static const uint8_t APIN_HSMCI_DATA = 135;
 
-// PHY
-static const uint8_t APIN_GMAC_PHY_INTERRUPT = 96;
-static const uint8_t APIN_GMAC_PHY_RESET = 97;
-static const uint8_t APINS_GMAC_PHY = 98;
+static const uint8_t APINS_GMAC_PHY = 136;
 
-static const uint32_t MaxPinNumber = 93;						// last GPIO pin (PE05)
+static const uint32_t MaxPinNumber = 133;						// last GPIO pin (PE05)
 
 static const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
 static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds

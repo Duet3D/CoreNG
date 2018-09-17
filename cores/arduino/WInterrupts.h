@@ -24,14 +24,18 @@
 union CallbackParameter
 {
 	void *vp;
-	uint32_t ip;
+	uint32_t u32;
+	int32_t i32;
 
 	CallbackParameter(void *pp) : vp(pp) { }
-	CallbackParameter(uint32_t pp) : ip(pp) { }
-	CallbackParameter() : ip(0) { }
+	CallbackParameter(uint32_t pp) : u32(pp) { }
+	CallbackParameter(int32_t pp) : i32(pp) { }
+	CallbackParameter() : u32(0) { }
 };
 
-bool attachInterrupt(uint32_t pin, void (*callback)(CallbackParameter), enum InterruptMode mode, CallbackParameter param);
+typedef void (*StandardCallbackFunction)(CallbackParameter);
+
+bool attachInterrupt(uint32_t pin, StandardCallbackFunction callback, enum InterruptMode mode, CallbackParameter param);
 
 void detachInterrupt(uint32_t pin);
 

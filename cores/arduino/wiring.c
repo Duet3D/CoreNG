@@ -26,7 +26,9 @@ static volatile uint64_t g_ms_ticks = 0;		// Count of 1ms time ticks. */
 
 void TimeTick_Increment( void )
 {
+	const irqflags_t flags = cpu_irq_save();	// save and disable interrupts, because under RTOS the systick interrupt is low priority
 	g_ms_ticks++;
+	cpu_irq_restore(flags);
 }
 
 uint32_t millis( void )

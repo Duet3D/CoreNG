@@ -11,6 +11,7 @@
 #include "sam/utils/compiler.h"
 
 #ifndef NO_STATUS_CODES
+
 #if SAM4E || SAME70
 #include "sam/drivers/afec/afec.h"
 #else
@@ -21,10 +22,10 @@
 
 #if SAM4E || SAM3XA
 #include "sam/drivers/dmac/dmac.h"
-#endif
-#if SAME70
+#elif SAME70
 #include "sam/drivers/xdmac/xdmac.h"
 #endif
+
 #endif
 
 #include "sam/drivers/pio/pio.h"

@@ -32,6 +32,15 @@
 #  define USART_SSPI	USART0
 #  define ID_SSPI		ID_USART0
 
+#elif SAME70 && !SAME70XPLD
+
+#define USART_SPI		1
+
+# include "usart/usart.h"		// On Duet 3 the general SPI channel is on USART 0
+
+#  define USART_SSPI	USART0
+#  define ID_SSPI		ID_USART0
+
 #else
 
 #define USART_SPI		0
@@ -121,9 +130,9 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
 	if (!commsInitDone)
 	{
 #if USART_SPI
-		ConfigurePin(g_APinDescription[APIN_USART0_SCK]);
-		ConfigurePin(g_APinDescription[APIN_USART0_MOSI]);
-		ConfigurePin(g_APinDescription[APIN_USART0_MISO]);
+		ConfigurePin(g_APinDescription[APIN_USART_SSPI_SCK]);
+		ConfigurePin(g_APinDescription[APIN_USART_SSPI_MOSI]);
+		ConfigurePin(g_APinDescription[APIN_USART_SSPI_MISO]);
 		pmc_enable_periph_clk(ID_SSPI);
 
 		// Set USART0 in SPI master mode
@@ -133,7 +142,7 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
 						| US_MR_USCLKS_MCK
 						| US_MR_CHRL_8_BIT
 						| US_MR_CHMODE_NORMAL;
-		USART_SSPI->US_BRGR = SystemCoreClock/1000000;			// 1MHz SPI clock for now
+		USART_SSPI->US_BRGR = SystemPeripheralClock()/1000000;			// 1MHz SPI clock for now
 		USART_SSPI->US_CR = US_CR_RSTRX | US_CR_RSTTX | US_CR_RXDIS | US_CR_TXDIS | US_CR_RSTSTA;
 #else
 		ConfigurePin(g_APinDescription[APIN_SPI_SCK]);

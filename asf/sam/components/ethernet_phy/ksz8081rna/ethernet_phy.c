@@ -443,6 +443,10 @@ uint8_t ethernet_phy_reset(Gmac *p_gmac, uint8_t uc_phy_addr)
 		ul_timeout--;
 	} while ((ul_bmcr & GMII_RESET) && ul_timeout);
 
+#if 1	//dc42
+	gmac_phy_write(p_gmac, uc_phy_address, GMII_OMSOR, 0x0002);		// to handle missing pulldown resistor on RX_ERR
+#endif
+
 	gmac_enable_management(p_gmac, false);
 
 	if (ul_timeout) {
