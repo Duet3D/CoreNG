@@ -103,6 +103,11 @@ static const uint8_t APINS_UART1 = 72;
 static const uint8_t APIN_UART1_RXD = 28;
 static const uint8_t APIN_UART1_TXD = 29;
 
+// Shared SPI (USART 0 on Duet Maestro)
+static const uint8_t APIN_USART_SSPI_SCK = APIN_USART0_SCK;
+static const uint8_t APIN_USART_SSPI_MOSI = APIN_USART0_MOSI;
+static const uint8_t APIN_USART_SSPI_MISO = APIN_USART0_MISO;
+
 // HSMCI
 static const uint8_t APIN_HSMCI_CLOCK = 68;
 static const uint8_t APINS_HSMCI_DATA = 69;

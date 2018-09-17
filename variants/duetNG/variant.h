@@ -112,6 +112,16 @@ static const uint32_t MaxPinNumber = 105;						// last GPIO pin
  * Duet NG pins
  */
 
+// Serial1
+static const uint8_t APINS_Serial1 = APINS_UART1;
+static const uint8_t APIN_Serial1_RXD = APIN_UART1_RXD;
+static const uint8_t APIN_Serial1_TXD = APIN_UART1_TXD;
+
+// Shared SPI (USART 0 on Duet NG)
+static const uint8_t APIN_USART_SSPI_SCK = APIN_USART0_SCK;
+static const uint8_t APIN_USART_SSPI_MOSI = APIN_USART0_MOSI;
+static const uint8_t APIN_USART_SSPI_MISO = APIN_USART0_MISO;
+
 // HSMCI
 static const uint8_t APIN_HSMCI_CLOCK = 106;
 static const uint8_t APINS_HSMCI_DATA = 107;

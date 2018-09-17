@@ -228,15 +228,19 @@ static void hsmci_set_speed(uint32_t speed, uint32_t mck)
 // Get the speed of the HSMCI interface for reporting purposes, in bytes/sec
 uint32_t hsmci_get_speed()
 {
-#if SAM4E || SAME70
-       const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
-       const uint32_t clkodd = ((HSMCI->HSMCI_MR & HSMCI_MR_CLKODD) != 0) ? 1 : 0;
-       const uint32_t hsmciClock = sysclk_get_cpu_hz()/((2 * clkdiv) + clkodd + 2);
+#if SAME70
+	const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
+	const uint32_t clkodd = ((HSMCI->HSMCI_MR & HSMCI_MR_CLKODD) != 0) ? 1 : 0;
+	const uint32_t hsmciClock = sysclk_get_peripheral_hz()/((2 * clkdiv) + clkodd + 2);
+#elif SAM4E
+	const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
+	const uint32_t clkodd = ((HSMCI->HSMCI_MR & HSMCI_MR_CLKODD) != 0) ? 1 : 0;
+	const uint32_t hsmciClock = sysclk_get_cpu_hz()/((2 * clkdiv) + clkodd + 2);
 #else
-       const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
-       const uint32_t hsmciClock =  sysclk_get_cpu_hz()/((2 * clkdiv) + 2);
+	const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
+	const uint32_t hsmciClock =  sysclk_get_cpu_hz()/((2 * clkdiv) + 2);
 #endif
-       return hsmciClock/2;            // HSMCI interface is 4 bits wide, so divide by 2 to get bytes/sec
+	return hsmciClock/2;            // HSMCI interface is 4 bits wide, so divide by 2 to get bytes/sec
 }
 
 static hsmciIdleFunc_t hsmciIdleFunc = NULL;
@@ -1033,7 +1037,7 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 						| XDMAC_CC_DIF_AHB_IF0
 						| XDMAC_CC_SAM_FIXED_AM
 						| XDMAC_CC_DAM_INCREMENTED_AM
-						| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
+						| XDMAC_CC_PERID(XDMAC_HW_ID_HSMCI);	// dc42 corrected
 		p_cfg.mbr_ubc = nb_data;
 		HSMCI->HSMCI_MR |= HSMCI_MR_FBYTE;
 	} else {
@@ -1046,7 +1050,7 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 						| XDMAC_CC_DIF_AHB_IF0
 						| XDMAC_CC_SAM_FIXED_AM
 						| XDMAC_CC_DAM_INCREMENTED_AM
-						| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
+						| XDMAC_CC_PERID(XDMAC_HW_ID_HSMCI);	// dc42 corrected
 		p_cfg.mbr_ubc = nb_data / 4;
 		HSMCI->HSMCI_MR &= ~HSMCI_MR_FBYTE;
 	}
@@ -1065,7 +1069,6 @@ bool hsmci_wait_end_of_read_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI
 	do {
-		sr = HSMCI->HSMCI_SR;
 #if 1  // dc42 changes
 		const bool checkDmaEnded = (uint32_t)hsmci_block_size * hsmci_nb_block > hsmci_transfert_pos;
 		if (hsmciIdleFunc != NULL)
@@ -1073,6 +1076,7 @@ bool hsmci_wait_end_of_read_blocks(void)
 			hsmciIdleFunc(HSMCI_SR_UNRE | HSMCI_SR_OVRE | HSMCI_SR_DTOE | HSMCI_SR_DCRCE | HSMCI_SR_XFRDONE, (checkDmaEnded) ? XDMAC_CIS_BIS : 0);
 		}
 #endif
+		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
 			hsmci_debug("%s: DMA sr 0x%08x error\n\r",
@@ -1121,7 +1125,7 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 						| XDMAC_CC_DIF_AHB_IF1
 						| XDMAC_CC_SAM_INCREMENTED_AM
 						| XDMAC_CC_DAM_FIXED_AM
-						| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
+						| XDMAC_CC_PERID(XDMAC_HW_ID_HSMCI);	// dc42 corrected
 		p_cfg.mbr_ubc = nb_data;
 		HSMCI->HSMCI_MR |= HSMCI_MR_FBYTE;
 	} else {
@@ -1134,7 +1138,7 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 						| XDMAC_CC_DIF_AHB_IF1
 						| XDMAC_CC_SAM_INCREMENTED_AM
 						| XDMAC_CC_DAM_FIXED_AM
-						| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
+						| XDMAC_CC_PERID(XDMAC_HW_ID_HSMCI);	// dc42 corrected
 		p_cfg.mbr_ubc = nb_data / 4;
 		HSMCI->HSMCI_MR &= ~HSMCI_MR_FBYTE;
 	}
@@ -1153,7 +1157,6 @@ bool hsmci_wait_end_of_write_blocks(void)
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI
 	do {
-		sr = HSMCI->HSMCI_SR;
 #if 1  // dc42 changes
 		const bool checkDmaEnded = (uint32_t)hsmci_block_size * hsmci_nb_block > hsmci_transfert_pos;
 		if (hsmciIdleFunc != NULL)
@@ -1161,6 +1164,7 @@ bool hsmci_wait_end_of_write_blocks(void)
 			hsmciIdleFunc(HSMCI_SR_UNRE | HSMCI_SR_OVRE | HSMCI_SR_DTOE | HSMCI_SR_DCRCE | HSMCI_SR_XFRDONE, (checkDmaEnded) ? XDMAC_CIS_BIS : 0);
 		}
 #endif
+		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
 		HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
 			hsmci_debug("%s: DMA sr 0x%08x error\n\r",
