@@ -258,8 +258,8 @@ extern "C" void init( void )
 	// We no longer disable pullups on all pins here, better to leave them enabled until the port is initialised
 
 	// Initialize Serial port U(S)ART pins
-	ConfigurePin(g_APinDescription[APINS_UART0]);
-	setPullup(APIN_UART0_RXD, true); 							// Enable pullup for RX0
+	ConfigurePin(g_APinDescription[APINS_Serial0]);
+	setPullup(APIN_Serial0_RXD, true); 							// Enable pullup for RX0
 
 	// Initialize USB VBUS pin
 	ConfigurePin(g_APinDescription[USB_VBUS_PIN]);

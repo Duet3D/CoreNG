@@ -206,8 +206,8 @@ extern "C" void init( void )
 {
 #ifndef PCCB
 	// Initialize Serial port U(S)ART pins
-	ConfigurePin(g_APinDescription[APINS_UART1]);				// PanelDue uses UART1
-	setPullup(APIN_UART1_RXD, true); 							// Enable pullup for RxD
+	ConfigurePin(g_APinDescription[APINS_Serial0]);				// PanelDue uses UART1
+	setPullup(APIN_Serial0_RXD, true); 							// Enable pullup for RxD
 #endif
 
 	// No need to initialize the USB pins on the SAM4S because they are USB by default

@@ -67,22 +67,22 @@ extern "C"{
  */
 
 #define SPI_INTERFACE_ID	ID_SPI
-#define APIN_SPI_MOSI		(13u)
-#define APIN_SPI_MISO		(12u)
-#define APIN_SPI_SCK		(14u)
-#define APIN_SPI_SS0		(11u)
+static const Pin APIN_SPI_MOSI = 13;
+static const Pin APIN_SPI_MISO = 12;
+static const Pin APIN_SPI_SCK = 14;
+static const Pin APIN_SPI_SS0 = 11;
 
-#define APIN_USART0_MOSI	(6u)
-#define APIN_USART0_MISO	(5u)
-#define APIN_USART0_SCK		(2u)
+static const Pin APIN_USART_SSPI_MOSI = 6;
+static const Pin APIN_USART_SSPI_MISO = 5;
+static const Pin APIN_USART_SSPI_SCK = 2;
 
 /*
  * Wire Interfaces
  */
 #define WIRE_INTERFACES_COUNT (1)		// SAM4S supports two I2C interfaces but we only have the first one available
 
-#define APIN_WIRE_SDA		(3u)
-#define APIN_WIRE_SCL		(4u)
+static const Pin APIN_WIRE_SDA = 3;
+static const Pin APIN_WIRE_SCL = 4;
 #define WIRE_INTERFACE		TWI0
 #define WIRE_INTERFACE_ID	ID_TWI0
 #define WIRE_ISR_HANDLER	TWI0_Handler
@@ -96,19 +96,34 @@ extern "C"{
 #define USB_VBUS_PIN		(47u)
 
 // Serial
-static const uint8_t APINS_UART0 = 71;
-static const uint8_t APIN_UART0_RXD = 9;
-static const uint8_t APIN_UART0_TXD = 10;
-static const uint8_t APINS_UART1 = 72;
-static const uint8_t APIN_UART1_RXD = 28;
-static const uint8_t APIN_UART1_TXD = 29;
+
+// UART0 used by TMC drivers
+static const Pin APINS_UART0 = 71;
+static const Pin APIN_UART0_RXD = 9;
+static const Pin APIN_UART0_TXD = 10;
+
+#ifdef PCCB
+
+// UART1 also used by TMC drivers in PCCB build
+static const Pin APINS_UART1 = 72;
+static const Pin APIN_UART1_RXD = 28;
+static const Pin APIN_UART1_TXD = 29;
+
+#else
+
+// Serial0 uses UART1
+static const Pin APINS_Serial0 = 72;
+static const Pin APIN_Serial0_RXD = 28;
+static const Pin APIN_Serial0_TXD = 29;
+
+#endif
 
 // HSMCI
-static const uint8_t APIN_HSMCI_CLOCK = 68;
-static const uint8_t APINS_HSMCI_DATA = 69;
+static const Pin APIN_HSMCI_CLOCK = 68;
+static const Pin APINS_HSMCI_DATA = 69;
 
 // TWI
-static const uint8_t APINS_TWI = 70;
+static const Pin APINS_TWI = 70;
 
 static const uint32_t MaxPinNumber = 67;						// last GPIO pin
 

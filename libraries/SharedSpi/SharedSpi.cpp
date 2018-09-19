@@ -32,7 +32,7 @@
 #  define USART_SSPI	USART0
 #  define ID_SSPI		ID_USART0
 
-#elif SAME70 && !SAME70XPLD
+#elif SAME70 && !defined(SAME70XPLD)
 
 #define USART_SPI		1
 

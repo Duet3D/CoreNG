@@ -235,7 +235,7 @@ uint32_t hsmci_get_speed()
 #elif SAM4E
 	const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
 	const uint32_t clkodd = ((HSMCI->HSMCI_MR & HSMCI_MR_CLKODD) != 0) ? 1 : 0;
-	const uint32_t hsmciClock = sysclk_get_cpu_hz()()/((2 * clkdiv) + clkodd + 2);
+	const uint32_t hsmciClock = sysclk_get_cpu_hz()/((2 * clkdiv) + clkodd + 2);
 #else
 	const uint32_t clkdiv = HSMCI->HSMCI_MR & HSMCI_MR_CLKDIV_Msk;
 	const uint32_t hsmciClock =  sysclk_get_cpu_hz()/((2 * clkdiv) + 2);

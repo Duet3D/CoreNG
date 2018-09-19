@@ -66,31 +66,30 @@ static const uint32_t MaxPinNumber = 105;						// last GPIO pin
  */
 
 #define SPI_INTERFACE_ID	ID_SPI
-#define APIN_SPI_MOSI		(13u)
-#define APIN_SPI_MISO		(12u)
-#define APIN_SPI_SCK		(14u)
-#define APIN_SPI_SS0		(11u)
+static const Pin APIN_SPI_MOSI = 13;
+static const Pin APIN_SPI_MISO = 12;
+static const Pin APIN_SPI_SCK = 14;
+static const Pin APIN_SPI_SS0 = 11;
 
-#define APIN_USART0_MOSI	(27u)
-#define APIN_USART0_MISO	(26u)
-#define APIN_USART0_SCK		(30u)
+static const Pin APIN_USART_SSPI_MOSI = 27;
+static const Pin APIN_USART_SSPI_MISO = 26;
+static const Pin APIN_USART_SSPI_SCK = 30;
 
-#define APIN_USART1_MOSI	(22u)
-#define APIN_USART1_MISO	(21u)
-#define APIN_USART1_SCK		(23u)
+static const Pin APIN_USART1_MOSI = 22;
+static const Pin APIN_USART1_MISO = 21;
+static const Pin APIN_USART1_SCK = 23;
 
 /*
- * Wire Interfaces
+ * TWI Interfaces
  */
 #define WIRE_INTERFACES_COUNT 1
 
-#define APIN_WIRE_SDA		(3u)
-#define APIN_WIRE_SCL		(4u)
+static const Pin APIN_WIRE_SDA = 3;
+static const Pin APIN_WIRE_SCL = 4;
 #define WIRE_INTERFACE		TWI0
 #define WIRE_INTERFACE_ID	ID_TWI0
 #define WIRE_ISR_HANDLER	TWI0_Handler
 #define WIRE_ISR_ID			TWI0_IRQn
-
 
 /*
  * UART/USART Interfaces
@@ -99,25 +98,25 @@ static const uint32_t MaxPinNumber = 105;						// last GPIO pin
 #define USB_VBUS_PIN		(54u)
 
 // Serial
-#define APINS_UART0			(109u)
-#define APIN_UART0_RXD		(9u)
-#define APIN_UART0_TXD		(10u)
+static const Pin APINS_Serial0 = 109;
+static const Pin APIN_Serial0_RXD = 9;
+static const Pin APIN_Serial0_TXD = 10;
 
 // Serial1
-#define APINS_UART1			(110u)
-#define APIN_UART1_RXD		(5u)
-#define APIN_UART1_TXD		(6u)
+static const Pin APINS_Serial1 = 110;
+static const Pin APIN_Serial1_RXD = 5;
+static const Pin APIN_Serial1_TXD = 6u;
 
 /*
  * Duet NG pins
  */
 
 // HSMCI
-static const uint8_t APIN_HSMCI_CLOCK = 106;
+static const Pin APIN_HSMCI_CLOCK = 106;
 static const uint8_t APINS_HSMCI_DATA = 107;
 
 // TWI
-static const uint8_t APINS_TWI = 108;
+static const Pin APINS_TWI = 108;
 
 static const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
 static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds
