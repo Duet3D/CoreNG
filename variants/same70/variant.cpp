@@ -195,7 +195,11 @@ extern const PinDescription g_APinDescription[] =
   { PIOC, PIO_PC11B_TIOA8,     ID_PIOC, PIO_PERIPH_B,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  TC2_CHA8 },
 
   // 76-79 PC12-15 (PC15 is connected to RAM on the XPLD)
+#ifdef SAME70XPLD
   { PIOC, PIO_PC12,            ID_PIOC, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC19,  NOT_ON_PWM,  NOT_ON_TIMER },
+#else
+  { PIOC, PIO_PC12C_CANRX1,    ID_PIOC, PIO_PERIPH_C,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
+#endif
   { PIOC, PIO_PC13,            ID_PIOC, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC17,  NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOC, PIO_PC14,            ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOC, PIO_PC15,            ID_PIOC, PIO_INPUT,	   PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC18,  NOT_ON_PWM,  NOT_ON_TIMER },
@@ -285,11 +289,10 @@ extern const PinDescription g_APinDescription[] =
 #endif
 
   { PIOD, PIO_PD27,            ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
-
 #ifdef SAME70XPLD
   { PIOD, PIO_PD28,			   ID_PIOD, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 #else
-  { PIOD, PIO_PD28B_CANRX1,    ID_PIOD, PIO_PERIPH_B, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // CANRX1
+  { PIOD, PIO_PD28,			   ID_PIOD, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // connected to CANRX1 on prototype
 #endif
 
   // 125 PD29 (connected to RAM on the XPLD)
@@ -329,7 +332,7 @@ extern const PinDescription g_APinDescription[] =
 
   // 138 UART1 or 4 all pins
 #ifdef SAME70XPLD
-  { PIOA, PIO_PA5C_URXD1|PIO_PA6C_UTXD1,   ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER }
+  { PIOA, PIO_PA5C_URXD1|PIO_PA6C_UTXD1,   ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER },
 #else
   { PIOD, PIO_PD18C_URXD4|PIO_PD19C_UTXD4, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER }
 #endif
@@ -351,14 +354,14 @@ UARTClass Serial(UART0, UART0_IRQn, ID_UART0, &rx_buffer1, &tx_buffer1);
 
 void UART0_Handler(void)
 {
-  Serial.IrqHandler();
+	Serial.IrqHandler();
 }
 
 UARTClass Serial1(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2);
 
 void UART1_Handler(void)
 {
-  Serial1.IrqHandler();
+	Serial1.IrqHandler();
 }
 
 #else
@@ -367,14 +370,14 @@ UARTClass Serial(UART2, UART2_IRQn, ID_UART2, &rx_buffer1, &tx_buffer1);
 
 void UART2_Handler(void)
 {
-  Serial.IrqHandler();
+	Serial.IrqHandler();
 }
 
 UARTClass Serial1(UART4, UART4_IRQn, ID_UART4, &rx_buffer2, &tx_buffer2);
 
 void UART4_Handler(void)
 {
-  Serial1.IrqHandler();
+	Serial1.IrqHandler();
 }
 
 #endif

@@ -19,7 +19,7 @@
 #ifndef _VARIANT_SAME70_H
 #define _VARIANT_SAME70_H
 
-#ifndef __SAME70Q21__
+#if !(defined(__SAME70Q21__) || defined(__SAME70Q20B__) || defined(__SAME70Q21B__))
 #error Wrong variant.h file included!
 #endif
 
@@ -124,6 +124,10 @@ static const uint8_t APIN_HSMCI_CLOCK = 134;
 static const uint8_t APIN_HSMCI_DATA = 135;
 
 static const uint8_t APINS_GMAC_PHY = 136;
+
+// CAN
+static const uint8_t APIN_CAN1_RX = PORTC_PIN(12);
+static const uint8_t APIN_CAN1_TX = PORTD_PIN(12);
 
 static const uint32_t MaxPinNumber = 133;						// last GPIO pin (PE05)
 

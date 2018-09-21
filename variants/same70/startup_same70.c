@@ -149,8 +149,12 @@ void PWM0_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void ICM_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void ACC_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void USBHS_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void MCAN0_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void MCAN1_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void MCAN0_INT0_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void MCAN0_INT1_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef _SAME70_MCAN1_INSTANCE_
+void MCAN1_INT0_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void MCAN1_INT1_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif /* _SAME70_MCAN1_INSTANCE_ */
 void GMAC_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void AFEC1_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 #ifdef _SAME70_TWIHS2_INSTANCE_
@@ -178,6 +182,7 @@ void TRNG_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void XDMAC_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void ISI_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void PWM1_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void FPU_Handler    ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 #ifdef _SAME70_SDRAMC_INSTANCE_
 void SDRAMC_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 #endif /* _SAME70_SDRAMC_INSTANCE_ */
@@ -270,10 +275,15 @@ const DeviceVectors exception_table = {
         .pfnICM_Handler    = (void*) ICM_Handler,    /* 32 Integrity Check Monitor */
         .pfnACC_Handler    = (void*) ACC_Handler,    /* 33 Analog Comparator */
         .pfnUSBHS_Handler  = (void*) USBHS_Handler,  /* 34 USB Host / Device Controller */
-        .pfnMCAN0_Handler  = (void*) MCAN0_Handler,  /* 35 MCAN Controller 0 */
-        .pvReserved36      = (void*) (0UL),          /* 36 Reserved */
-        .pfnMCAN1_Handler  = (void*) MCAN1_Handler,  /* 37 MCAN Controller 1 */
+        .pfnMCAN0_INT0_Handler = (void*) MCAN0_INT0_Handler, /* 35 Controller Area Network */
+        .pfnMCAN0_INT1_Handler = (void*) MCAN0_INT1_Handler, /* 36 Controller Area Network */
+#ifdef _SAME70_MCAN1_INSTANCE_
+        .pfnMCAN1_INT0_Handler = (void*) MCAN1_INT0_Handler, /* 37 Controller Area Network */
+        .pfnMCAN1_INT1_Handler = (void*) MCAN1_INT1_Handler, /* 38 Controller Area Network */
+#else
+        .pvReserved37      = (void*) (0UL),          /* 37 Reserved */
         .pvReserved38      = (void*) (0UL),          /* 38 Reserved */
+#endif /* _SAME70_MCAN1_INSTANCE_ */
         .pfnGMAC_Handler   = (void*) GMAC_Handler,   /* 39 Ethernet MAC */
         .pfnAFEC1_Handler  = (void*) AFEC1_Handler,  /* 40 Analog Front End 1 */
 #ifdef _SAME70_TWIHS2_INSTANCE_
@@ -312,7 +322,7 @@ const DeviceVectors exception_table = {
         .pfnXDMAC_Handler  = (void*) XDMAC_Handler,  /* 58 DMA */
         .pfnISI_Handler    = (void*) ISI_Handler,    /* 59 Camera Interface */
         .pfnPWM1_Handler   = (void*) PWM1_Handler,   /* 60 Pulse Width Modulation 1 */
-        .pvReserved61      = (void*) (0UL),          /* 61 Reserved */
+        .pfnFPU_Handler    = (void*) FPU_Handler,    /* 61 Floating Point Unit Registers */
 #ifdef _SAME70_SDRAMC_INSTANCE_
         .pfnSDRAMC_Handler = (void*) SDRAMC_Handler, /* 62 SDRAM Controller */
 #else

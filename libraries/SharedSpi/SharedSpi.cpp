@@ -196,7 +196,7 @@ void sspi_master_setup_device(const struct sspi_device *device)
 {
 #if USART_SPI
 	USART_SSPI->US_CR = US_CR_RXDIS | US_CR_TXDIS;			// disable transmitter and receiver
-	USART_SSPI->US_BRGR = SystemCoreClock/device->clockFrequency;
+	USART_SSPI->US_BRGR = SystemPeripheralClock()/device->clockFrequency;
 	uint32_t mr = US_MR_USART_MODE_SPI_MASTER
 					| US_MR_USCLKS_MCK
 					| US_MR_CHRL_8_BIT

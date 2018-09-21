@@ -309,7 +309,7 @@ static void udd_sleep_mode(bool b_idle)
 
 static void udd_sleep_mode(bool b_idle)
 {
-	b_idle = b_idle;
+	(void)b_idle;		//dc42 change to fix Eclipse error
 }
 
 #endif // UDD_NO_SLEEP_MGR

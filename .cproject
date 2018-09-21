@@ -591,7 +591,7 @@
 								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.option.optimization.level.380422902" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.more" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.985543607" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.default" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.563853364" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="__SAME70Q21__"/>
+									<listOptionValue builtIn="false" value="__SAME70Q20B__"/>
 									<listOptionValue builtIn="false" value="UDD_ENABLE"/>
 									<listOptionValue builtIn="false" value="UDD_NO_SLEEP_MGR"/>
 								</option>
@@ -630,7 +630,7 @@
 								<option id="gnu.cpp.compiler.option.optimization.level.34371935" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.more" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.765963730" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.default" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.738959837" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="__SAME70Q21__"/>
+									<listOptionValue builtIn="false" value="__SAME70Q20B__"/>
 									<listOptionValue builtIn="false" value="UDD_ENABLE"/>
 									<listOptionValue builtIn="false" value="UDD_NO_SLEEP_MGR"/>
 								</option>
@@ -929,7 +929,7 @@
 								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.option.optimization.level.1871190162" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.more" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.769835814" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.default" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.2095210793" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="__SAME70Q21__"/>
+									<listOptionValue builtIn="false" value="__SAME70Q20B__"/>
 									<listOptionValue builtIn="false" value="RTOS"/>
 									<listOptionValue builtIn="false" value="UDD_ENABLE"/>
 									<listOptionValue builtIn="false" value="UDD_NO_SLEEP_MGR"/>
@@ -969,7 +969,7 @@
 								<option id="gnu.cpp.compiler.option.optimization.level.499499900" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.more" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.1762368315" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.default" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.462203892" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="__SAME70Q21__"/>
+									<listOptionValue builtIn="false" value="__SAME70Q20B__"/>
 									<listOptionValue builtIn="false" value="RTOS"/>
 									<listOptionValue builtIn="false" value="UDD_ENABLE"/>
 									<listOptionValue builtIn="false" value="UDD_NO_SLEEP_MGR"/>

@@ -129,12 +129,13 @@ SECTIONS
         _erelocate = .;
     } > ram
 
-    /* .bss section which is used for uninitialized data */
+    /* .bss section which is used for uninitialized data. The MCAN buffers must be within the first 64Kb. */
     .bss ALIGN(4) (NOLOAD) :
     {
         . = ALIGN(4);
         _sbss = . ;
         _szero = .;
+		*mcan.o(.bss .bss.*);
         *(.bss .bss.*)
         *(COMMON)
         . = ALIGN(4);
