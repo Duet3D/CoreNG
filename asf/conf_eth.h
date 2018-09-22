@@ -56,7 +56,7 @@ extern "C" {
 /// @endcond
 
 
-#ifdef __SAME70Q21__
+#if defined(__SAME70Q21__) || defined(__SAME70Q20B__) || defined(__SAME70Q21B__)
 
 # include "gmac.h"
 

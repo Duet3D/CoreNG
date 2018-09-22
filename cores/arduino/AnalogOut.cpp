@@ -141,7 +141,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 			pwm_clock_t clockConfig;
 			clockConfig.ul_clka = PwmSlowClock;
 			clockConfig.ul_clkb = PwmFastClock;
-			clockConfig.ul_mck = VARIANT_MCK;
+			clockConfig.ul_mck = SystemPeripheralClock();
 			pwm_init(PWM0, &clockConfig);
 			PWM0->PWM_SCM = 0;										// ensure no sync channels
 			pwm_init(PWM1, &clockConfig);
@@ -329,7 +329,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)
 							TC_CMR_ACPA_CLEAR | TC_CMR_ACPC_CLEAR |
 							TC_CMR_BCPB_CLEAR | TC_CMR_BCPC_CLEAR |
 							TC_CMR_ASWTRG_SET | TC_CMR_BSWTRG_SET);	// Software trigger will let us set the output high
-			const uint32_t top = min<uint32_t>((VARIANT_MCK/128)/(uint32_t)freq, 65535);	// with 120MHz clock (SAM4S) this varies between 14 @ 65.535kHz and 65535 @ 14.3Hz
+			const uint32_t top = min<uint32_t>((SystemPeripheralClock()/128)/(uint32_t)freq, 65535);	// with 120MHz clock (SAM4S) this varies between 14 @ 65.535kHz and 65535 @ 14.3Hz
 #else
 			tc_init(chTC, chNo,
 							TC_CMR_TCCLKS_TIMER_CLOCK2 |			// clock is MCLK/8 to save a little power and avoid overflow later on

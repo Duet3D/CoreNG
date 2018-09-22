@@ -1183,7 +1183,7 @@
                                 								
                                 <option id="gnu.c.compiler.option.preprocessor.def.symbols.563853364" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
                                     									
-                                    <listOptionValue builtIn="false" value="__SAME70Q21__"/>
+                                    <listOptionValue builtIn="false" value="__SAME70Q20B__"/>
                                     									
                                     <listOptionValue builtIn="false" value="UDD_ENABLE"/>
                                     									
@@ -1261,7 +1261,7 @@
                                 								
                                 <option id="gnu.cpp.compiler.option.preprocessor.def.738959837" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
                                     									
-                                    <listOptionValue builtIn="false" value="__SAME70Q21__"/>
+                                    <listOptionValue builtIn="false" value="__SAME70Q20B__"/>
                                     									
                                     <listOptionValue builtIn="false" value="UDD_ENABLE"/>
                                     									
@@ -1859,7 +1859,7 @@
                                 								
                                 <option id="gnu.c.compiler.option.preprocessor.def.symbols.2095210793" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
                                     									
-                                    <listOptionValue builtIn="false" value="__SAME70Q21__"/>
+                                    <listOptionValue builtIn="false" value="__SAME70Q20B__"/>
                                     									
                                     <listOptionValue builtIn="false" value="RTOS"/>
                                     									
@@ -1939,7 +1939,7 @@
                                 								
                                 <option id="gnu.cpp.compiler.option.preprocessor.def.462203892" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
                                     									
-                                    <listOptionValue builtIn="false" value="__SAME70Q21__"/>
+                                    <listOptionValue builtIn="false" value="__SAME70Q20B__"/>
                                     									
                                     <listOptionValue builtIn="false" value="RTOS"/>
                                     									

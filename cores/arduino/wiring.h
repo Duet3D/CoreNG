@@ -79,7 +79,7 @@ static inline void delayMicroseconds(uint32_t usec){
      * for Teensy 3.0 (http://www.pjrc.com/)
      */
     if (usec == 0) return;
-    uint32_t n = usec * (VARIANT_MCK / 3000000);
+    uint32_t n = usec * (SystemCoreClock / 3000000);
     asm volatile(
         "L_%=_delayMicroseconds:"       "\n\t"
         "subs   %0, #1"                 "\n\t"
