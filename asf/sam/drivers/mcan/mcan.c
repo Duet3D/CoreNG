@@ -269,7 +269,7 @@ void mcan_init(struct mcan_module *const module_inst, Mcan *hw,
 	pmc_disable_pck(PMC_PCK_5);
 
 #if 1	// dc42 use UPLL not PLLA as recommended in the documentation, so the MCAN clock is independent of the CPU clock frequency
-	pmc_switch_pck_to_upllck(PMC_PCK_5, PMC_PCK_PRES(23));		// run MCAN at 20MHz for now
+	pmc_switch_pck_to_upllck(PMC_PCK_5, PMC_PCK_PRES(7));		// run PCLK5 at 60MHz, we'll divide it by 3 to get 20MHz
 #else
 	pmc_switch_pck_to_pllack(PMC_PCK_5, PMC_PCK_PRES(9));
 #endif

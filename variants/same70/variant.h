@@ -31,7 +31,7 @@
 #define VARIANT_MAINOSC		12000000
 
 /** Master clock frequency */
-#define VARIANT_MCK			150000000
+#define VARIANT_MCK			120000000
 
 /*----------------------------------------------------------------------------
  *        Headers

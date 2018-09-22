@@ -43,6 +43,7 @@
  */
 
 #include "same70.h"
+#include "variant.h"	// for VARIANT_MCK
 
 /* @cond 0 */
 /**INDENT-OFF**/
@@ -52,10 +53,18 @@ extern "C" {
 /**INDENT-ON**/
 /* @endcond */
 
+#if VARIANT_MCK == 150000000
+const uint32_t PllaMul = 50;
+const uint32_t FlashWaitStates = 6;
+#elif VARIANT_MCK == 120000000
+const uint32_t PllaMul = 40;
+const uint32_t FlashWaitStates = 5;
+#endif
+
 // Clock Settings (600MHz PLL VDDIO 3.3V and VDDCORE 1.2V)
 // Clock Settings (300MHz HCLK, 150MHz MCK)=> PRESC = 2, MDIV = 2
 #define SYS_BOARD_OSCOUNT   (CKGR_MOR_MOSCXTST(0x8U))
-#define SYS_BOARD_PLLAR     (CKGR_PLLAR_ONE | CKGR_PLLAR_MULA(50 - 1) | \
+#define SYS_BOARD_PLLAR     (CKGR_PLLAR_ONE | CKGR_PLLAR_MULA(PllaMul - 1) | \
                             CKGR_PLLAR_PLLACOUNT(0x3fU) | CKGR_PLLAR_DIVA(2 - 1))
 #define SYS_BOARD_MCKR      (PMC_MCKR_PRES_CLK_2 | PMC_MCKR_CSS_PLLA_CLK | (1<<8))
 
@@ -68,7 +77,7 @@ uint32_t SystemCoreClock = CHIP_FREQ_XTAL_12M;
  void SystemInit( void )
 {
   /* Set FWS according to SYS_BOARD_MCKR configuration */
-  EFC->EEFC_FMR = EEFC_FMR_FWS(6);
+  EFC->EEFC_FMR = EEFC_FMR_FWS(FlashWaitStates);
 
   /* Initialize main oscillator */
   if ( !(PMC->CKGR_MOR & CKGR_MOR_MOSCSEL) )
@@ -111,7 +120,7 @@ uint32_t SystemCoreClock = CHIP_FREQ_XTAL_12M;
   {
   }
 
-  SystemCoreClock = (CHIP_FREQ_XTAL_12M * 50)/2;		// see definitions of SYS_BOARD_PLLAR near the start of this file
+  SystemCoreClock = (CHIP_FREQ_XTAL_12M * PllaMul)/2;		// see definitions of SYS_BOARD_PLLAR near the start of this file
 }
 
 void SystemCoreClockUpdate( void )
