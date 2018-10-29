@@ -38,6 +38,8 @@
 class UARTClass : public HardwareSerial
 {
   public:
+	typedef void (*InterruptCallbackFn)(UARTClass*);
+
     enum UARTModes {
       Mode_8N1 = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_NO,
       Mode_8E1 = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_EVEN,
@@ -68,16 +70,21 @@ class UARTClass : public HardwareSerial
 
     operator bool() { return true; }; // UART always active
 
+    InterruptCallbackFn SetInterruptCallback(InterruptCallbackFn f);
+
   protected:
     void init(const uint32_t dwBaudRate, const uint32_t config);
 
-    RingBuffer *_rx_buffer;
-    RingBuffer *_tx_buffer;
+    RingBuffer * const _rx_buffer;
+    RingBuffer * const _tx_buffer;
 
-    Uart* _pUart;
-    IRQn_Type _dwIrq;
-    uint32_t _dwId;
+    Uart* const _pUart;
+    const IRQn_Type _dwIrq;
+    const uint32_t _dwId;
+    size_t numInterruptBytesMatched;
+    InterruptCallbackFn interruptCallback;
 
+    static constexpr uint8_t interruptSeq[2] = { 0xF0, 0x0F };
 };
 
 #endif // _UART_CLASS_

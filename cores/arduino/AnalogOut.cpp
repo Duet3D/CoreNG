@@ -125,9 +125,9 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 
 	// Which PWM interface do we need to work with?
 #if SAME70
-	Pwm *PWMInterface = (chan <= 3) ? PWM0 : PWM1;
+	Pwm * const PWMInterface = (chan <= 3) ? PWM0 : PWM1;
 #else
-	Pwm *PWMInterface = PWM;
+	Pwm * const PWMInterface = PWM;
 #endif
 
 	if (PWMChanFreq[chan] != freq)
@@ -264,12 +264,11 @@ static const uint8_t channelToId[numTcChannels] =
 {
 	ID_TC0, ID_TC1, ID_TC2,
 	ID_TC3, ID_TC4, ID_TC5,
-#if SAME70
+#if SAM3XA || SAM4E || SAME70
 	ID_TC6, ID_TC7, ID_TC8,
-	ID_TC9, ID_TC10, ID_TC11
 #endif
-#if SAM3XA || SAM4E
-	ID_TC6, ID_TC7, ID_TC8
+#if SAME70
+	ID_TC9, ID_TC10, ID_TC11
 #endif
 };
 
@@ -294,7 +293,7 @@ static inline void TC_WriteCCR(Tc *tc, uint32_t chan, uint32_t v)
 // AnalogWrite to a TC pin
 // Return true if successful, false if we need to fall back to digitalWrite
 // WARNING: this will screw up big time if you try to use both the A and B outputs of the same timer at different frequencies.
-// The DuetNG board uses only A outputs, so this is OK.
+// The Duet boards use only A outputs, so this is OK.
 static bool AnalogWriteTc(const PinDescription& pinDesc, float ulValue, uint16_t freq)
 pre(0.0 <= ulValue; ulValue <= 1.0)
 pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)

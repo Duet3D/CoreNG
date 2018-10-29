@@ -21,17 +21,14 @@
 
 #include "asf.h"
 #include "UARTClass.h"
+#include "WMath.h"
 
 // Constructors ////////////////////////////////////////////////////////////////
 
-UARTClass::UARTClass( Uart *pUart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer *pRx_buffer, RingBuffer *pTx_buffer )
+UARTClass::UARTClass(Uart *pUart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer *pRx_buffer, RingBuffer *pTx_buffer)
+	: _rx_buffer(pRx_buffer), _tx_buffer(pTx_buffer), _pUart(pUart), _dwIrq(dwIrq), _dwId(dwId),
+	  numInterruptBytesMatched(0), interruptCallback(nullptr)
 {
-  _rx_buffer = pRx_buffer;
-  _tx_buffer = pTx_buffer;
-
-  _pUart=pUart;
-  _dwIrq=dwIrq;
-  _dwId=dwId;
 }
 
 // Public Methods //////////////////////////////////////////////////////////////
@@ -201,7 +198,24 @@ void UARTClass::IrqHandler()
   // Did we receive data?
   if ((status & UART_SR_RXRDY) != 0)
   {
-    _rx_buffer->store_char(_pUart->UART_RHR);
+	  const uint8_t c = _pUart->UART_RHR;
+	  if (c == interruptSeq[numInterruptBytesMatched])
+	  {
+		  ++numInterruptBytesMatched;
+		  if (numInterruptBytesMatched == ARRAY_SIZE(interruptSeq))
+		  {
+			  numInterruptBytesMatched = 0;
+			  if (interruptCallback != nullptr)
+			  {
+				  interruptCallback(this);
+			  }
+		  }
+	  }
+	  else
+	  {
+		  numInterruptBytesMatched = 0;
+	  }
+	  _rx_buffer->store_char(c);
   }
 
   // Do we need to keep sending data?
@@ -227,3 +241,11 @@ void UARTClass::IrqHandler()
   }
 }
 
+UARTClass::InterruptCallbackFn UARTClass::SetInterruptCallback(InterruptCallbackFn f)
+{
+	InterruptCallbackFn ret = interruptCallback;
+	interruptCallback = f;
+	return ret;
+}
+
+// End
