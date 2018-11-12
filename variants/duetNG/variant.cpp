@@ -261,9 +261,6 @@ extern "C" void init( void )
 	ConfigurePin(g_APinDescription[APINS_Serial0]);
 	setPullup(APIN_Serial0_RXD, true); 							// Enable pullup for RX0
 
-	// Initialize USB VBUS pin
-	ConfigurePin(g_APinDescription[USB_VBUS_PIN]);
-
  	// Initialize Analog Controller
 	AnalogInInit();
 

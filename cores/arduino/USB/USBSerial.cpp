@@ -9,12 +9,9 @@
 #include "conf_usb.h"		// include this to check that the signatures of the callback functions are correct
 #include "udi_cdc.h"		// Atmel CDC module
 #include "udc.h"
-
-#if SAM4E || SAM4S
-# include "WInterrupts.h"
+#include "WInterrupts.h"
 
 void core_vbus_off(CallbackParameter);
-#endif
 
 // SerialCDC members
 
@@ -22,28 +19,18 @@ SerialCDC::SerialCDC() : /* _cdc_tx_buffer(), */ txBufsize(1), isConnected(false
 {
 }
 
-void SerialCDC::begin(uint32_t baud_count)
+void SerialCDC::Start(Pin vBusPin)
 {
-	// suppress "unused parameter" warning
-	(void)baud_count;
+	static bool isInterruptAttached = false;
+
 	udc_start();
 
-#if SAM4E || SAM4S
-	static bool isInterruptAttached = false;
-	if (!isInterruptAttached)
+	if (vBusPin != NoPin && !isInterruptAttached)
 	{
 		isInterruptAttached = true;
-		attachInterrupt(USB_VBUS_PIN, core_vbus_off, INTERRUPT_MODE_FALLING, nullptr);
+		pinMode(vBusPin, INPUT);
+		attachInterrupt(vBusPin, core_vbus_off, INTERRUPT_MODE_FALLING, nullptr);
 	}
-#endif
-}
-
-void SerialCDC::begin(uint32_t baud_count, uint8_t config)
-{
-	// suppress "unused parameter" warning
-	(void)baud_count;
-	(void)config;
-	udc_start();
 }
 
 void SerialCDC::end()
@@ -156,12 +143,10 @@ extern "C" void core_cdc_tx_empty_notify(uint8_t port)
 	SerialUSB.cdcTxEmptyNotify();
 }
 
-#if SAM4E || SAM4S
-// On the SAM4E there is only a GPIO pin available to monitor the VBUS state
+// On the SAM4E and SAM4S we use a GPIO pin available to monitor the VBUS state
 void core_vbus_off(CallbackParameter)
 {
 	SerialUSB.cdcSetConnected(false);
 }
-#endif
 
 // End

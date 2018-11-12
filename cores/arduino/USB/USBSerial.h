@@ -8,6 +8,7 @@
 #ifndef USBSERIAL_H_
 #define USBSERIAL_H_
 
+#include "Core.h"
 #include "Stream.h"
 
 // Serial over CDC
@@ -21,8 +22,7 @@ private:
 public:
 	SerialCDC();
 
-	void begin(uint32_t baud_count);
-	void begin(uint32_t baud_count, uint8_t config);
+	void Start(Pin vBusPin);
 	void end(void);
 
 	int available() override;

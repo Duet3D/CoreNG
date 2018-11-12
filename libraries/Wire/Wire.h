@@ -1,8 +1,4 @@
 /*
- * TwoWire.h - TWI/I2C library for Arduino Due
- * Copyright (c) 2011 Cristian Maglie <c.maglie@bug.st>.
- * All rights reserved.
- *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -36,71 +32,39 @@
 # define Twi Twihs
 #endif
 
-class TwoWire : public Stream {
+struct TwoWireErrors
+{
+	uint32_t naks;
+	uint32_t sendTimeouts;
+	uint32_t recvTimeouts;
+	uint32_t finishTimeouts;
+
+	void Clear();
+};
+
+class TwoWire
+{
 public:
 	TwoWire(Twi *twi, void(*begin_cb)(void));
-	virtual ~TwoWire() {}
-	void begin();
-	void begin(uint8_t);
-	void beginTransmission(uint8_t);
-	void beginTransmission(int);
-	uint8_t endTransmission(void);
-    uint8_t endTransmission(uint8_t);
-	uint8_t requestFrom(uint8_t, uint8_t);
-	virtual size_t write(uint8_t);
-	virtual size_t write(const uint8_t *, size_t);
-	virtual int available(void);
-	virtual int read(void);
-	virtual int peek(void);
-	virtual void flush(void);
-	void onReceive(void(*)(int));
-	void onRequest(void(*)(void));
-	void onService(void);
+
+	void BeginMaster(uint32_t clockFrequency);
+	size_t Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, uint32_t timeout);
+	TwoWireErrors GetErrorCounts(bool clear);
 
 private:
-	// RX Buffer
-	uint8_t rxBuffer[BUFFER_LENGTH];
-	uint8_t rxBufferIndex;
-	uint8_t rxBufferLength;
-
-	// TX Buffer
-	uint8_t txAddress;
-	uint8_t txBuffer[BUFFER_LENGTH];
-	uint8_t txBufferLength;
-
-	// Service buffer
-	uint8_t srvBuffer[BUFFER_LENGTH];
-	uint8_t srvBufferIndex;
-	uint8_t srvBufferLength;
-
-	// Callback user functions
-	void (*onRequestCallback)(void);
-	void (*onReceiveCallback)(int);
-
-	// Called before initialization
-	void (*onBeginCallback)(void);
+	bool WaitForStatus(uint32_t statusBit, uint32_t timeout, uint32_t& timeoutErrorCounter);
+	bool WaitTransferComplete(uint32_t timeout);
+	bool WaitByteSent(uint32_t timeout);
+	bool WaitByteReceived(uint32_t timeout);
 
 	// TWI instance
 	Twi *twi;
 
-	// TWI state
-	enum TwoWireStatus {
-		UNINITIALIZED,
-		MASTER_IDLE,
-		MASTER_SEND,
-		MASTER_RECV,
-		SLAVE_IDLE,
-		SLAVE_RECV,
-		SLAVE_SEND
-	};
-	TwoWireStatus status;
+	// Called before initialization
+	void (*onBeginCallback)(void);
 
-	// TWI clock frequency
-	static const uint32_t TWI_CLOCK = 100000;
-
-	// Timeouts (
-	static const uint32_t RECV_TIMEOUT = 100000;
-	static const uint32_t XMIT_TIMEOUT = 100000;
+	// Count of errors
+	TwoWireErrors errorCounts;
 };
 
 #if WIRE_INTERFACES_COUNT > 0

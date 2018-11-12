@@ -93,7 +93,6 @@ static const uint8_t APIN_SPI_SS0 = PORTB_PIN(2);
 
 #else
 
-# define USB_VBUS_PIN		(PORTC_PIN(21))		// this is for Duet 3, not present on the XPLD
 static const uint8_t APIN_GMAC_PHY_INTERRUPT = PORTC_PIN(6);
 static const uint8_t APIN_GMAC_PHY_RESET = PORTD_PIN(11);
 

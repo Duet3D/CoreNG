@@ -92,9 +92,6 @@ static const Pin APIN_WIRE_SCL = 4;
  * UART/USART Interfaces
  */
 
-// SerialUSB
-#define USB_VBUS_PIN		(47u)
-
 // Serial
 
 // UART0 used by TMC drivers
