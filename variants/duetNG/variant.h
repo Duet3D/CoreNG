@@ -61,6 +61,41 @@ extern "C"{
 
 static const uint32_t MaxPinNumber = 105;						// last GPIO pin
 
+#ifdef __cplusplus
+
+// The following must be kept in step with the way we organise the pin table in variant.cpp
+static inline constexpr Pin PortAPin(unsigned int pin)
+{
+	return (Pin)pin;
+}
+
+static inline constexpr Pin PortBPin(unsigned int pin)
+{
+	return (Pin)(
+					(pin <= 3) ? 26 + pin
+						: (pin <= 5) ? (104 - 4) + pin
+							: (pin <= 7) ? (102 - 6) + pin
+								: (30 - 13) + pin
+				);
+}
+
+static inline constexpr Pin PortCPin(unsigned int pin)
+{
+	return (Pin)(32 + pin);
+}
+
+static inline constexpr Pin PortDPin(unsigned int pin)
+{
+	return (Pin)(64 + pin);
+}
+
+static inline constexpr Pin PortEPin(unsigned int pin)
+{
+	return (Pin)(96 + pin);
+}
+
+#endif
+
 /*
  * SPI Interfaces
  */
@@ -94,8 +129,6 @@ static const Pin APIN_WIRE_SCL = 4;
 /*
  * UART/USART Interfaces
  */
-// SerialUSB
-#define USB_VBUS_PIN		(54u)
 
 // Serial
 static const Pin APINS_Serial0 = 109;
@@ -105,7 +138,7 @@ static const Pin APIN_Serial0_TXD = 10;
 // Serial1
 static const Pin APINS_Serial1 = 110;
 static const Pin APIN_Serial1_RXD = 5;
-static const Pin APIN_Serial1_TXD = 6u;
+static const Pin APIN_Serial1_TXD = 6;
 
 /*
  * Duet NG pins
@@ -113,7 +146,7 @@ static const Pin APIN_Serial1_TXD = 6u;
 
 // HSMCI
 static const Pin APIN_HSMCI_CLOCK = 106;
-static const uint8_t APINS_HSMCI_DATA = 107;
+static const Pin APINS_HSMCI_DATA = 107;
 
 // TWI
 static const Pin APINS_TWI = 108;
