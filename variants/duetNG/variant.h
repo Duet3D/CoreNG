@@ -119,8 +119,8 @@ static const Pin APIN_USART1_SCK = 23;
  */
 #define WIRE_INTERFACES_COUNT 1
 
-static const Pin APIN_WIRE_SDA = 3;
-static const Pin APIN_WIRE_SCL = 4;
+static const Pin APINS_WIRE = 108;
+
 #define WIRE_INTERFACE		TWI0
 #define WIRE_INTERFACE_ID	ID_TWI0
 #define WIRE_ISR_HANDLER	TWI0_Handler

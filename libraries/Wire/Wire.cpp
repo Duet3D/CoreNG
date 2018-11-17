@@ -32,24 +32,31 @@
 
 #include <cstring>
 
-void TwoWireErrors::Clear()
+void TwoWire::ErrorCounts::Clear()
 {
 	naks = sendTimeouts = recvTimeouts = finishTimeouts = 0;
 }
 
-// Wait for a status bit or NAK to be set, returning true if successful and it wasn't NAK
-bool TwoWire::WaitForStatus(uint32_t statusBit, uint32_t timeout, uint32_t& timeoutErrorCounter)
+// This is the default wait-for-status function.
+// It wait until either 2 clock ticks have passed (so we have waited for at least 1ms) or one or more of the status bits we are interested in has been set.
+// Reading some status bits clears them, so we return the status.
+/*static*/ uint32_t TwoWire::DefaultWaitForStatusFunc(Twi *twi, uint32_t bitsToWaitFor)
 {
-	const uint32_t startClocks = SysTick->VAL & 0x00FFFFFF;
-	const uint32_t loadVal = (SysTick->LOAD & 0x00FFFFFF) + 1;
-	timeout *= VARIANT_MCK/1000000;
+	const uint32_t startMillis = millis();
+	bool timedOut;
 	uint32_t sr;
 	do
 	{
-		sr = twi->TWI_SR & (TWI_SR_NACK | statusBit);
-	} while (sr == 0 && ((startClocks - (SysTick->VAL & 0x00FFFFFF)) % loadVal) < timeout);
+		timedOut = (millis() - startMillis > 2);
+		sr = twi->TWI_SR;							// read this after checking for timeout, in case we get descheduled between the two statements
+	} while (!timedOut && (sr & bitsToWaitFor) == 0);
+	return sr;
+}
 
-	sr |= twi->TWI_SR;										// in case we were descheduled between checking the status register and checking for timeout
+// Wait for a status bit or NAK to be set, returning true if successful and it wasn't NAK
+bool TwoWire::WaitForStatus(uint32_t statusBit, uint32_t& timeoutErrorCounter, WaitForStatusFunc statusWaitFunc)
+{
+	const uint32_t sr = statusWaitFunc(twi, statusBit | TWI_SR_NACK);
 	if ((sr & TWI_SR_NACK) != 0)
 	{
 		++errorCounts.naks;
@@ -63,19 +70,19 @@ bool TwoWire::WaitForStatus(uint32_t statusBit, uint32_t timeout, uint32_t& time
 	return false;
 }
 
-inline bool TwoWire::WaitTransferComplete(uint32_t timeout)
+inline bool TwoWire::WaitTransferComplete(WaitForStatusFunc statusWaitFunc)
 {
-	return WaitForStatus(TWI_SR_TXCOMP, timeout, errorCounts.finishTimeouts);
+	return WaitForStatus(TWI_SR_TXCOMP, errorCounts.finishTimeouts, statusWaitFunc);
 }
 
-inline bool TwoWire::WaitByteSent(uint32_t timeout)
+inline bool TwoWire::WaitByteSent(WaitForStatusFunc statusWaitFunc)
 {
-	return WaitForStatus(TWI_SR_TXRDY, timeout, errorCounts.sendTimeouts);
+	return WaitForStatus(TWI_SR_TXRDY, errorCounts.sendTimeouts, statusWaitFunc);
 }
 
-inline bool TwoWire::WaitByteReceived(uint32_t timeout)
+inline bool TwoWire::WaitByteReceived(WaitForStatusFunc statusWaitFunc)
 {
-	return WaitForStatus(TWI_SR_RXRDY, timeout, errorCounts.recvTimeouts);
+	return WaitForStatus(TWI_SR_RXRDY, errorCounts.recvTimeouts, statusWaitFunc);
 }
 
 TwoWire::TwoWire(Twi *_twi, void(*_beginCb)(void)) : twi(_twi), onBeginCallback(_beginCb)
@@ -103,7 +110,7 @@ void TwoWire::BeginMaster(uint32_t clockFrequency)
 }
 
 // Write then read data
-size_t TwoWire::Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, uint32_t timeout)
+size_t TwoWire::Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, WaitForStatusFunc statusWaitFunc)
 {
 	// If an empty transfer, nothing to do
 	if (numToRead + numToWrite == 0)
@@ -135,10 +142,10 @@ size_t TwoWire::Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, s
 		while (bytesSent + 1 < numToWrite)
 		{
 			twi->TWI_THR = *buffer++;
-			if (!WaitByteSent(timeout))
+			if (!WaitByteSent(statusWaitFunc))
 			{
 				twi->TWI_CR = TWI_CR_STOP;
-				(void)WaitTransferComplete(timeout);
+				(void)WaitTransferComplete(statusWaitFunc);
 				return bytesSent;
 			}
 			++bytesSent;
@@ -146,11 +153,11 @@ size_t TwoWire::Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, s
 
 		twi->TWI_THR = *buffer++;
 		twi->TWI_CR = TWI_CR_STOP;
-		if (WaitByteSent(timeout))
+		if (WaitByteSent(statusWaitFunc))
 		{
 			++bytesSent;
 		}
-		(void)WaitTransferComplete(timeout);
+		(void)WaitTransferComplete(statusWaitFunc);
 		if (bytesSent < numToWrite || numToRead == 0)
 		{
 			return bytesSent;
@@ -163,13 +170,13 @@ size_t TwoWire::Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, s
 	if (numToRead == 1)
 	{
 		twi->TWI_CR = TWI_CR_START | TWI_CR_STOP;
-		if (WaitByteReceived(timeout))
+		if (WaitByteReceived(statusWaitFunc))
 		{
 			*buffer = twi->TWI_RHR;
 			++bytesReceived;
 		}
 
-		(void)WaitTransferComplete(timeout);
+		(void)WaitTransferComplete(statusWaitFunc);
 		return bytesSent + bytesReceived;
 	}
 
@@ -177,10 +184,10 @@ size_t TwoWire::Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, s
 	twi->TWI_CR = TWI_CR_START;
 	for (;;)
 	{
-		if (!WaitByteReceived(timeout))
+		if (!WaitByteReceived(statusWaitFunc))
 		{
 			twi->TWI_CR = TWI_CR_STOP;						// this may not do any good
-			(void)WaitTransferComplete(timeout);		// neither may this
+			(void)WaitTransferComplete(statusWaitFunc);		// neither may this
 			return bytesSent + bytesReceived;
 		}
 
@@ -196,20 +203,20 @@ size_t TwoWire::Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, s
 	// The penultimate byte is in the RHR
 	twi->TWI_CR = TWI_CR_STOP;
 	*buffer++ = twi->TWI_RHR;
-	if (WaitByteReceived(timeout))
+	if (WaitByteReceived(statusWaitFunc))
 	{
 		*buffer++ = twi->TWI_RHR;
 		++bytesReceived;
 	}
-	(void)WaitTransferComplete(timeout);
+	(void)WaitTransferComplete(statusWaitFunc);
 	return bytesSent + bytesReceived;
 
 }
 
-TwoWireErrors TwoWire::GetErrorCounts(bool clear)
+TwoWire::ErrorCounts TwoWire::GetErrorCounts(bool clear)
 {
 	const irqflags_t flags = cpu_irq_save();
-	const TwoWireErrors ret = errorCounts;
+	const ErrorCounts ret = errorCounts;
 	if (clear)
 	{
 		errorCounts.Clear();
@@ -222,8 +229,7 @@ TwoWireErrors TwoWire::GetErrorCounts(bool clear)
 static void Wire_Init(void)
 {
 	pmc_enable_periph_clk(WIRE_INTERFACE_ID);
-	ConfigurePin(g_APinDescription[APIN_WIRE_SDA]);
-	ConfigurePin(g_APinDescription[APIN_WIRE_SCL]);
+	ConfigurePin(g_APinDescription[APINS_WIRE]);
 
 	NVIC_DisableIRQ(WIRE_ISR_ID);
 	NVIC_ClearPendingIRQ(WIRE_ISR_ID);
@@ -236,15 +242,13 @@ TwoWire Wire = TwoWire(WIRE_INTERFACE, Wire_Init);
 static void Wire1_Init(void)
 {
 	pmc_enable_periph_clk(WIRE1_INTERFACE_ID);
-	ConfigurePin(g_APinDescription[APIN_WIRE1_SDA]);
-	ConfigurePin(g_APinDescription[APIN_WIRE1_SCL]);
+	ConfigurePin(g_APinDescription[APINS_WIRE1]);
 
 	NVIC_DisableIRQ(WIRE1_ISR_ID);
 	NVIC_ClearPendingIRQ(WIRE1_ISR_ID);
 }
 
 TwoWire Wire1 = TwoWire(WIRE1_INTERFACE, Wire1_Init);
-}
 #endif
 
 #endif

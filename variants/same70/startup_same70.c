@@ -70,7 +70,7 @@ extern uint32_t _estack;
 void Dummy_Handler(void);
 
 /* Calls to the core */
-extern int sysTickHook(void);
+extern void sysTickHook(void);
 extern void TimeTick_Increment(void);
 
 /* Cortex-M7 core handlers */
@@ -93,10 +93,7 @@ void vApplicationTickHook(void)
 void SysTick_Handler(void)
 #endif
 {
-	if (sysTickHook())
-		return;
-
-	wdt_restart(WDT);							// kick the watchdog
+	sysTickHook();
 	TimeTick_Increment();						// increment tick count each ms
 }
 

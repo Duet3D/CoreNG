@@ -74,8 +74,8 @@ void Dummy_Handler(void)
 	}
 }
 
-extern void TimeTick_Increment(void);				// in wiring.c
-extern int sysTickHook(void);
+extern void TimeTick_Increment(void);			// in wiring.c
+extern void sysTickHook(void);					// in the application
 
 /* Cortex-M4 core handlers */
 void NMI_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
@@ -97,10 +97,7 @@ void vApplicationTickHook(void)
 void SysTick_Handler(void)
 #endif
 {
-	if (sysTickHook())
-		return;
-
-	wdt_restart(WDT);							// kick the watchdog
+	sysTickHook();
 	TimeTick_Increment();						// increment tick count each ms
 }
 

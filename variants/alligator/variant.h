@@ -80,15 +80,13 @@ extern "C"{
  */
 #define WIRE_INTERFACES_COUNT 2
 
-#define APIN_WIRE_SDA        (20u)
-#define APIN_WIRE_SCL        (21u)
+#define APINS_WIRE	         (80u)
 #define WIRE_INTERFACE       TWI1
 #define WIRE_INTERFACE_ID    ID_TWI1
 #define WIRE_ISR_HANDLER     TWI1_Handler
 #define WIRE_ISR_ID          TWI1_IRQn
 
-#define APIN_WIRE1_SDA       (70u)
-#define APIN_WIRE1_SCL       (71u)
+#define APINS_WIRE1		     (79u)
 #define WIRE1_INTERFACE      TWI0
 #define WIRE1_INTERFACE_ID   ID_TWI0
 #define WIRE1_ISR_HANDLER    TWI0_Handler
