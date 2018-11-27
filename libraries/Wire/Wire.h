@@ -32,39 +32,38 @@
 # define Twi Twihs
 #endif
 
-struct TwoWireErrors
-{
-	uint32_t naks;
-	uint32_t sendTimeouts;
-	uint32_t recvTimeouts;
-	uint32_t finishTimeouts;
-
-	void Clear();
-};
-
 class TwoWire
 {
 public:
+	struct ErrorCounts
+	{
+		uint32_t naks;
+		uint32_t sendTimeouts;
+		uint32_t recvTimeouts;
+		uint32_t finishTimeouts;
+
+		void Clear();
+	};
+
+	typedef uint32_t (*WaitForStatusFunc)(Twi *twi, uint32_t bitsToWaitFor);
+
 	TwoWire(Twi *twi, void(*begin_cb)(void));
 
 	void BeginMaster(uint32_t clockFrequency);
-	size_t Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, uint32_t timeout);
-	TwoWireErrors GetErrorCounts(bool clear);
+	size_t Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, WaitForStatusFunc statusWaitFunc = DefaultWaitForStatusFunc);
+	ErrorCounts GetErrorCounts(bool clear);
+
+	static uint32_t DefaultWaitForStatusFunc(Twi *twi, uint32_t bitsToWaitFor);
 
 private:
-	bool WaitForStatus(uint32_t statusBit, uint32_t timeout, uint32_t& timeoutErrorCounter);
-	bool WaitTransferComplete(uint32_t timeout);
-	bool WaitByteSent(uint32_t timeout);
-	bool WaitByteReceived(uint32_t timeout);
+	bool WaitForStatus(uint32_t statusBit, uint32_t& timeoutErrorCounter, WaitForStatusFunc statusWaitFunc);
+	bool WaitTransferComplete(WaitForStatusFunc statusWaitFunc);
+	bool WaitByteSent(WaitForStatusFunc statusWaitFunc);
+	bool WaitByteReceived(WaitForStatusFunc statusWaitFunc);
 
-	// TWI instance
-	Twi *twi;
-
-	// Called before initialization
-	void (*onBeginCallback)(void);
-
-	// Count of errors
-	TwoWireErrors errorCounts;
+	Twi *twi;							// TWI instance
+	void (*onBeginCallback)(void);		// called before initialization
+	ErrorCounts errorCounts;			// error counts
 };
 
 #if WIRE_INTERFACES_COUNT > 0

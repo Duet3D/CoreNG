@@ -30,7 +30,7 @@ static void __halt() {
 }
 
 extern void TimeTick_Increment(void);				// in wiring.c
-extern int sysTickHook(void);
+extern void sysTickHook(void);
 
 /* Cortex-M3 core handlers */
 void NMI_Handler        ( void ) __attribute__ ((weak, alias("__halt")));
@@ -52,11 +52,7 @@ void vApplicationTickHook(void)
 void SysTick_Handler(void)
 #endif
 {
-	if (sysTickHook())
-		return;
-
-	wdt_restart(WDT);							// kick the watchdog
-
+	sysTickHook();
 	TimeTick_Increment();						// increment tick count each ms
 }
 

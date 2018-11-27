@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-static volatile uint64_t g_ms_ticks = 0;		// Count of 1ms time ticks. */
+static volatile uint64_t g_ms_ticks = 0;		// Count of 1ms time ticks
 
 void TimeTick_Increment( void )
 {
@@ -50,7 +50,7 @@ uint64_t millis64( void )
 // Theory: repeatedly take readings of SysTick counter, millis counter and SysTick interrupt pending flag.
 // When it appears that millis counter and pending is stable and SysTick hasn't rolled over, use these 
 // values to calculate micros. If there is a pending SysTick, add one to the millis counter in the calculation.
-// DC 2018-05-28: The return value from this is NOT RELIABLE if it is called while a system tick is being executed, at least in the RTOS build.
+// DC 2018-05-28: The return value from this is NOT RELIABLE if it is called from within an interrupt service routine, at least in the RTOS build.
 // I think the reason is that if SCB->SHCSR & SCB_SHCSR_SYSTICKACT_Msk indicates that the systick exception is active,
 // the milliseconds counter may or may not have been incremented yet. So do not use this function! Use the step timer for precise timing instead.
 uint32_t micros( void )
