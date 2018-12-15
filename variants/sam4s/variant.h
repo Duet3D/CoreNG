@@ -59,8 +59,35 @@ extern "C"{
  *        Pins
  *----------------------------------------------------------------------------*/
 
-// Number of pins defined in PinDescription array
-#define APINS_COUNT			(68u)
+static const uint32_t MaxPinNumber = 67;						// last GPIO pin
+
+#ifdef __cplusplus
+
+// The following must be kept in step with the way we organise the pin table in variant.cpp
+static inline constexpr Pin PortAPin(unsigned int pin)
+{
+	return (Pin)pin;
+}
+
+static inline constexpr Pin PortBPin(unsigned int pin)
+{
+	return (Pin)(
+					(pin <= 7) ? 26 + pin		// PB0-7 are 26-33
+						: (34 - 13) + pin		// PB13-14 are 34-35
+				);
+}
+
+static inline constexpr Pin PortCPin(unsigned int pin)
+{
+	return (Pin)(32 + pin);
+}
+
+static inline constexpr Pin PortDPin(unsigned int pin)
+{
+	return (Pin)(36 + pin);
+}
+
+#endif
 
 /*
  * SPI Interfaces
@@ -120,8 +147,6 @@ static const Pin APINS_HSMCI_DATA = 69;
 
 // TWI
 static const Pin APINS_TWI = 70;
-
-static const uint32_t MaxPinNumber = 67;						// last GPIO pin
 
 static const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
 static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds

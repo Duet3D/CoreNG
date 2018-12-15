@@ -101,7 +101,11 @@ extern const PinDescription g_APinDescription[]=
 
   // Pins 34-35 are PB13-PB14
   { PIOB, PIO_PB13X1_DAC0,		ID_PIOB, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DAC,	                    DA0,    NOT_ON_PWM,  NOT_ON_TIMER }, // SPI0_CS0 (external SD card)
+#ifdef PCCB
+  { PIOB, PIO_PB14,				ID_PIOB, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,	                NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // expansion (driver 2 EN/CS)
+#else
   { PIOB, PIO_PB14X1_DAC1,		ID_PIOB, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DAC,	                    DA1,    NOT_ON_PWM,  NOT_ON_TIMER }, // SPI0_CS1 (daughter boards)
+#endif
 
   // PB15-31 not present on chip
 
