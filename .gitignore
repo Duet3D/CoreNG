@@ -45,3 +45,20 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+/SAM4E8E_RTOS/
+/Alligator/
+/RADDS/
+/RADDS_RTOS/
+/SAM3X8E/
+/SAM3X8E_RTOS/
+/SAM4E8E/
+/SAM4S/
+/SAM4S_RTOS/
+/SAM4S_RTOS_PCCB/
+/SAME70/
+/SAME70XPLD/
+/SAME70XPLD_RTOS/
+/SAME70_RTOS/
+
+# Eclipse
+.settings/language.settings.xml
