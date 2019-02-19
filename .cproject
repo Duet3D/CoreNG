@@ -4,7 +4,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483" moduleId="org.eclipse.cdt.core.settings" name="SAM3X8E">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -27,7 +26,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.285738798" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.247642039" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1331950428" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1331950428" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1469163379" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.1364090807" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.597788140" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -115,7 +114,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050" moduleId="org.eclipse.cdt.core.settings" name="SAM4E8E">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -137,7 +135,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1716907105" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.542555289" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.317148025" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.317148025" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.471788573" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.1120505592" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.326515188" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -226,7 +224,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.707159577">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.707159577" moduleId="org.eclipse.cdt.core.settings" name="RADDS">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -248,7 +245,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.707159577." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.914674480" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.1933363652" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1302577148" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1302577148" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.895712984" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.1365491109" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.746308312" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -338,7 +335,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.1297149118">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.1297149118" moduleId="org.eclipse.cdt.core.settings" name="Alligator">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -360,7 +356,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.1297149118." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.986635691" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.1742313350" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" useByScannerDiscovery="false" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1910619934" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1910619934" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.968327373" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.845207871" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.986965141" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -450,7 +446,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235" moduleId="org.eclipse.cdt.core.settings" name="SAM4S">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -472,7 +467,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1568400799" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.1500986800" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" useByScannerDiscovery="false" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1530662974" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1530662974" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1232639951" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.199276801" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1183576625" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -561,7 +556,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308" moduleId="org.eclipse.cdt.core.settings" name="SAME70">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -584,7 +578,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1336492731" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.17589810" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.2002123258" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.2002123258" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1092159015" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.869975453" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1875689395" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -674,7 +668,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.655386357">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.655386357" moduleId="org.eclipse.cdt.core.settings" name="SAM4E8E_RTOS">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -696,7 +689,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.655386357." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.136398794" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.1714355962" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1322156662" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1322156662" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.2144327360" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.164760376" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.507911226" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -787,7 +780,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235.1790499141">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235.1790499141" moduleId="org.eclipse.cdt.core.settings" name="SAM4S_RTOS">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -809,7 +801,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235.1790499141." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1894162921" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.1154938832" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" useByScannerDiscovery="false" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.87794203" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.87794203" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1689813731" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.822965884" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1183988888" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -900,7 +892,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308.685155237">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308.685155237" moduleId="org.eclipse.cdt.core.settings" name="SAME70_RTOS">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -922,7 +913,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308.685155237." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.426746955" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.1732026928" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1888131867" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1888131867" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.474204560" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.1997818483" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.2070136103" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -1014,7 +1005,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235.1790499141.139430533">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235.1790499141.139430533" moduleId="org.eclipse.cdt.core.settings" name="SAM4S_RTOS_PCCB">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -1036,7 +1026,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235.1790499141.139430533." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1222667191" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.2134367451" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" useByScannerDiscovery="false" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.614909096" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.614909096" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1198706041" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.685929817" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1294621485" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -1129,7 +1119,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308.685155237.462901423">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308.685155237.462901423" moduleId="org.eclipse.cdt.core.settings" name="SAME70XPLD_RTOS">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -1151,7 +1140,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308.685155237.462901423." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1347023688" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.32256586" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.114325949" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.114325949" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.743107843" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.1131175678" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.609375152" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -1245,7 +1234,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308.216576016">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308.216576016" moduleId="org.eclipse.cdt.core.settings" name="SAME70XPLD">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -1267,7 +1255,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308.216576016." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1749232987" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.141198073" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1350398824" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1350398824" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1561995531" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.701639415" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.268251648" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -1359,7 +1347,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.707159577.293019475">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.707159577.293019475" moduleId="org.eclipse.cdt.core.settings" name="RADDS_RTOS">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -1381,7 +1368,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.707159577.293019475." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.512223618" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.1399101796" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1620640898" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1620640898" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.868034925" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.621780879" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1508943951" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
@@ -1473,7 +1460,6 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.27403733">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.27403733" moduleId="org.eclipse.cdt.core.settings" name="SAM3X8E_RTOS">
 				<macros>
-					<stringMacro name="GccPath" type="VALUE_TEXT" value="C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>
@@ -1495,7 +1481,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.27403733." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.lib.release.1774700373" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.lib.release">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.85282761" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="arm-none-eabi-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1104017650" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${GccPath}" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1104017650" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${ArmGccPath}" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1408711508" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/CoreNG}/Release" id="cdt.managedbuild.builder.gnu.cross.1259050725" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.456298659" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
