@@ -159,12 +159,14 @@ static const uint8_t X8  = 100;
 static const uint8_t X9  = 101;
 static const uint8_t X10 = 102;
 static const uint8_t X11 = 103;
-static const uint8_t X12 = 104; //probe
+static const uint8_t X12 = 104;
 static const uint8_t X13 = 105;
 static const uint8_t X14 = 106;
 static const uint8_t X15 = 106;
 static const uint8_t X16 = 108;
 static const uint8_t X17 = 109;
+
+static const uint32_t MaxPinNumber = 109;					// X17
 
 // HSMCI
 static const uint8_t APIN_HSMCI_CLOCK = 110;
@@ -172,10 +174,6 @@ static const uint8_t APINS_HSMCI_DATA = 111;
 
 // EMAC
 static const uint8_t APINS_EMAC = 112;
-
-static const uint32_t MaxPinNumber = 109;					// X17
-static const uint32_t PwmFastClock = 25000 * 255;			// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
-static const uint32_t PwmSlowClock = (25000 * 255) / 256;	// slow PWM clock to allow us to get slow speeds
 
 #ifdef __cplusplus
 }

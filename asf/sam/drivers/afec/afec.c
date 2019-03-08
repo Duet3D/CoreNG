@@ -154,7 +154,11 @@ static void afec_set_config(Afec *const afec, struct afec_config *config)
 			AFEC_MR_PRESCAL(config->mck / (2 * config->afec_clock) - 1) |
 			(config->settling_time) |		
 		#endif
+#if SAME70	//dc42
+			(afec->AFEC_MR & (15 << 24)) |				// datasheet says we mustn't modify this field
+#else
 			AFEC_MR_TRACKTIM(config->tracktim) |
+#endif
 			AFEC_MR_TRANSFER(config->transfer) |
 			(config->startup_time);
 

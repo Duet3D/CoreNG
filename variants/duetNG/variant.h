@@ -151,9 +151,6 @@ static const Pin APINS_HSMCI_DATA = 107;
 // TWI
 static const Pin APINS_TWI = 108;
 
-static const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
-static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds
-
 #ifdef __cplusplus
 }
 #endif
