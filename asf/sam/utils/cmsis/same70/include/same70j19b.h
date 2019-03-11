@@ -595,7 +595,7 @@ void XDMAC_Handler      ( void );
 #define CHIP_FREQ_MAINCK_RC_4MHZ        (4000000UL)
 #define CHIP_FREQ_MAINCK_RC_8MHZ        (8000000UL)
 #define CHIP_FREQ_MAINCK_RC_12MHZ       (12000000UL)
-#define CHIP_FREQ_CPU_MAX               (120000000UL)
+#define CHIP_FREQ_CPU_MAX               (300000000UL)
 #define CHIP_FREQ_XTAL_32K              (32768UL)
 #define CHIP_FREQ_XTAL_12M              (12000000UL)
 

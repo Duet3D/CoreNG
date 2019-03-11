@@ -65,7 +65,23 @@ void AnalogInInit()
 	afec_enable(AFEC0);
 	afec_enable(AFEC1);
 	afec_config cfg;
+
+# if SAME70
+	// afec_get_config_defaults returns the wrong values for the SAME70
+	cfg.resolution = AFEC_12_BITS;
+	cfg.mck = SystemPeripheralClock();
+	cfg.afec_clock = 10000000UL;					// datasheet says typical AFEC clock is 20MHz, minimum 4, maximum 40
+	cfg.startup_time = AFEC_STARTUP_TIME_4;
+	cfg.tracktim = 2;								// as recommended on the 2018 datasheet
+	cfg.transfer = 2;								// not used
+	cfg.anach = true;
+	cfg.useq = false;
+	cfg.tag = true;
+	cfg.stm = true;
+	cfg.ibctl = 0b10;
+# else
 	afec_get_config_defaults(&cfg);
+# endif
 
 	while (afec_init(AFEC0, &cfg) != STATUS_OK)
 	{

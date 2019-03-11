@@ -23,6 +23,17 @@
 #include "tc/tc.h"
 #include "dacc/dacc.h"
 
+// PWM channels are 16 bit. We can choose two PWM frequencies. The first one should be a sub-multiple of the peripheral clock.
+#if SAM3XA
+// Peripheral clock is 84MHz so we can do 15MHz = 84/6
+static const uint32_t PwmFastClock = 14000000;			// fast PWM clock for Intel spec PWM fans that need 25kHz PWM, resolution is 1 part in 560 @ 240MHz
+#else
+// Peripheral clock is 120MHz or 150MHz, so we can do 15MHz in either case
+static const uint32_t PwmFastClock = 15000000;			// fast PWM clock for Intel spec PWM fans that need 25kHz PWM, resolution is 1 part in 600 @ 120MHz
+#endif
+
+static const uint32_t PwmSlowClock = 100000;			// slow PWM clock to allow us to get slow speeds, minimum a little under 2Hz, servo resolution is 10us
+
 // Initialise this module
 extern void AnalogOutInit()
 {
@@ -107,8 +118,10 @@ static bool PWMEnabled = false;
 static uint16_t PWMChanFreq[numPwmChannels] = {0};
 static uint16_t PWMChanPeriod[numPwmChannels];
 
+#ifdef PWM_DEBUG
 //***Temporary for debugging
 uint32_t maxPwmLoopCount = 0;
+#endif
 
 // AnalogWrite to a PWM pin
 // Return true if successful, false if we need to fall back to digitalWrite
@@ -116,43 +129,42 @@ static bool AnalogWritePwm(const PinDescription& pinDesc, float ulValue, uint16_
 pre(0.0 <= ulValue; ulValue <= 1.0)
 pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 {
-	const uint32_t chan = pinDesc.ulPWMChannel;
+	const uint32_t chanIndex = pinDesc.ulPWMChannel;
 	if (freq == 0)
 	{
-		PWMChanFreq[chan] = freq;
+		PWMChanFreq[chanIndex] = freq;
 		return false;
 	}
 
 	// Which PWM interface do we need to work with?
 #if SAME70
-	Pwm * const PWMInterface = (chan <= 3) ? PWM0 : PWM1;
+	Pwm * const PWMInterface = (chanIndex < 4) ? PWM0 : PWM1;
 #else
 	Pwm * const PWMInterface = PWM;
 #endif
 
-	if (PWMChanFreq[chan] != freq)
+	const uint32_t chan = chanIndex & 3;
+	if (PWMChanFreq[chanIndex] != freq)
 	{
 		if (!PWMEnabled)
 		{
+			// PWM Startup code
 #if SAME70
-			// PWM startup code for both PWM interfaces
 			pmc_enable_periph_clk(ID_PWM0);
 			pmc_enable_periph_clk(ID_PWM1);
+#else
+			pmc_enable_periph_clk(ID_PWM);
+#endif
 			pwm_clock_t clockConfig;
 			clockConfig.ul_clka = PwmSlowClock;
 			clockConfig.ul_clkb = PwmFastClock;
 			clockConfig.ul_mck = SystemPeripheralClock();
+#if SAME70
 			pwm_init(PWM0, &clockConfig);
 			PWM0->PWM_SCM = 0;										// ensure no sync channels
 			pwm_init(PWM1, &clockConfig);
 			PWM1->PWM_SCM = 0;										// ensure no sync channels
 #else
-			// PWM Startup code
-			pmc_enable_periph_clk(ID_PWM);
-			pwm_clock_t clockConfig;
-			clockConfig.ul_clka = PwmSlowClock;
-			clockConfig.ul_clkb = PwmFastClock;
-			clockConfig.ul_mck = VARIANT_MCK;
 			pwm_init(PWM, &clockConfig);
 			PWM->PWM_SCM = 0;										// ensure no sync channels
 #endif
@@ -160,11 +172,11 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 		}
 
 		const bool useFastClock = (freq >= PwmFastClock/65535);
-		const uint32_t period = ((useFastClock) ? PwmFastClock : PwmSlowClock)/freq;
-		const uint32_t duty = ConvertRange(ulValue, period);
+		const uint16_t period = (uint16_t)min<uint32_t>(((useFastClock) ? PwmFastClock : PwmSlowClock)/freq, 65535);
+		const uint16_t duty = (uint16_t)ConvertRange(ulValue, period);
 
-		PWMChanFreq[chan] = freq;
-		PWMChanPeriod[chan] = (uint16_t)period;
+		PWMChanFreq[chanIndex] = freq;
+		PWMChanPeriod[chanIndex] = (uint16_t)period;
 
 		// Set up the PWM channel
 		// We need to work around a bug in the SAM PWM channels. Enabling a channel is supposed to clear the counter, but it doesn't.
@@ -173,18 +185,20 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 		for (unsigned int j = 0; j < 5; ++j)							// twice through should be enough, but just in case...
 		{
 			pwm_channel_disable(PWMInterface, chan);
+#ifdef PWM_DEBUG
 			if (j > maxPwmLoopCount)
 			{
 				maxPwmLoopCount = j;
 			}
+#endif
 			uint32_t oldCurrentVal = PWMInterface->PWM_CH_NUM[chan].PWM_CCNT & 0xFFFF;
 			if (oldCurrentVal < period || oldCurrentVal > 65536 - 10)	// if counter is already small enough or about to wrap round, OK
 			{
 				break;
 			}
 			oldCurrentVal += 2;											// note: +1 doesn't work here, has to be at least +2
-			PWMInterface->PWM_CH_NUM[chan].PWM_CPRD = oldCurrentVal;				// change the period to be just greater than the counter
-			PWMInterface->PWM_CH_NUM[chan].PWM_CMR = PWM_CMR_CPRE_CLKB;			// use the fast clock to avoid waiting too long
+			PWMInterface->PWM_CH_NUM[chan].PWM_CPRD = oldCurrentVal;	// change the period to be just greater than the counter
+			PWMInterface->PWM_CH_NUM[chan].PWM_CMR = PWM_CMR_CPRE_CLKB;	// use the fast clock to avoid waiting too long
 			pwm_channel_enable(PWMInterface, chan);
 			for (unsigned int i = 0; i < 1000; ++i)
 			{
@@ -202,6 +216,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 		channelConfig.ul_prescaler = (useFastClock) ? PWM_CMR_CPRE_CLKB : PWM_CMR_CPRE_CLKA;
 		channelConfig.ul_duty = duty;
 		channelConfig.ul_period = period;
+		channelConfig.b_pwmh_output_inverted = true;					// both outputs have same polarity
 
 		pwm_channel_init(PWMInterface, &channelConfig);
 		pwm_channel_enable(PWMInterface, chan);
@@ -217,50 +232,48 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 		// We have to pass a pwm_channel_t struct to pwm_channel_update duty, but the only fields it reads are 'chan' and 'ul_period'.
 		pwm_channel_t channelConfig;
 		channelConfig.channel = chan;
-		channelConfig.ul_period = (uint32_t)PWMChanPeriod[chan];
+		channelConfig.ul_period = (uint32_t)PWMChanPeriod[chanIndex];
 		pwm_channel_update_duty(PWMInterface, &channelConfig, ConvertRange(ulValue, channelConfig.ul_period));
 	}
 	return true;
 }
 
 #if SAM4S
-const unsigned int numTcChannels = 6;
+const unsigned int NumTcChannels = 6;
 #elif SAM3XA || SAM4E
-const unsigned int numTcChannels = 9;
+const unsigned int NumTcChannels = 9;
 #elif SAME70
-const unsigned int numTcChannels = 12;
+const unsigned int NumTcChannels = 12;
 #endif
 
 // Map from timer channel to TC channel number
-static const uint8_t channelToChNo[numTcChannels] =
+static const uint8_t channelToChNo[NumTcChannels] =
 {
 	0, 1, 2,
 	0, 1, 2,
-#if SAME70
+#if SAM3XA || SAM4E || SAME70
 	0, 1, 2,
-	0, 1, 2
 #endif
-#if SAM3XA || SAM4E
+#if SAME70
 	0, 1, 2
 #endif
 };
 
 // Map from timer channel to TC number
-static Tc * const channelToTC[numTcChannels] =
+static Tc * const channelToTC[NumTcChannels] =
 {
 	TC0, TC0, TC0,
 	TC1, TC1, TC1,
-#if SAME70
+#if SAM3XA || SAM4E || SAME70
 	TC2, TC2, TC2,
-	TC3, TC3, TC3
 #endif
-#if SAM3XA || SAM4E
-	TC2, TC2, TC2
+#if SAME70
+	TC3, TC3, TC3
 #endif
 };
 
 // Map from timer channel to TIO number
-static const uint8_t channelToId[numTcChannels] =
+static const uint8_t channelToId[NumTcChannels] =
 {
 	ID_TC0, ID_TC1, ID_TC2,
 	ID_TC3, ID_TC4, ID_TC5,
@@ -273,7 +286,7 @@ static const uint8_t channelToId[numTcChannels] =
 };
 
 // Current frequency of each TC channel
-static uint16_t TCChanFreq[numTcChannels] = {0};
+static uint16_t TCChanFreq[NumTcChannels] = {0};
 
 static inline void TC_SetCMR_ChannelA(Tc *tc, uint32_t chan, uint32_t v)
 {
@@ -321,7 +334,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)
 #if SAM4S || SAME70
 			// The timer/counters are only 16 bits wide on the SAM4S and SAME70 so we need to use a higher prescaler
 			tc_init(chTC, chNo,
-							TC_CMR_TCCLKS_TIMER_CLOCK4 |			// clock is MCLK/128
+							TC_CMR_TCCLKS_TIMER_CLOCK4 |			// clock is MCLK/128 (SAM4S) or peripheral_clock/128 (SAME70)
 							TC_CMR_WAVE |         					// Waveform mode
 							TC_CMR_WAVSEL_UP_RC | 					// Counter running up and then down when equals to RC
 							TC_CMR_EEVT_XC0 |     					// Set external events from XC0 (this allows TIOB to be an output)
@@ -365,7 +378,6 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)
 				tc_write_rb(chTC, chNo, 1);
 				TC_SetCMR_ChannelB(chTC, chNo, TC_CMR_BCPB_CLEAR | TC_CMR_BCPC_CLEAR);
 			}
-
 		}
 		else
 		{

@@ -65,10 +65,7 @@ extern "C"{
 #define PORTD_PIN(n)	(96+n)
 #define PORTE_PIN(n)	(128+n)
 
-// UART/USART and SPI Interfaces
-
-static const uint8_t APINS_Serial0 = 137;
-static const uint8_t APINS_Serial1 = 138;
+static const uint32_t MaxPinNumber = 133;						// last GPIO pin (PE05)
 
 #ifdef SAME70XPLD
 
@@ -124,14 +121,13 @@ static const uint8_t APIN_HSMCI_DATA = 135;
 
 static const uint8_t APINS_GMAC_PHY = 136;
 
+// UART/USART and SPI Interfaces
+static const uint8_t APINS_Serial0 = 137;
+static const uint8_t APINS_Serial1 = 138;
+
 // CAN
 static const uint8_t APIN_CAN1_RX = PORTC_PIN(12);
 static const uint8_t APIN_CAN1_TX = PORTD_PIN(12);
-
-static const uint32_t MaxPinNumber = 133;						// last GPIO pin (PE05)
-
-static const uint32_t PwmFastClock = 25000 * 255;				// fast PWM clock for Intel spec PWM fans that need 25kHz PWM
-static const uint32_t PwmSlowClock = (25000 * 255) / 256;		// slow PWM clock to allow us to get slow speeds
 
 #ifdef __cplusplus
 }
