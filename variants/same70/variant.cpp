@@ -182,8 +182,7 @@ extern const PinDescription g_APinDescription[] =
   { PIOC, PIO_PC7,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                  NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 72-73 PC8-9
-  // PC8 is connected to USER LED on the XPLD (active low)
-  { PIOC, PIO_PC8B_TIOA7,      ID_PIOC, PIO_PERIPH_B,  PIO_DEFAULT,  (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),	NO_ADC, NOT_ON_PWM,  TC2_CHA7 },
+  { PIOC, PIO_PC8B_TIOA7,      ID_PIOC, PIO_PERIPH_B,  PIO_DEFAULT,  (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),	NO_ADC, NOT_ON_PWM,  TC2_CHA7 },	 // USER LED on the XPLD, active low
   { PIOC, PIO_PC9,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                  NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 74-75 PC10-11 (connected to EEPROM on the XPLD)

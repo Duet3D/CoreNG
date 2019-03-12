@@ -66,7 +66,7 @@ static const uint32_t MaxPinNumber = 67;						// last GPIO pin
 // The following must be kept in step with the way we organise the pin table in variant.cpp
 static inline constexpr Pin PortAPin(unsigned int pin)
 {
-	return (Pin)pin;
+	return (Pin)pin;							// PA0-24 are 0-25
 }
 
 static inline constexpr Pin PortBPin(unsigned int pin)
@@ -79,12 +79,7 @@ static inline constexpr Pin PortBPin(unsigned int pin)
 
 static inline constexpr Pin PortCPin(unsigned int pin)
 {
-	return (Pin)(32 + pin);
-}
-
-static inline constexpr Pin PortDPin(unsigned int pin)
-{
-	return (Pin)(36 + pin);
+	return (Pin)(36 + pin);						// PC0-31 are 36-67
 }
 
 #endif
