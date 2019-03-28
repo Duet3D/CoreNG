@@ -36,7 +36,7 @@ extern const PinDescription g_APinDescription[]=
   // Pins 0-25 are PA0-PA25
 
   // 0-2
-  { PIOA, PIO_PA0B_TIOA0,		ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),	NO_ADC, NOT_ON_PWM,  TC0_CHA0	  }, // PS_ON
+  { PIOA, PIO_PA0,				ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // PS_ON
   { PIOA, PIO_PA1,				ID_PIOA, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                	NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // ENN to all stepper drivers
   { PIOA, PIO_PA2B_SCK0,		ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT,  PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // SCK0 (daughter boards, external SD card)
 

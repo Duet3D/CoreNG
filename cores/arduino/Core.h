@@ -111,7 +111,9 @@ typedef enum _ETCChannel
   TC3_CHA9,
   TC3_CHB9,
   TC3_CHA10,
-  TC3_CHA11
+  TC3_CHB10,
+  TC3_CHA11,
+  TC3_CHB11
 #endif
 } ETCChannel ;
 

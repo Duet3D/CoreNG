@@ -182,8 +182,7 @@ extern const PinDescription g_APinDescription[] =
   { PIOC, PIO_PC7,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                  NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 72-73 PC8-9
-  // PC8 is connected to USER LED on the XPLD (active low)
-  { PIOC, PIO_PC8B_TIOA7,      ID_PIOC, PIO_PERIPH_B,  PIO_DEFAULT,  (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),	NO_ADC, NOT_ON_PWM,  TC2_CHA7 },
+  { PIOC, PIO_PC8B_TIOA7,      ID_PIOC, PIO_PERIPH_B,  PIO_DEFAULT,  (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),	NO_ADC, NOT_ON_PWM,  TC2_CHA7 },	 // USER LED on the XPLD, active low
   { PIOC, PIO_PC9,             ID_PIOC, PIO_OUTPUT_0,  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                  NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
 
   // 74-75 PC10-11 (connected to EEPROM on the XPLD)
@@ -306,7 +305,7 @@ extern const PinDescription g_APinDescription[] =
 
   // 128-133 PE0-5 (connected to RAM on the XPLD)
   { PIOE, PIO_PE0,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC27,  NOT_ON_PWM,  NOT_ON_TIMER },
-  { PIOE, PIO_PE1B_TIOB9,      ID_PIOE, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),  NO_ADC, NOT_ON_PWM,  TC3_CHA10 },
+  { PIOE, PIO_PE1B_TIOB9,      ID_PIOE, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),  NO_ADC, NOT_ON_PWM,  TC3_CHB9 },
   { PIOE, PIO_PE2,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOE, PIO_PE3,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC26,  NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOE, PIO_PE4,             ID_PIOE, PIO_INPUT,	 PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC4,   NOT_ON_PWM,  NOT_ON_TIMER },
