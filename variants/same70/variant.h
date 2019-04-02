@@ -113,6 +113,12 @@ static const uint8_t APIN_SPI_MISO = PORTD_PIN(20);
 static const uint8_t APIN_SPI_SCK = PORTD_PIN(22);
 static const uint8_t APIN_SPI_SS0 = PORTB_PIN(2);
 
+// Linux SPI
+static const uint8_t APIN_SPI1_MOSI = PORTC_PIN(27);
+static const uint8_t APIN_SPI1_MISO = PORTC_PIN(26);
+static const uint8_t APIN_SPI1_SCK = PORTC_PIN(24);
+static const uint8_t APIN_SPI1_SS0 = PORTC_PIN(25);
+
 #endif
 
 // HSMCI
