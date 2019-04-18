@@ -40,109 +40,130 @@
 #include "Core.h"
 
 #ifdef __cplusplus
-#include "UARTClass.h"
-#include "USARTClass.h"
+# include "UARTClass.h"
+# include "USARTClass.h"
 #endif
+
+/**
+ * Libc porting layers
+ */
 
 #ifdef __cplusplus
 extern "C"{
 #endif // __cplusplus
 
-/**
- * Libc porting layers
- */
-#if defined (__GNUC__) /* GCC CS3 */
-# include <syscalls.h> /** RedHat Newlib minimal stub */
+#ifdef __GNUC__			// GCC CS3
+# include <syscalls.h>	// RedHat Newlib minimal stub
 #endif
-
-/*----------------------------------------------------------------------------
- *        Pins
- *----------------------------------------------------------------------------*/
-
-#define PORTA_PIN(n)	(n)
-#define PORTB_PIN(n)	(32+n)
-#define PORTC_PIN(n)	(64+n)
-#define PORTD_PIN(n)	(96+n)
-#define PORTE_PIN(n)	(128+n)
-
-static const uint32_t MaxPinNumber = 133;						// last GPIO pin (PE05)
-
-#ifdef SAME70XPLD
-
-// No USB_VBUS_PIN on the XPLD
-static const uint8_t APIN_GMAC_PHY_INTERRUPT = PORTA_PIN(14);
-static const uint8_t APIN_GMAC_PHY_RESET = PORTC_PIN(10);
-
-// Serial
-static const uint8_t APIN_Serial0_RXD = PORTA_PIN(9);
-static const uint8_t APIN_Serial0_TXD = PORTA_PIN(10);
-
-// Serial1
-static const uint8_t APIN_Serial1_RXD = PORTA_PIN(5);
-static const uint8_t APIN_Serial1_TXD = PORTA_PIN(6);
-
-// ESP SPI
-#define SPI_INTERFACE_ID	ID_SPI0
-static const uint8_t APIN_SPI_MOSI = PORTD_PIN(21);
-static const uint8_t APIN_SPI_MISO = PORTD_PIN(20);
-static const uint8_t APIN_SPI_SCK = PORTD_PIN(22);
-static const uint8_t APIN_SPI_SS0 = PORTB_PIN(2);
-
-#else
-
-static const uint8_t APIN_GMAC_PHY_INTERRUPT = PORTC_PIN(6);
-static const uint8_t APIN_GMAC_PHY_RESET = PORTD_PIN(11);
-
-// Serial
-static const uint8_t APIN_Serial0_RXD = PORTD_PIN(25);
-static const uint8_t APIN_Serial0_TXD = PORTD_PIN(26);
-
-// Serial1
-static const uint8_t APIN_Serial1_RXD = PORTD_PIN(18);
-static const uint8_t APIN_Serial1_TXD = PORTD_PIN(19);
-
-// Shared SPI (USART 1 on Duet 3)
-static const uint8_t APIN_USART_SSPI_SCK = PORTB_PIN(13);
-static const uint8_t APIN_USART_SSPI_MOSI = PORTB_PIN(1);
-static const uint8_t APIN_USART_SSPI_MISO = PORTB_PIN(0);
-
-// ESP SPI
-#define SPI_INTERFACE_ID	ID_SPI0
-static const uint8_t APIN_SPI_MOSI = PORTD_PIN(21);
-static const uint8_t APIN_SPI_MISO = PORTD_PIN(20);
-static const uint8_t APIN_SPI_SCK = PORTD_PIN(22);
-static const uint8_t APIN_SPI_SS0 = PORTB_PIN(2);
-
-#endif
-
-// HSMCI
-static const uint8_t APIN_HSMCI_CLOCK = 134;
-static const uint8_t APIN_HSMCI_DATA = 135;
-
-static const uint8_t APINS_GMAC_PHY = 136;
-
-// UART/USART and SPI Interfaces
-static const uint8_t APINS_Serial0 = 137;
-static const uint8_t APINS_Serial1 = 138;
-
-// CAN
-static const uint8_t APIN_CAN1_RX = PORTC_PIN(12);
-static const uint8_t APIN_CAN1_TX = PORTD_PIN(12);
 
 #ifdef __cplusplus
 }
 #endif
 
-/*----------------------------------------------------------------------------
- *        Arduino objects - C++ only
- *----------------------------------------------------------------------------*/
-
 #ifdef __cplusplus
 
+/*----------------------------------------------------------------------------
+ *        Pins
+ *----------------------------------------------------------------------------*/
+
+// The following must be kept in step with the way we organise the pin table in variant.cpp
+static inline constexpr Pin PortAPin(unsigned int pin)
+{
+	return (Pin)pin;
+}
+
+static inline constexpr Pin PortBPin(unsigned int pin)
+{
+	return (Pin)(pin + 32);
+}
+
+static inline constexpr Pin PortCPin(unsigned int pin)
+{
+	return (Pin)(pin + 64);
+}
+
+static inline constexpr Pin PortDPin(unsigned int pin)
+{
+	return (Pin)(pin + 96);
+}
+
+static inline constexpr Pin PortEPin(unsigned int pin)
+{
+	return (Pin)(pin + 128);
+}
+
+constexpr uint32_t MaxPinNumber = 133;						// last GPIO pin (PE05)
+
+#ifdef SAME70XPLD
+
+constexpr Pin APIN_GMAC_PHY_INTERRUPT = PortAPin(14);
+constexpr Pin APIN_GMAC_PHY_RESET = PortCPin(10);
+
+// Serial
+constexpr Pin APIN_Serial0_RXD = PortAPin(9);
+constexpr Pin APIN_Serial0_TXD = PortAPin(10);
+
+// Serial1
+constexpr Pin APIN_Serial1_RXD = PortAPin(5);
+constexpr Pin APIN_Serial1_TXD = PortAPin(6);
+
+// ESP SPI
+#define SPI_INTERFACE_ID	ID_SPI0
+constexpr Pin APIN_SPI_MOSI = PortDPin(21);
+constexpr Pin APIN_SPI_MISO = PortDPin(20);
+constexpr Pin APIN_SPI_SCK = PortDPin(22);
+constexpr Pin APIN_SPI_SS0 = PortBPin(2);
+
+#else
+
+constexpr Pin APIN_GMAC_PHY_INTERRUPT = PortCPin(6);
+constexpr Pin APIN_GMAC_PHY_RESET = PortDPin(11);
+
+// Serial
+constexpr Pin APIN_Serial0_RXD = PortDPin(25);
+constexpr Pin APIN_Serial0_TXD = PortDPin(26);
+
+// Serial1
+constexpr Pin APIN_Serial1_RXD = PortDPin(18);
+constexpr Pin APIN_Serial1_TXD = PortDPin(19);
+
+// Shared SPI (USART 1 on Duet 3)
+constexpr Pin APIN_USART_SSPI_SCK = PortBPin(13);
+constexpr Pin APIN_USART_SSPI_MOSI = PortBPin(1);
+constexpr Pin APIN_USART_SSPI_MISO = PortBPin(0);
+
+// ESP SPI
+#define SPI_INTERFACE_ID	ID_SPI0
+constexpr Pin APIN_SPI_MOSI = PortDPin(21);
+constexpr Pin APIN_SPI_MISO = PortDPin(20);
+constexpr Pin APIN_SPI_SCK = PortDPin(22);
+constexpr Pin APIN_SPI_SS0 = PortBPin(2);
+
+#endif
+
+// HSMCI
+constexpr Pin APIN_HSMCI_CLOCK = 134;
+constexpr Pin APIN_HSMCI_DATA = 135;
+
+// GMAC
+constexpr Pin APINS_GMAC_PHY = 136;
+
+// UART/USART and SPI Interfaces
+constexpr Pin APINS_Serial0 = 137;
+constexpr Pin APINS_Serial1 = 138;
+
+// CAN
+constexpr Pin APIN_CAN1_RX = PortCPin(12);
+constexpr Pin APIN_CAN1_TX = PortDPin(12);
+
+// Serial interface objects
 extern UARTClass Serial;
 extern UARTClass Serial1;
 
+// Pin configuration
 extern void ConfigurePin(const PinDescription& pinDesc);
+extern void ConfigurePin(Pin pin);
+extern bool IsPwmCapable(Pin pin);						// Return true if this pin exists and can do PWM
 
 #endif
 

@@ -16,8 +16,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef _VARIANT_DUET_NG_H
-#define _VARIANT_DUET_NG_H
+#ifndef _VARIANT_H
+#define _VARIANT_H
 
 #ifndef __SAM4S8C__
 #error Wrong variant.h file included!
@@ -40,28 +40,33 @@
 #include "Core.h"
 
 #ifdef __cplusplus
-#include "UARTClass.h"
-#include "USARTClass.h"
+# include "UARTClass.h"
+# include "USARTClass.h"
 #endif
+
+/**
+ * Libc porting layers
+ */
 
 #ifdef __cplusplus
 extern "C"{
 #endif // __cplusplus
 
-/**
- * Libc porting layers
- */
-#if defined (  __GNUC__  ) /* GCC CS3 */
-#    include <syscalls.h> /** RedHat Newlib minimal stub */
+#ifdef __GNUC__ 		// GCC CS3
+# include <syscalls.h>	// RedHat Newlib minimal stub
 #endif
+
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
 
 /*----------------------------------------------------------------------------
  *        Pins
  *----------------------------------------------------------------------------*/
 
-static const uint32_t MaxPinNumber = 67;						// last GPIO pin
-
-#ifdef __cplusplus
+constexpr uint32_t MaxPinNumber = 67;						// last GPIO pin
 
 // The following must be kept in step with the way we organise the pin table in variant.cpp
 static inline constexpr Pin PortAPin(unsigned int pin)
@@ -82,83 +87,73 @@ static inline constexpr Pin PortCPin(unsigned int pin)
 	return (Pin)(36 + pin);						// PC0-31 are 36-67
 }
 
-#endif
-
 /*
  * SPI Interfaces
  */
 
 #define SPI_INTERFACE_ID	ID_SPI
-static const Pin APIN_SPI_MOSI = 13;
-static const Pin APIN_SPI_MISO = 12;
-static const Pin APIN_SPI_SCK = 14;
-static const Pin APIN_SPI_SS0 = 11;
+constexpr Pin APIN_SPI_MOSI = 13;
+constexpr Pin APIN_SPI_MISO = 12;
+constexpr Pin APIN_SPI_SCK = 14;
+constexpr Pin APIN_SPI_SS0 = 11;
 
-static const Pin APIN_USART_SSPI_MOSI = 6;
-static const Pin APIN_USART_SSPI_MISO = 5;
-static const Pin APIN_USART_SSPI_SCK = 2;
+constexpr Pin APIN_USART_SSPI_MOSI = 6;
+constexpr Pin APIN_USART_SSPI_MISO = 5;
+constexpr Pin APIN_USART_SSPI_SCK = 2;
 
 /*
  * Wire Interfaces
  */
 #define WIRE_INTERFACES_COUNT (1)		// SAM4S supports two I2C interfaces but we only have the first one available
 
-static const Pin APINS_WIRE = 70;
+constexpr Pin APINS_WIRE = 70;
 #define WIRE_INTERFACE		TWI0
 #define WIRE_INTERFACE_ID	ID_TWI0
 #define WIRE_ISR_HANDLER	TWI0_Handler
 #define WIRE_ISR_ID			TWI0_IRQn
 
-/*
- * UART/USART Interfaces
- */
-
 // Serial
 
 // UART0 used by TMC drivers
-static const Pin APINS_UART0 = 71;
-static const Pin APIN_UART0_RXD = 9;
-static const Pin APIN_UART0_TXD = 10;
+constexpr Pin APINS_UART0 = 71;
+constexpr Pin APIN_UART0_RXD = 9;
+constexpr Pin APIN_UART0_TXD = 10;
 
 #ifdef PCCB
 
 // UART1 also used by TMC drivers in PCCB build
-static const Pin APINS_UART1 = 72;
-static const Pin APIN_UART1_RXD = 28;
-static const Pin APIN_UART1_TXD = 29;
+constexpr Pin APINS_UART1 = 72;
+constexpr Pin APIN_UART1_RXD = 28;
+constexpr Pin APIN_UART1_TXD = 29;
 
 #else
 
 // Serial0 uses UART1
-static const Pin APINS_Serial0 = 72;
-static const Pin APIN_Serial0_RXD = 28;
-static const Pin APIN_Serial0_TXD = 29;
+constexpr Pin APINS_Serial0 = 72;
+constexpr Pin APIN_Serial0_RXD = 28;
+constexpr Pin APIN_Serial0_TXD = 29;
 
 #endif
 
 // HSMCI
-static const Pin APIN_HSMCI_CLOCK = 68;
-static const Pin APINS_HSMCI_DATA = 69;
+constexpr Pin APIN_HSMCI_CLOCK = 68;
+constexpr Pin APINS_HSMCI_DATA = 69;
 
 // TWI
-static const Pin APINS_TWI = 70;
-
-#ifdef __cplusplus
-}
-#endif
+constexpr Pin APINS_TWI = 70;
 
 /*----------------------------------------------------------------------------
  *        Arduino objects - C++ only
  *----------------------------------------------------------------------------*/
-
-#ifdef __cplusplus
 
 #ifndef PCCB
 extern UARTClass Serial;
 #endif
 
 extern void ConfigurePin(const PinDescription& pinDesc);
+extern void ConfigurePin(Pin pin);
+extern bool IsPwmCapable(Pin pin);						// Return true if this pin exists and can do PWM
 
 #endif
 
-#endif /* _VARIANT_ARDUINO_DUET_X_ */
+#endif /* _VARIANT_H */

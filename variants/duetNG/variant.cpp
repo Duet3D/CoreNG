@@ -200,16 +200,16 @@ extern const PinDescription g_APinDescription[]=
   { PIOE, PIO_PE5,             ID_PIOE, PIO_OUTPUT_0, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // ESP PD/EN
 
   // 102 PB6 - was thought to be dedicated to JTAG but is also available on the expansion connector
-  { PIOB, PIO_PB6,				ID_PIOB, PIO_INPUT,	  PIO_DEFAULT,	PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // expansion
+  { PIOB, PIO_PB6,			   ID_PIOB, PIO_INPUT,	  PIO_DEFAULT,	PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // expansion
 
   // 103 PB7 - now used as the VSSA sense pin
-  { PIOB, PIO_PB7,				ID_PIOB, PIO_INPUT,	  PIO_DEFAULT,	PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // VSSA sense
+  { PIOB, PIO_PB7,			   ID_PIOB, PIO_INPUT,	  PIO_DEFAULT,	PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // VSSA sense
 
   // 104 PB4 - used by the ATE
-  { PIOB, PIO_PB4,				ID_PIOB, PIO_INPUT,	  PIO_DEFAULT,	PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // ATE
+  { PIOB, PIO_PB4,			   ID_PIOB, PIO_INPUT,	  PIO_DEFAULT,	PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // ATE
 
   // 105 PB5 - used by the ATE
-  { PIOB, PIO_PB5,				ID_PIOB, PIO_INPUT,	  PIO_DEFAULT,	PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // ATE
+  { PIOB, PIO_PB5,			   ID_PIOB, PIO_INPUT,	  PIO_DEFAULT,	PIN_ATTR_DIGITAL,					NO_ADC, NOT_ON_PWM,	 NOT_ON_TIMER }, // ATE
 
   // 106-107 HSMCI
   { PIOA, PIO_PA29C_MCCK,      ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER }, // HSMCI MCCK
@@ -235,30 +235,41 @@ UARTClass Serial(UART0, UART0_IRQn, ID_UART0, &rx_buffer1, &tx_buffer1);
 
 void UART0_Handler(void)
 {
-  Serial.IrqHandler();
+	Serial.IrqHandler();
 }
 
 UARTClass Serial1(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2);
 
 void UART1_Handler(void)
 {
-  Serial1.IrqHandler();
+	Serial1.IrqHandler();
 }
 
 // ----------------------------------------------------------------------------
-
 
 void ConfigurePin(const PinDescription& pinDesc)
 {
 	pio_configure(pinDesc.pPort, pinDesc.ulPinType, pinDesc.ulPin, pinDesc.ulPinConfiguration);
 }
 
+void ConfigurePin(Pin pin)
+{
+	if (pin < ARRAY_SIZE(g_APinDescription))
+	{
+		ConfigurePin(g_APinDescription[pin]);
+	}
+}
+
+// Return true if this pin exists and can do PWM
+bool IsPwmCapable(Pin pin)
+{
+	return pin < ARRAY_SIZE(g_APinDescription) && (g_APinDescription[pin].ulPinAttribute & (PIN_ATTR_PWM | PIN_ATTR_TIMER)) != 0;
+}
+
 extern "C" void init( void )
 {
-	// We no longer disable pullups on all pins here, better to leave them enabled until the port is initialised
-
 	// Initialize Serial port U(S)ART pins
-	ConfigurePin(g_APinDescription[APINS_Serial0]);
+	ConfigurePin(APINS_Serial0);
 	setPullup(APIN_Serial0_RXD, true); 							// Enable pullup for RX0
 
  	// Initialize Analog Controller
@@ -268,8 +279,8 @@ extern "C" void init( void )
 	AnalogOutInit();
 
 	// Initialize HSMCI pins
-	ConfigurePin(g_APinDescription[APIN_HSMCI_CLOCK]);
-	ConfigurePin(g_APinDescription[APINS_HSMCI_DATA]);
+	ConfigurePin(APIN_HSMCI_CLOCK);
+	ConfigurePin(APINS_HSMCI_DATA);
 }
 
 // End

@@ -34,18 +34,11 @@
 #include "binary.h"
 #include "itoa.h"
 
-// Define attribute
-#if defined(__GNUC__)
-# define WEAK __attribute__ ((weak))
-#endif
-
 #ifdef __cplusplus
 extern "C"{
 #endif // __cplusplus
 
-// Includes Atmel CMSIS
 #include "asf.h"
-
 #include "wiring_constants.h"
 
 void yield(void);
@@ -53,26 +46,14 @@ void yield(void);
 typedef uint8_t Pin;
 static const Pin NoPin = 0xFF;
 
-#define NOT_A_PORT			(0)
-#define NOT_AN_INTERRUPT	(-1)
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
-typedef enum _EExt_Interrupts
-{
-  EXTERNAL_INT_0=0,
-  EXTERNAL_INT_1=1,
-  EXTERNAL_INT_2=2,
-  EXTERNAL_INT_3=3,
-  EXTERNAL_INT_4=4,
-  EXTERNAL_INT_5=5,
-  EXTERNAL_INT_6=6,
-  EXTERNAL_INT_7=7,
-  EXTERNAL_NUM_INTERRUPTS
-} EExt_Interrupts ;
-
-typedef void (*voidFuncPtr)(void) ;
+#ifdef __cplusplus
 
 // Definitions for PWM channels
-typedef enum _EPWMChannel
+enum EPWMChannel : int8_t
 {
   NOT_ON_PWM=-1,
   PWM_CH0=0,
@@ -83,10 +64,10 @@ typedef enum _EPWMChannel
   PWM_CH5,
   PWM_CH6,
   PWM_CH7
-} EPWMChannel ;
+};
 
 // Definitions for TC channels
-typedef enum _ETCChannel
+enum ETCChannel : int8_t
 {
   NOT_ON_TIMER=-1,
   TC0_CHA0=0,
@@ -101,12 +82,14 @@ typedef enum _ETCChannel
   TC1_CHB4,
   TC1_CHA5,
   TC1_CHB5,
+#if SAM3XA || SAM4E || SAME70
   TC2_CHA6,
   TC2_CHB6,
   TC2_CHA7,
   TC2_CHB7,
   TC2_CHA8,
   TC2_CHB8,
+#endif
 #if SAME70
   TC3_CHA9,
   TC3_CHB9,
@@ -115,12 +98,9 @@ typedef enum _ETCChannel
   TC3_CHA11,
   TC3_CHB11
 #endif
-} ETCChannel ;
+};
 
-#ifdef __cplusplus
-} // extern "C"
-
-// This analog input module uses the scheduler in the SAM processor to convert a number of channels.
+// The analog input module uses the scheduler in the SAM processor to convert a number of channels.
 // Usage:
 // 1. Enable the channels you need by making calls to AnalogEnableChannel.
 // 2. If desired, call AnalogSetCallback to set a callback for when conversion is complete.
@@ -128,7 +108,7 @@ typedef enum _ETCChannel
 // 4. Either use the callback to determine when conversion is complete, or call AnalogCheckReady to poll the status.
 // 5. Call AnalogReadChannel to read the most recent converted result for each channel of interest.
 
-enum AnalogChannelNumber
+enum AnalogChannelNumber : int8_t
 {
   NO_ADC=-1,
   ADC0=0,
@@ -168,13 +148,13 @@ enum AnalogChannelNumber
 };
 
 // Pin Attributes to be OR-ed
-#define PIN_ATTR_NONE		(0UL)
-#define PIN_ATTR_COMBO		(1UL<<0)
-#define PIN_ATTR_ANALOG		(1UL<<1)
-#define PIN_ATTR_DIGITAL	(1UL<<2)
-#define PIN_ATTR_PWM		(1UL<<3)
-#define PIN_ATTR_TIMER		(1UL<<4)
-#define PIN_ATTR_DAC		(1UL<<5)
+constexpr uint8_t PIN_ATTR_NONE = 0;
+constexpr uint8_t PIN_ATTR_COMBO = 1 << 0;
+constexpr uint8_t PIN_ATTR_ANALOG = 1 << 1;
+constexpr uint8_t PIN_ATTR_DIGITAL = 1 << 2;
+constexpr uint8_t PIN_ATTR_PWM = 1 << 3;
+constexpr uint8_t PIN_ATTR_TIMER = 1 << 4;
+constexpr uint8_t PIN_ATTR_DAC = 1 << 5;
 
 // Types used for the tables below
 struct PinDescription
@@ -184,7 +164,7 @@ struct PinDescription
 	uint32_t ulPeripheralId;
 	pio_type_t ulPinType;
 	uint32_t ulPinConfiguration;
-	uint32_t ulPinAttribute;
+	uint8_t ulPinAttribute;
 	AnalogChannelNumber ulADCChannelNumber; // ADC or DAC channel number in the SAM device
 	EPWMChannel ulPWMChannel;
 	ETCChannel ulTCChannel;

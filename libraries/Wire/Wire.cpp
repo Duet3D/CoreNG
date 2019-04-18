@@ -229,7 +229,7 @@ TwoWire::ErrorCounts TwoWire::GetErrorCounts(bool clear)
 static void Wire_Init(void)
 {
 	pmc_enable_periph_clk(WIRE_INTERFACE_ID);
-	ConfigurePin(g_APinDescription[APINS_WIRE]);
+	ConfigurePin(APINS_WIRE);
 
 	NVIC_DisableIRQ(WIRE_ISR_ID);
 	NVIC_ClearPendingIRQ(WIRE_ISR_ID);

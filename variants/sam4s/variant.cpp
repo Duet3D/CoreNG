@@ -206,12 +206,26 @@ void ConfigurePin(const PinDescription& pinDesc)
 	pio_configure(pinDesc.pPort, pinDesc.ulPinType, pinDesc.ulPin, pinDesc.ulPinConfiguration);
 }
 
+void ConfigurePin(Pin pin)
+{
+	if (pin < ARRAY_SIZE(g_APinDescription))
+	{
+		ConfigurePin(g_APinDescription[pin]);
+	}
+}
+
+// Return true if this pin exists and can do PWM
+bool IsPwmCapable(Pin pin)
+{
+	return pin < ARRAY_SIZE(g_APinDescription) && (g_APinDescription[pin].ulPinAttribute & (PIN_ATTR_PWM | PIN_ATTR_TIMER)) != 0;
+}
+
 extern "C" void init( void )
 {
 #ifndef PCCB
 	// Initialize Serial port U(S)ART pins
-	ConfigurePin(g_APinDescription[APINS_Serial0]);				// PanelDue uses UART1
-	setPullup(APIN_Serial0_RXD, true); 							// Enable pullup for RxD
+	ConfigurePin(APINS_Serial0);				// PanelDue uses UART1
+	setPullup(APIN_Serial0_RXD, true); 			// Enable pullup for RxD
 #endif
 
 	// No need to initialize the USB pins on the SAM4S because they are USB by default
@@ -223,8 +237,8 @@ extern "C" void init( void )
 	AnalogOutInit();
 
 	// Initialize HSMCI pins
-	ConfigurePin(g_APinDescription[APIN_HSMCI_CLOCK]);
-	ConfigurePin(g_APinDescription[APINS_HSMCI_DATA]);
+	ConfigurePin(APIN_HSMCI_CLOCK);
+	ConfigurePin(APINS_HSMCI_DATA);
 
 #ifndef PCCB
 	// Set up PB4..PB7 as normal I/O, not JTAG

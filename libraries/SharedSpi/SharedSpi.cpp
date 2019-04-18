@@ -130,9 +130,9 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
 	if (!commsInitDone)
 	{
 #if USART_SPI
-		ConfigurePin(g_APinDescription[APIN_USART_SSPI_SCK]);
-		ConfigurePin(g_APinDescription[APIN_USART_SSPI_MOSI]);
-		ConfigurePin(g_APinDescription[APIN_USART_SSPI_MISO]);
+		ConfigurePin(APIN_USART_SSPI_SCK);
+		ConfigurePin(APIN_USART_SSPI_MOSI);
+		ConfigurePin(APIN_USART_SSPI_MISO);
 		pmc_enable_periph_clk(ID_SSPI);
 
 		// Set USART0 in SPI master mode

@@ -388,10 +388,24 @@ void ConfigurePin(const PinDescription& pinDesc)
 	pio_configure(pinDesc.pPort, pinDesc.ulPinType, pinDesc.ulPin, pinDesc.ulPinConfiguration);
 }
 
+void ConfigurePin(Pin pin)
+{
+	if (pin < ARRAY_SIZE(g_APinDescription))
+	{
+		ConfigurePin(g_APinDescription[pin]);
+	}
+}
+
+// Return true if this pin exists and can do PWM
+bool IsPwmCapable(Pin pin)
+{
+	return pin < ARRAY_SIZE(g_APinDescription) && (g_APinDescription[pin].ulPinAttribute & (PIN_ATTR_PWM | PIN_ATTR_TIMER)) != 0;
+}
+
 extern "C" void init( void )
 {
 	// Initialize Serial port U(S)ART pins
-	ConfigurePin(g_APinDescription[APINS_Serial0]);
+	ConfigurePin(APINS_Serial0);
 	setPullup(APIN_Serial0_RXD, true); 							// Enable pullup for RX0
 
 	// No need to initialize the USB pins on the SAME70 because they are USB by default
@@ -403,13 +417,13 @@ extern "C" void init( void )
 	AnalogOutInit();
 
 	// Initialize HSMCI pins
-	ConfigurePin(g_APinDescription[APIN_HSMCI_CLOCK]);
-	ConfigurePin(g_APinDescription[APIN_HSMCI_DATA]);
+	ConfigurePin(APIN_HSMCI_CLOCK);
+	ConfigurePin(APIN_HSMCI_DATA);
 
 	// Initialize Ethernet pins
-	ConfigurePin(g_APinDescription[APIN_GMAC_PHY_RESET]);
-	ConfigurePin(g_APinDescription[APIN_GMAC_PHY_INTERRUPT]);
-	ConfigurePin(g_APinDescription[APINS_GMAC_PHY]);
+	ConfigurePin(APIN_GMAC_PHY_RESET);
+	ConfigurePin(APIN_GMAC_PHY_INTERRUPT);
+	ConfigurePin(APINS_GMAC_PHY);
 
 	// Initialize TRNG
 	pmc_enable_periph_clk(ID_TRNG);

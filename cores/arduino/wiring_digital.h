@@ -8,7 +8,7 @@
 
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   See the GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public
@@ -94,11 +94,6 @@ extern void setPullup(Pin pin, bool en);
 
 // The remaining functionality is only available to C++ clients
 #ifdef __cplusplus
-
-inline const PinDescription& GetPinDescription(Pin pin)
-{
-	return g_APinDescription[pin];
-}
 
 // Set a pin high with no error checking
 inline void fastDigitalWriteHigh(uint32_t pin)

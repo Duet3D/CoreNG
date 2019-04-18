@@ -8,7 +8,7 @@
 
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   See the GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public
@@ -111,11 +111,21 @@ extern "C++" {
 		return (uint64_t)arg * arg;
 	}
 
-	inline void swap(float& a, float& b)
+	// Find the lowest set bit. Returns the lowest set bit number, undefined if no bits are set.
+	// GCC provides intrinsics, but unhelpfully they are in terms of int, long and long long instead of uint32_t, uint64_t etc.
+	inline unsigned int LowestSetBitNumber(unsigned int val)
 	{
-		float temp = a;
-		a = b;
-		b = temp;
+		return (unsigned int)__builtin_ctz(val);
+	}
+
+	inline unsigned int LowestSetBitNumber(unsigned long val)
+	{
+		return (unsigned int)__builtin_ctzl(val);
+	}
+
+	inline unsigned int LowestSetBitNumber(unsigned long long val)
+	{
+		return (unsigned int)__builtin_ctzll(val);
 	}
 }
 

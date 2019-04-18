@@ -8,7 +8,7 @@
 
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   See the GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public
@@ -71,30 +71,6 @@ static void __initialize()
 #endif
 }
 
-// Get the number of the highest bit that is set in a 32-bit word. Returns 0 if no bit set (same as if lowest bit is set).
-// This needs to be fast. Hopefully the ARM conditional instructions will be used to advantage here.
-static unsigned int GetHighestBit(uint32_t bits)
-{
-	unsigned int bitNum = (bits >= 0x00010000) ? 16 : 0;
-	if ((bits >> bitNum) >= 0x0100u)
-	{
-		bitNum += 8;
-	}
-	if ((bits >> bitNum) >= 0x0010u)
-	{
-		bitNum += 4;
-	}
-	if ((bits >> bitNum) >= 0x0004u)
-	{
-		bitNum += 2;
-	}
-	if ((bits >> bitNum) >= 0x0002u)
-	{
-		bitNum += 1;
-	}
-	return bitNum;
-}
-
 // Attach an interrupt to the specified pin returning true if successful
 bool attachInterrupt(uint32_t pin, StandardCallbackFunction callback, enum InterruptMode mode, CallbackParameter param)
 {
@@ -113,8 +89,8 @@ bool attachInterrupt(uint32_t pin, StandardCallbackFunction callback, enum Inter
 	// Retrieve pin information
 	Pio * const pio = g_APinDescription[pin].pPort;
 	const uint32_t mask = g_APinDescription[pin].ulPin;
-	pio->PIO_IDR = mask;			// ensure the interrupt is disabled before we start changing the tables
-	const uint32_t pos = GetHighestBit(mask);
+	pio->PIO_IDR = mask;									// ensure the interrupt is disabled before we start changing the tables
+	const unsigned int pos = LowestSetBitNumber(mask);		// only one bit should be set
 
 	// Set callback function and parameter
 	if (pio == PIOA)
@@ -221,7 +197,7 @@ void CommonPioHandler(Pio *pio, const InterruptCallback callbacks[])
 	uint32_t isr = pio->PIO_ISR & pio->PIO_IMR;
 	while (isr != 0)
 	{
-		const unsigned int pos = GetHighestBit(isr);
+		const unsigned int pos = LowestSetBitNumber(isr);
 		if (callbacks[pos].func != nullptr)
 		{
 			callbacks[pos].func(callbacks[pos].param);
