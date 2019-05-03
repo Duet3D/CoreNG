@@ -42,6 +42,7 @@ extern "C"{
 #include "wiring_constants.h"
 
 void yield(void);
+void CoreSysTick(void);
 
 typedef uint8_t Pin;
 static const Pin NoPin = 0xFF;

@@ -242,7 +242,7 @@ TwoWire Wire = TwoWire(WIRE_INTERFACE, Wire_Init);
 static void Wire1_Init(void)
 {
 	pmc_enable_periph_clk(WIRE1_INTERFACE_ID);
-	ConfigurePin(g_APinDescription[APINS_WIRE1]);
+	ConfigurePin(APINS_WIRE1);
 
 	NVIC_DisableIRQ(WIRE1_ISR_ID);
 	NVIC_ClearPendingIRQ(WIRE1_ISR_ID);

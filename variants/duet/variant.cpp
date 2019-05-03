@@ -369,14 +369,28 @@ void ConfigurePin(const PinDescription& pinDesc)
 	pio_configure(pinDesc.pPort, pinDesc.ulPinType, pinDesc.ulPin, pinDesc.ulPinConfiguration);
 }
 
+void ConfigurePin(Pin pin)
+{
+	if (pin < ARRAY_SIZE(g_APinDescription))
+	{
+		ConfigurePin(g_APinDescription[pin]);
+	}
+}
+
+// Return true if this pin exists and can do PWM
+bool IsPwmCapable(Pin pin)
+{
+	return pin < ARRAY_SIZE(g_APinDescription) && (g_APinDescription[pin].ulPinAttribute & (PIN_ATTR_PWM | PIN_ATTR_TIMER)) != 0;
+}
+
 extern "C" void init( void )
 {
 	// Initialize Serial port 0 U(S)ART pins
-	ConfigurePin(g_APinDescription[APINS_UART]);
+	ConfigurePin(APINS_UART);
 	setPullup(APIN_UART_RXD, true); 							// Enable pullup for RX0
 
 	// Initialize USB pins
-	ConfigurePin(g_APinDescription[APINS_USB]);
+	ConfigurePin(APINS_USB);
 
 	// Initialize Analog Controller
 	AnalogInInit();
@@ -385,11 +399,11 @@ extern "C" void init( void )
 	AnalogOutInit();
 
 	// Initialize HSMCI pins
-	ConfigurePin(g_APinDescription[APIN_HSMCI_CLOCK]);
-	ConfigurePin(g_APinDescription[APINS_HSMCI_DATA]);
+	ConfigurePin(APIN_HSMCI_CLOCK);
+	ConfigurePin(APINS_HSMCI_DATA);
 
 	// Initialize Ethernet pins
-	ConfigurePin(g_APinDescription[APINS_EMAC]);
+	ConfigurePin(APINS_EMAC);
 
 	// Initialize TRNG
 	pmc_enable_periph_clk(ID_TRNG);

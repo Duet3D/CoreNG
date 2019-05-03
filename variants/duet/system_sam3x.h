@@ -80,6 +80,9 @@ void SystemCoreClockUpdate(void);
  */
 void system_init_flash(uint32_t ul_clk);
 
+// Initialise the 1ms system tick. Called by non-RTOS builds only.
+void SysTickInit(void);
+
 /* @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus

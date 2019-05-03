@@ -69,33 +69,13 @@ extern uint32_t _estack;
 /* Default empty handler */
 void Dummy_Handler(void);
 
-/* Calls to the core */
-extern void sysTickHook(void);
-extern void TimeTick_Increment(void);
-
 /* Cortex-M7 core handlers */
 void NMI_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void HardFault_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void MemManage_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void BusFault_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void UsageFault_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-
-#ifndef RTOS
-void SVC_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void PendSV_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#endif
-
 void DebugMon_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-
-#ifdef RTOS
-void vApplicationTickHook(void)
-#else
-void SysTick_Handler(void)
-#endif
-{
-	sysTickHook();
-	TimeTick_Increment();						// increment tick count each ms
-}
 
 /* Peripherals handlers */
 void SUPC_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
@@ -366,16 +346,7 @@ void Reset_Handler(void)
 	__libc_init_array();	// initialize C library and call C++ constructors for static data
 	init();					// initialise variant
 
-#ifndef RTOS
-	// Set Systick to 1ms interval, common to all SAME70 variants
-	if (SysTick_Config(SystemCoreClock / 1000))
-	{
-		// Capture error
-		while (true);
-	}
-#endif
-
-	AppMain();
+	AppMain();				// note: app must set up the system tick interrupt, either within FreeRTOS or by calling SysTickInit
 }
 
 /**
@@ -383,6 +354,6 @@ void Reset_Handler(void)
  */
 void Dummy_Handler(void)
 {
-        while (1) {
-        }
+	while (1) {
+	}
 }

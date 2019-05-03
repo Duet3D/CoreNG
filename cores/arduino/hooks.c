@@ -30,12 +30,4 @@ static void __empty() {
 }
 void yield(void) __attribute__ ((weak, alias("__empty")));
 
-/**
- * SysTick hook
- *
- * This function is called from SysTick handler, before the default
- * handler provided by Arduino.
- */
-void sysTickHook() __attribute__ ((weak, alias("__empty")));
-
 // End

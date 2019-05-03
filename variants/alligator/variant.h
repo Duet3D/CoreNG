@@ -188,6 +188,8 @@ extern USARTClass Serial1;
 extern USARTClass Serial2;
 
 extern void ConfigurePin(const PinDescription& pinDesc);
+extern void ConfigurePin(Pin pin);
+extern bool IsPwmCapable(Pin pin);						// Return true if this pin exists and can do PWM
 
 #endif
 

@@ -119,6 +119,12 @@ void SystemInit( void )
 	SystemCoreClock = CHIP_FREQ_CPU_MAX;
 }
 
+// SysTick init, called by non-RTOS builds
+void SysTickInit(void)
+{
+	SysTick_Config(SystemCoreClock / 1000);
+}
+
 /* @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus

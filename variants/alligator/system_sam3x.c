@@ -216,6 +216,12 @@ void system_init_flash(uint32_t ul_clk)
 	}
 }
 
+// SysTick init, called by non-RTOS builds
+void SysTickInit(void)
+{
+	SysTick_Config(SystemCoreClock / 1000);
+}
+
 /* @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus

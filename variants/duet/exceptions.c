@@ -17,7 +17,6 @@
 */
 
 #include "exceptions.h"
-#include "wdt/wdt.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,32 +28,13 @@ static void __halt() {
 		;
 }
 
-extern void TimeTick_Increment(void);				// in wiring.c
-extern void sysTickHook(void);
-
 /* Cortex-M3 core handlers */
 void NMI_Handler        ( void ) __attribute__ ((weak, alias("__halt")));
 void HardFault_Handler  ( void ) __attribute__ ((weak, alias("__halt")));
 void MemManage_Handler  ( void ) __attribute__ ((weak, alias("__halt")));
 void BusFault_Handler   ( void ) __attribute__ ((weak, alias("__halt")));
 void UsageFault_Handler ( void ) __attribute__ ((weak, alias("__halt")));
-
-#ifndef RTOS
-void SVC_Handler		( void ) __attribute__ ((weak, alias("__halt")));
-void PendSV_Handler		( void ) __attribute__ ((weak, alias("__halt")));
-#endif
-
 void DebugMon_Handler   ( void ) __attribute__ ((weak, alias("__halt")));
-
-#ifdef RTOS
-void vApplicationTickHook(void)
-#else
-void SysTick_Handler(void)
-#endif
-{
-	sysTickHook();
-	TimeTick_Increment();						// increment tick count each ms
-}
 
 /* Peripherals handlers */
 void SUPC_Handler       (void) __attribute__ ((weak, alias("__halt")));

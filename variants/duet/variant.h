@@ -55,12 +55,15 @@ extern "C"{
 #    include <syscalls.h> /** RedHat Newlib minimal stub */
 #endif
 
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+
 /*----------------------------------------------------------------------------
  *        Pins
  *----------------------------------------------------------------------------*/
-
-// Number of pins defined in PinDescription array
-#define APINS_COUNT				(79u)
 
 /*
  * SPI Interfaces
@@ -68,26 +71,26 @@ extern "C"{
 #define SPI_INTERFACES_COUNT 1
 
 #define SPI_INTERFACE_ID     ID_SPI0
-#define APIN_SPI_SS0         (77u)
-#define APIN_SPI_SS1         (87u)
-#define APIN_SPI_SS2         (86u)
-#define APIN_SPI_SS3         (78u)
-#define APIN_SPI_MOSI        (75u)
-#define APIN_SPI_MISO        (74u)
-#define APIN_SPI_SCK         (76u)
+constexpr Pin APIN_SPI_SS0 = 77;
+constexpr Pin APIN_SPI_SS1 = 87;
+constexpr Pin APIN_SPI_SS2 = 86;
+constexpr Pin APIN_SPI_SS3 = 78;
+constexpr Pin APIN_SPI_MOSI = 75;
+constexpr Pin APIN_SPI_MISO = 74;
+constexpr Pin APIN_SPI_SCK = 76;
 
 /*
  * Wire Interfaces
  */
 #define WIRE_INTERFACES_COUNT 2
 
-#define APINS_WIRE	         (80u)
+constexpr Pin APINS_WIRE = 80;
 #define WIRE_INTERFACE       TWI1
 #define WIRE_INTERFACE_ID    ID_TWI1
 #define WIRE_ISR_HANDLER     TWI1_Handler
 #define WIRE_ISR_ID          TWI1_IRQn
 
-#define APINS_WIRE1			 (79u)
+constexpr Pin APINS_WIRE1 = 79;
 #define WIRE1_INTERFACE      TWI0
 #define WIRE1_INTERFACE_ID   ID_TWI0
 #define WIRE1_ISR_HANDLER    TWI0_Handler
@@ -96,99 +99,80 @@ extern "C"{
 /*
  * UART/USART Interfaces
  */
-// Serial
-#define APINS_UART           (81u)
-#define APIN_UART_RXD		 (0u)
-// Serial1
-#define APINS_USART0         (82u)
-// Serial2
-#define APINS_USART1         (83u)
-// Serial3
-#define APINS_USART3         (84u)
+// Serial, Serial1,2,3
+constexpr Pin APINS_UART = 81;
+constexpr Pin APIN_UART_RXD	= 0;
+constexpr Pin APINS_USART0 = 82;
+constexpr Pin APINS_USART1 = 83;
+constexpr Pin APINS_USART3 = 84;
 
 /*
  * USB Interfaces
  */
-#define APINS_USB            (85u)
+constexpr Pin APINS_USB = 85;
 
 /*
  * Analog pins
  */
-static const uint8_t A0  = 54;
-static const uint8_t A1  = 55;
-static const uint8_t A2  = 56;
-static const uint8_t A3  = 57;
-static const uint8_t A4  = 58;
-static const uint8_t A5  = 59;
-static const uint8_t A6  = 60;
-static const uint8_t A7  = 61;
-static const uint8_t A8  = 62;
-static const uint8_t A9  = 63;
-static const uint8_t A10 = 64;
-static const uint8_t A11 = 65;
-static const uint8_t DAC0 = 66;
-static const uint8_t DAC1 = 67;
-static const uint8_t CANRX = 68;
-static const uint8_t CANTX = 69;
-
-/*
- * Complementary CAN pins
- */
-static const uint8_t CAN1RX = 88;
-static const uint8_t CAN1TX = 89;
-
-// CAN0
-#define APINS_CAN0           (90u)
-// CAN1
-#define APINS_CAN1           (91u)
+constexpr Pin A0  = 54;
+constexpr Pin A1  = 55;
+constexpr Pin A2  = 56;
+constexpr Pin A3  = 57;
+constexpr Pin A4  = 58;
+constexpr Pin A5  = 59;
+constexpr Pin A6  = 60;
+constexpr Pin A7  = 61;
+constexpr Pin A8  = 62;
+constexpr Pin A9  = 63;
+constexpr Pin A10 = 64;
+constexpr Pin A11 = 65;
+constexpr Pin DAC0 = 66;
+constexpr Pin DAC1 = 67;
 
 /*
  * Duet pins
  */
 
-static const uint8_t X0  = 92;
-static const uint8_t X1  = 93;
-static const uint8_t X2  = 94;
-static const uint8_t X3  = 95;
-static const uint8_t X4  = 96;
-static const uint8_t X5  = 97;
-static const uint8_t X6  = 98;
-static const uint8_t X7  = 99;
-static const uint8_t X8  = 100;
-static const uint8_t X9  = 101;
-static const uint8_t X10 = 102;
-static const uint8_t X11 = 103;
-static const uint8_t X12 = 104;
-static const uint8_t X13 = 105;
-static const uint8_t X14 = 106;
-static const uint8_t X15 = 106;
-static const uint8_t X16 = 108;
-static const uint8_t X17 = 109;
+constexpr Pin X0  = 92;
+constexpr Pin X1  = 93;
+constexpr Pin X2  = 94;
+constexpr Pin X3  = 95;
+constexpr Pin X4  = 96;
+constexpr Pin X5  = 97;
+constexpr Pin X6  = 98;
+constexpr Pin X7  = 99;
+constexpr Pin X8  = 100;
+constexpr Pin X9  = 101;
+constexpr Pin X10 = 102;
+constexpr Pin X11 = 103;
+constexpr Pin X12 = 104;
+constexpr Pin X13 = 105;
+constexpr Pin X14 = 106;
+constexpr Pin X15 = 106;
+constexpr Pin X16 = 108;
+constexpr Pin X17 = 109;
 
-static const uint32_t MaxPinNumber = 109;					// X17
+constexpr uint32_t MaxPinNumber = 109;					// X17
 
 // HSMCI
-static const uint8_t APIN_HSMCI_CLOCK = 110;
-static const uint8_t APINS_HSMCI_DATA = 111;
+constexpr Pin APIN_HSMCI_CLOCK = 110;
+constexpr Pin APINS_HSMCI_DATA = 111;
 
 // EMAC
-static const uint8_t APINS_EMAC = 112;
-
-#ifdef __cplusplus
-}
-#endif
+constexpr Pin APINS_EMAC = 112;
 
 /*----------------------------------------------------------------------------
  *        Arduino objects - C++ only
  *----------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
-
 extern UARTClass Serial;
 extern USARTClass Serial1;
 extern USARTClass Serial2;
 
+// Pin configuration
 extern void ConfigurePin(const PinDescription& pinDesc);
+extern void ConfigurePin(Pin pin);
+extern bool IsPwmCapable(Pin pin);						// Return true if this pin exists and can do PWM
 
 #endif
 

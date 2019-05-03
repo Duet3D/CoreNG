@@ -217,14 +217,5 @@ void Reset_Handler(void)
 	__libc_init_array();	// initialize C library and call C++ constructors for static data
 	init();					// initialise variant
 
-#ifndef RTOS
-	// Set Systick to 1ms interval, common to all SAM4 variants
-	if (SysTick_Config(SystemCoreClock / 1000))
-	{
-		// Capture error
-		for (;;){}
-	}
-#endif
-
-	AppMain();
+	AppMain();				// note: app must set up the system tick interrupt, either within FreeRTOS or by calling SysTickInit
 }
