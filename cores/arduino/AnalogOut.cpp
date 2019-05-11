@@ -25,7 +25,7 @@
 
 // PWM channels are 16 bit. We can choose two PWM frequencies. The first one should be a sub-multiple of the peripheral clock.
 #if SAM3XA
-// Peripheral clock is 84MHz so we can do 15MHz = 84/6
+// Peripheral clock is 84MHz so we can do 14MHz = 84/6
 static const uint32_t PwmFastClock = 14000000;			// fast PWM clock for Intel spec PWM fans that need 25kHz PWM, resolution is 1 part in 560 @ 240MHz
 #else
 // Peripheral clock is 120MHz or 150MHz, so we can do 15MHz in either case
@@ -143,7 +143,11 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 	Pwm * const PWMInterface = PWM;
 #endif
 
-	const uint32_t chan = chanIndex & 3;
+#if SAME70
+	const uint32_t chan = chanIndex & 3;							// SAME70 has two PWM controllers with 3 channels each
+#else
+	const uint32_t chan = chanIndex;								// other supported processors have one PWM controller with 4 or 8 channels
+#endif
 	if (PWMChanFreq[chanIndex] != freq)
 	{
 		if (!PWMEnabled)
