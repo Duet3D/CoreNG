@@ -136,18 +136,15 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 		return false;
 	}
 
-	// Which PWM interface do we need to work with?
+	// Which PWM interface and channel within that interface do we need to work with?
 #if SAME70
 	Pwm * const PWMInterface = (chanIndex < 4) ? PWM0 : PWM1;
-#else
-	Pwm * const PWMInterface = PWM;
-#endif
-
-#if SAME70
 	const uint32_t chan = chanIndex & 3;							// SAME70 has two PWM controllers with 3 channels each
 #else
+	Pwm * const PWMInterface = PWM;
 	const uint32_t chan = chanIndex;								// other supported processors have one PWM controller with 4 or 8 channels
 #endif
+
 	if (PWMChanFreq[chanIndex] != freq)
 	{
 		if (!PWMEnabled)

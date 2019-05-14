@@ -146,9 +146,6 @@ constexpr Pin APIN_Serial1_TXD = 6;
 constexpr Pin APIN_HSMCI_CLOCK = 106;
 constexpr Pin APINS_HSMCI_DATA = 107;
 
-// TWI
-constexpr Pin APINS_TWI = 108;
-
 // Serial interface objects
 extern UARTClass Serial;
 extern UARTClass Serial1;

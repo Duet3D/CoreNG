@@ -34,7 +34,7 @@
 
 void TwoWire::ErrorCounts::Clear()
 {
-	naks = sendTimeouts = recvTimeouts = finishTimeouts = 0;
+	naks = sendTimeouts = recvTimeouts = finishTimeouts = resets = 0;
 }
 
 // This is the default wait-for-status function.
@@ -85,28 +85,31 @@ inline bool TwoWire::WaitByteReceived(WaitForStatusFunc statusWaitFunc)
 	return WaitForStatus(TWI_SR_RXRDY, errorCounts.recvTimeouts, statusWaitFunc);
 }
 
-TwoWire::TwoWire(Twi *_twi, void(*_beginCb)(void)) : twi(_twi), onBeginCallback(_beginCb)
+TwoWire::TwoWire(Twi *_twi, void(*_beginCb)(void)) : twi(_twi), onBeginCallback(_beginCb), clockFrequency(100000)
 {
 }
 
-// Begin in master mode
-void TwoWire::BeginMaster(uint32_t clockFrequency)
+void TwoWire::ReInit()
 {
+	twi->TWI_PTCR = UART_PTCR_RXTDIS | UART_PTCR_TXTDIS;	// disable PDC channel
+
+	twi_options_t opt;
+	opt.speed = clockFrequency;
+	opt.master_clk = SystemPeripheralClock();
+	opt.chip = opt.smbus = 0;
+	twi_master_init(twi, &opt);
+}
+
+// Begin in master mode
+void TwoWire::BeginMaster(uint32_t p_clockFrequency)
+{
+	clockFrequency = p_clockFrequency;
 	if (onBeginCallback != nullptr)
 	{
 		onBeginCallback();
 	}
-
-	// Disable PDC channel
-	twi->TWI_PTCR = UART_PTCR_RXTDIS | UART_PTCR_TXTDIS;
-
-	twi_options_t opt;
-	opt.speed = clockFrequency;
-	opt.master_clk = VARIANT_MCK;
-	opt.chip = opt.smbus = 0;
-	twi_master_init(twi, &opt);
-
 	errorCounts.Clear();
+	ReInit();
 }
 
 // Write then read data
@@ -118,6 +121,23 @@ size_t TwoWire::Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, s
 		return 0;
 	}
 
+	size_t bytesTransferred;
+	for (unsigned int triesDone = 0; triesDone < 3; ++triesDone)
+	{
+		bytesTransferred = InternalTransfer(address, buffer, numToWrite, numToRead, statusWaitFunc);
+		if (bytesTransferred == numToRead + numToWrite)
+		{
+			break;
+		}
+
+		// Had an I2C error, so re-initialise and try again
+		ReInit();
+	}
+	return bytesTransferred;
+}
+
+size_t TwoWire::InternalTransfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, WaitForStatusFunc statusWaitFunc)
+{
 	// Set up the mode register and address
 	if (address >= 0x80)
 	{
