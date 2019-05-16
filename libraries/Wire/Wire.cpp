@@ -132,6 +132,7 @@ size_t TwoWire::Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, s
 
 		// Had an I2C error, so re-initialise and try again
 		ReInit();
+		++errorCounts.resets;
 	}
 	return bytesTransferred;
 }
