@@ -411,14 +411,6 @@ extern "C" void init( void )
 	ConfigurePin(g_APinDescription[APIN_GMAC_PHY_INTERRUPT]);
 	ConfigurePin(g_APinDescription[APINS_GMAC_PHY]);
 
-#if !SAME70_XPLD
-	// Initialize SPI1 pins
-	ConfigurePin(g_APinDescription[APIN_SPI1_MOSI]);
-	ConfigurePin(g_APinDescription[APIN_SPI1_MISO]);
-	ConfigurePin(g_APinDescription[APIN_SPI1_SCK]);
-	ConfigurePin(g_APinDescription[APIN_SPI1_SS0]);
-#endif
-
 	// Initialize TRNG
 	pmc_enable_periph_clk(ID_TRNG);
 	TRNG->TRNG_IDR = TRNG_IDR_DATRDY;							// Disable all interrupts
