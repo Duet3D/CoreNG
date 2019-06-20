@@ -30,21 +30,26 @@
 #endif
 
 #if SAM4E
-#define  USB_DEVICE_VENDOR_ID			0x1D50			// openmoku.org VID from which PIDs are allocated to open source projects
-#define  USB_DEVICE_PRODUCT_ID			0x60EC			// PID allocated to us for Duet NG series
-#define  USB_DEVICE_POWER				200				// Consumption on Vbus line (mA)
+# define  USB_DEVICE_VENDOR_ID			0x1D50			// openmoku.org VID from which PIDs are allocated to open source projects
+# define  USB_DEVICE_PRODUCT_ID			0x60EC			// PID allocated to us for Duet NG series
+# define  USB_DEVICE_POWER				200				// Consumption on Vbus line (mA)
 #endif
 
 #if SAM4S
-#define  USB_DEVICE_VENDOR_ID			0x1D50			// openmoku.org VID from which PIDs are allocated to open source projects
-#define  USB_DEVICE_PRODUCT_ID			0x60ED
-#define  USB_DEVICE_POWER				200				// Consumption on Vbus line (mA)
+# ifdef PCCB
+#  define  USB_DEVICE_VENDOR_ID			0x04D8			// Microchip VID
+#  define  USB_DEVICE_PRODUCT_ID		0xED2F			// PID assigned by Microchip to this OEM
+# else
+#  define  USB_DEVICE_VENDOR_ID			0x1D50			// openmoku.org VID from which PIDs are allocated to open source projects
+#  define  USB_DEVICE_PRODUCT_ID		0x60ED			// PID allocated to us for Duet Maestro
+# endif
+# define  USB_DEVICE_POWER				200				// Consumption on Vbus line (mA)
 #endif
 
 #if SAME70
-#define  USB_DEVICE_VENDOR_ID			0x1D50			// pid.codes VID from which PIDs are allocated to open source projects
-#define  USB_DEVICE_PRODUCT_ID			0x60EE
-#define  USB_DEVICE_POWER				200				// Consumption on Vbus line (mA)
+# define  USB_DEVICE_VENDOR_ID			0x1D50			// pid.codes VID from which PIDs are allocated to open source projects
+# define  USB_DEVICE_PRODUCT_ID			0x60EE			// PID allocated to us for Duet 3
+# define  USB_DEVICE_POWER				200				// Consumption on Vbus line (mA)
 #endif
 
 #define  USB_DEVICE_MAJOR_VERSION         1
