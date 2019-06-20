@@ -109,10 +109,10 @@ constexpr Pin APIN_Serial1_TXD = PortAPin(6);
 
 // ESP SPI
 #define SPI_INTERFACE_ID	ID_SPI0
-constexpr Pin APIN_SPI_MOSI = PortDPin(21);
-constexpr Pin APIN_SPI_MISO = PortDPin(20);
-constexpr Pin APIN_SPI_SCK = PortDPin(22);
-constexpr Pin APIN_SPI_SS0 = PortBPin(2);
+constexpr Pin APIN_SPI0_MOSI = PortDPin(21);
+constexpr Pin APIN_SPI0_MISO = PortDPin(20);
+constexpr Pin APIN_SPI0_SCK = PortDPin(22);
+constexpr Pin APIN_SPI0_SS0 = PortBPin(2);
 
 #else
 
@@ -138,6 +138,12 @@ constexpr Pin APIN_SPI_MOSI = PortDPin(21);
 constexpr Pin APIN_SPI_MISO = PortDPin(20);
 constexpr Pin APIN_SPI_SCK = PortDPin(22);
 constexpr Pin APIN_SPI_SS0 = PortBPin(2);
+
+// Linux SPI
+constexpr Pin APIN_SPI1_MOSI = PortCPin(27);
+constexpr Pin APIN_SPI1_MISO = PortCPin(26);
+constexpr Pin APIN_SPI1_SCK = PortCPin(24);
+constexpr Pin APIN_SPI1_SS0 = PortCPin(25);
 
 #endif
 

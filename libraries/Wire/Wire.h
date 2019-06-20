@@ -41,6 +41,7 @@ public:
 		uint32_t sendTimeouts;
 		uint32_t recvTimeouts;
 		uint32_t finishTimeouts;
+		uint32_t resets;
 
 		void Clear();
 	};

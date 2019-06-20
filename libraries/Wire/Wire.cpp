@@ -34,7 +34,7 @@
 
 void TwoWire::ErrorCounts::Clear()
 {
-	naks = sendTimeouts = recvTimeouts = finishTimeouts = 0;
+	naks = sendTimeouts = recvTimeouts = finishTimeouts = resets = 0;
 }
 
 // This is the default wait-for-status function.
