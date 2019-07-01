@@ -64,16 +64,16 @@ extern "C"{
 /*
  * SPI Interfaces
  */
-#define SPI_INTERFACES_COUNT 1
 
-#define SPI_INTERFACE_ID     ID_SPI0
-#define APIN_SPI_SS0         (77u)
-#define APIN_SPI_SS1         (87u)
-#define APIN_SPI_SS2         (86u)
-#define APIN_SPI_SS3         (78u)
-#define APIN_SPI_MOSI        (75u)
-#define APIN_SPI_MISO        (74u)
-#define APIN_SPI_SCK         (76u)
+#define SHARED_SPI				SPI0
+#define SHARED_SPI_INTERFACE_ID	ID_SPI0
+#define APIN_SPI_SS0			(77u)
+#define APIN_SPI_SS1			(87u)
+#define APIN_SPI_SS2			(86u)
+#define APIN_SPI_SS3			(78u)
+#define APIN_SHARED_SPI_MOSI	(75u)
+#define APIN_SHARED_SPI_MISO	(74u)
+#define APIN_SHARED_SPI_SCK		(76u)
 
 /*
  * Wire Interfaces

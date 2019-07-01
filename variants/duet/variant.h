@@ -68,16 +68,16 @@ extern "C"{
 /*
  * SPI Interfaces
  */
-#define SPI_INTERFACES_COUNT 1
 
-#define SPI_INTERFACE_ID     ID_SPI0
+#define SHARED_SPI					SPI0
+#define SHARED_SPI_INTERFACE_ID     ID_SPI0
 constexpr Pin APIN_SPI_SS0 = 77;
 constexpr Pin APIN_SPI_SS1 = 87;
 constexpr Pin APIN_SPI_SS2 = 86;
 constexpr Pin APIN_SPI_SS3 = 78;
-constexpr Pin APIN_SPI_MOSI = 75;
-constexpr Pin APIN_SPI_MISO = 74;
-constexpr Pin APIN_SPI_SCK = 76;
+constexpr Pin APIN_SHARED_SPI_MOSI = 75;
+constexpr Pin APIN_SHARED_SPI_MISO = 74;
+constexpr Pin APIN_SHARED_SPI_SCK = 76;
 
 /*
  * Wire Interfaces
