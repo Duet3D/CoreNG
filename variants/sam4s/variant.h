@@ -93,6 +93,8 @@ static inline constexpr Pin PortCPin(unsigned int pin)
 
 #define W5500_SPI				SPI
 #define W5500_SPI_INTERFACE_ID	ID_SPI
+#define W5500_SPI_IRQn			SPI_IRQn
+#define W5500_SPI_HANDLER		SPI_Handler
 constexpr Pin APIN_W5500_SPI_MOSI = 13;
 constexpr Pin APIN_W5500_SPI_MISO = 12;
 constexpr Pin APIN_W5500_SPI_SCK = 14;

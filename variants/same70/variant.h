@@ -137,6 +137,7 @@ constexpr Pin APIN_USART_SSPI_MISO = PortBPin(0);
 #define ESP_SPI					SPI0
 #define ESP_SPI_INTERFACE_ID	ID_SPI0
 #define ESP_SPI_IRQn			SPI0_IRQn
+#define ESP_SPI_HANDLER			SPI0_Handler
 constexpr Pin APIN_ESP_SPI_MOSI = PortDPin(21);
 constexpr Pin APIN_ESP_SPI_MISO = PortDPin(20);
 constexpr Pin APIN_ESP_SPI_SCK = PortDPin(22);
