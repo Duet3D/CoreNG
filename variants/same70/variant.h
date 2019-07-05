@@ -99,7 +99,7 @@ constexpr uint32_t MaxPinNumber = 133;						// last GPIO pin (PE05)
 constexpr Pin APIN_GMAC_PHY_INTERRUPT = PortAPin(14);
 constexpr Pin APIN_GMAC_PHY_RESET = PortCPin(10);
 
-// Serial
+// Serial0
 constexpr Pin APIN_Serial0_RXD = PortAPin(9);
 constexpr Pin APIN_Serial0_TXD = PortAPin(10);
 
@@ -107,19 +107,20 @@ constexpr Pin APIN_Serial0_TXD = PortAPin(10);
 constexpr Pin APIN_Serial1_RXD = PortAPin(5);
 constexpr Pin APIN_Serial1_TXD = PortAPin(6);
 
-// ESP SPI
-#define SPI_INTERFACE_ID	ID_SPI0
-constexpr Pin APIN_SPI0_MOSI = PortDPin(21);
-constexpr Pin APIN_SPI0_MISO = PortDPin(20);
-constexpr Pin APIN_SPI0_SCK = PortDPin(22);
-constexpr Pin APIN_SPI0_SS0 = PortBPin(2);
+// Shared SPI
+#define SHARED_SPI					SPI0
+#define SHARED_SPI_INTERFACE_ID		ID_SPI0
+constexpr Pin APIN_SHARED_SPI_MOSI = PortDPin(21);
+constexpr Pin APIN_SHARED_SPI_MISO = PortDPin(20);
+constexpr Pin APIN_SHARED_SPI_SCK = PortDPin(22);
+constexpr Pin APIN_SHARED_SPI_SS0 = PortBPin(2);
 
 #else
 
 constexpr Pin APIN_GMAC_PHY_INTERRUPT = PortCPin(6);
 constexpr Pin APIN_GMAC_PHY_RESET = PortDPin(11);
 
-// Serial
+// Serial0
 constexpr Pin APIN_Serial0_RXD = PortDPin(25);
 constexpr Pin APIN_Serial0_TXD = PortDPin(26);
 
@@ -132,12 +133,25 @@ constexpr Pin APIN_USART_SSPI_SCK = PortBPin(13);
 constexpr Pin APIN_USART_SSPI_MOSI = PortBPin(1);
 constexpr Pin APIN_USART_SSPI_MISO = PortBPin(0);
 
-// ESP SPI
-#define SPI_INTERFACE_ID	ID_SPI0
-constexpr Pin APIN_SPI_MOSI = PortDPin(21);
-constexpr Pin APIN_SPI_MISO = PortDPin(20);
-constexpr Pin APIN_SPI_SCK = PortDPin(22);
-constexpr Pin APIN_SPI_SS0 = PortBPin(2);
+// ESP SPI on Duet 3 version 0.3
+#define ESP_SPI					SPI0
+#define ESP_SPI_INTERFACE_ID	ID_SPI0
+#define ESP_SPI_IRQn			SPI0_IRQn
+#define ESP_SPI_HANDLER			SPI0_Handler
+constexpr Pin APIN_ESP_SPI_MOSI = PortDPin(21);
+constexpr Pin APIN_ESP_SPI_MISO = PortDPin(20);
+constexpr Pin APIN_ESP_SPI_SCK = PortDPin(22);
+constexpr Pin APIN_ESP_SPI_SS0 = PortBPin(2);
+
+// Single Board Computer SPI
+#define SBC_SPI					SPI1
+#define SBC_SPI_INTERFACE_ID	ID_SPI1
+#define SBC_SPI_IRQn			SPI1_IRQn
+#define SBC_SPI_HANDLER			SPI1_Handler
+constexpr Pin APIN_SBC_SPI_MOSI = PortCPin(27);
+constexpr Pin APIN_SBC_SPI_MISO = PortCPin(26);
+constexpr Pin APIN_SBC_SPI_SCK = PortCPin(24);
+constexpr Pin APIN_SBC_SPI_SS0 = PortCPin(25);
 
 // Linux SPI
 constexpr Pin APIN_SPI1_MOSI = PortCPin(27);

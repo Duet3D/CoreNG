@@ -56,13 +56,8 @@
 # define PERIPHERAL_CHANNEL_CS_PIN	APIN_SPI_SS3
 #endif
 
-
 /** Time-out value (number of attempts). */
 #define SPI_TIMEOUT       15000
-
-// Which SPI channel we use
-# define SSPI		SPI0
-# define ID_SSPI	ID_SPI0
 
 #endif
 
@@ -73,7 +68,7 @@ static inline bool waitForTxReady()
 #if USART_SPI
 	while (!usart_is_tx_ready(USART_SSPI))
 #else
-	while (!spi_is_tx_ready(SSPI))
+	while (!spi_is_tx_ready(SHARED_SPI))
 #endif
 	{
 		if (--timeout == 0)
@@ -91,7 +86,7 @@ static inline bool waitForTxEmpty()
 #if USART_SPI
 	while (!usart_is_tx_empty(USART_SSPI))
 #else
-		while (!spi_is_tx_empty(SSPI))
+		while (!spi_is_tx_empty(SHARED_SPI))
 #endif
 	{
 		if (!timeout--)
@@ -109,7 +104,7 @@ static inline bool waitForRxReady()
 #if USART_SPI
 	while (!usart_is_rx_ready(USART_SSPI))
 #else
-	while (!spi_is_rx_ready(SSPI))
+	while (!spi_is_rx_ready(SHARED_SPI))
 #endif
 	{
 		if (--timeout == 0)
@@ -145,15 +140,15 @@ void sspi_master_init(struct sspi_device *device, uint32_t bits)
 		USART_SSPI->US_BRGR = SystemPeripheralClock()/1000000;			// 1MHz SPI clock for now
 		USART_SSPI->US_CR = US_CR_RSTRX | US_CR_RSTTX | US_CR_RXDIS | US_CR_TXDIS | US_CR_RSTSTA;
 #else
-		ConfigurePin(g_APinDescription[APIN_SPI_SCK]);
-		ConfigurePin(g_APinDescription[APIN_SPI_MOSI]);
-		ConfigurePin(g_APinDescription[APIN_SPI_MISO]);
+		ConfigurePin(g_APinDescription[APIN_SHARED_SPI_SCK]);
+		ConfigurePin(g_APinDescription[APIN_SHARED_SPI_MOSI]);
+		ConfigurePin(g_APinDescription[APIN_SHARED_SPI_MISO]);
 
-		pmc_enable_periph_clk(ID_SSPI);
+		pmc_enable_periph_clk(SHARED_SPI_INTERFACE_ID);
 
-		SSPI->SPI_CR = SPI_CR_SPIDIS;
-	    SSPI->SPI_CR = SPI_CR_SWRST;
-	    SSPI->SPI_MR = SPI_MR_MSTR | SPI_MR_MODFDIS;
+		SHARED_SPI->SPI_CR = SPI_CR_SPIDIS;
+		SHARED_SPI->SPI_CR = SPI_CR_SWRST;
+		SHARED_SPI->SPI_MR = SPI_MR_MSTR | SPI_MR_MODFDIS;
 
 # if defined(USE_SAM3X_DMAC)
 		pmc_enable_periph_clk(ID_DMAC);
@@ -214,8 +209,8 @@ void sspi_master_setup_device(const struct sspi_device *device)
 	USART_SSPI->US_CR = US_CR_RSTRX | US_CR_RSTTX;			// reset transmitter and receiver (required - see datasheet)
 	USART_SSPI->US_CR = US_CR_RXEN | US_CR_TXEN;			// enable transmitter and receiver
 #else
-	spi_reset(SSPI);
-    SSPI->SPI_MR = SPI_MR_MSTR | SPI_MR_MODFDIS;
+	spi_reset(SHARED_SPI);
+	SHARED_SPI->SPI_MR = SPI_MR_MSTR | SPI_MR_MODFDIS;
 
 	// Set SPI mode, clock frequency, CS not active after transfer, delay between transfers
 	uint16_t baud_div = (uint16_t)spi_calc_baudrate_div(device->clockFrequency, SystemPeripheralClock());
@@ -230,8 +225,8 @@ void sspi_master_setup_device(const struct sspi_device *device)
 	{
 		csr |= SPI_CSR_CPOL;
 	}
-	SSPI->SPI_CSR[PERIPHERAL_CHANNEL_ID] = csr;
-	spi_enable(SSPI);
+	SHARED_SPI->SPI_CSR[PERIPHERAL_CHANNEL_ID] = csr;
+	spi_enable(SHARED_SPI);
 #endif
 }
 
@@ -246,7 +241,7 @@ void sspi_master_setup_device(const struct sspi_device *device)
 void sspi_select_device(const struct sspi_device *device)
 {
 #if SAM3XA
-	spi_set_peripheral_chip_select_value(SSPI, spi_get_pcs(PERIPHERAL_CHANNEL_ID));
+	spi_set_peripheral_chip_select_value(SHARED_SPI, spi_get_pcs(PERIPHERAL_CHANNEL_ID));
 #endif
 
 	// Enable the CS line
@@ -297,7 +292,7 @@ spi_status_t sspi_transceive_packet(const uint8_t *tx_data, uint8_t *rx_data, si
 		{
 			dOut |= SPI_TDR_LASTXFER;
 		}
-		SSPI->SPI_TDR = dOut;
+		SHARED_SPI->SPI_TDR = dOut;
 #endif
 
 		// Some devices are transmit-only e.g. 12864 display, so don't wait for received data if we don't need to
@@ -314,7 +309,7 @@ spi_status_t sspi_transceive_packet(const uint8_t *tx_data, uint8_t *rx_data, si
 #if USART_SPI
 					(uint8_t)USART_SSPI->US_RHR;
 #else
-					(uint8_t)SSPI->SPI_RDR;
+					(uint8_t)SHARED_SPI->SPI_RDR;
 #endif
 			*rx_data++ = dIn;
 		}
@@ -327,7 +322,7 @@ spi_status_t sspi_transceive_packet(const uint8_t *tx_data, uint8_t *rx_data, si
 #if USART_SPI
 		(void)USART_SSPI->US_RHR;
 #else
-		(void)SSPI->SPI_RDR;
+		(void)SHARED_SPI->SPI_RDR;
 #endif
 
 	}
@@ -361,7 +356,7 @@ spi_status_t sspi_transceive_packet16(const uint16_t *tx_data, uint16_t *rx_data
 		{
 			dOut |= SPI_TDR_LASTXFER;
 		}
-		SSPI->SPI_TDR = dOut;
+		SHARED_SPI->SPI_TDR = dOut;
 
 		// Wait for receive register
 		if (waitForRxReady())
@@ -370,7 +365,7 @@ spi_status_t sspi_transceive_packet16(const uint16_t *tx_data, uint16_t *rx_data
 		}
 
 		// Get data from receive register
-		uint16_t dIn = (uint16_t)SSPI->SPI_RDR;
+		uint16_t dIn = (uint16_t)SHARED_SPI->SPI_RDR;
 		if (rx_data != nullptr)
 		{
 			rx_data[i] = dIn;
