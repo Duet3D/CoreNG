@@ -18,8 +18,6 @@
 
 #include "WInterrupts.h"
 
-const uint32_t pioInterruptPriority = 5;
-
 struct InterruptCallback
 {
 	StandardCallbackFunction func;
