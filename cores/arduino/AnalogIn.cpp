@@ -70,7 +70,7 @@ void AnalogInInit()
 	// afec_get_config_defaults returns the wrong values for the SAME70
 	cfg.resolution = AFEC_12_BITS;
 	cfg.mck = SystemPeripheralClock();
-	cfg.afec_clock = 10000000UL;					// datasheet says typical AFEC clock is 20MHz, minimum 4, maximum 40
+	cfg.afec_clock = 10000000UL;					// datasheet says typical AFEC clock is 20MHz, minimum 4, maximum 40. App note 44093 says don't use 40MHz, use 10 or 20.
 	cfg.startup_time = AFEC_STARTUP_TIME_4;
 	cfg.tracktim = 2;								// as recommended on the 2018 datasheet
 	cfg.transfer = 2;								// not used
