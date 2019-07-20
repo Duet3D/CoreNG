@@ -153,12 +153,6 @@ constexpr Pin APIN_SBC_SPI_MISO = PortCPin(26);
 constexpr Pin APIN_SBC_SPI_SCK = PortCPin(24);
 constexpr Pin APIN_SBC_SPI_SS0 = PortCPin(25);
 
-// Linux SPI
-constexpr Pin APIN_SPI1_MOSI = PortCPin(27);
-constexpr Pin APIN_SPI1_MISO = PortCPin(26);
-constexpr Pin APIN_SPI1_SCK = PortCPin(24);
-constexpr Pin APIN_SPI1_SS0 = PortCPin(25);
-
 #endif
 
 // HSMCI
