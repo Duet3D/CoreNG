@@ -40,38 +40,38 @@
  * Below is the message RAM setting, it will be stored in the system RAM.
  * Please adjust the message size according to your application.
  */
-/** Range: 1..64 */ 
-#define CONF_MCAN0_RX_FIFO_0_NUM         16     
-/** Range: 1..64 */        
-#define CONF_MCAN0_RX_FIFO_1_NUM         16      
-/** Range: 1..64 */      
+/** Range: 1..64 */
+#define CONF_MCAN0_RX_FIFO_0_NUM         16
+/** Range: 1..64 */
+#define CONF_MCAN0_RX_FIFO_1_NUM         16
+/** Range: 1..64 */
 #define CONF_MCAN0_RX_BUFFER_NUM         16
 /** Range: 1..16 */
-#define CONF_MCAN0_TX_BUFFER_NUM         4   
-/** Range: 1..16 */        
-#define CONF_MCAN0_TX_FIFO_QUEUE_NUM     4     
-/** Range: 1..32 */       
-#define CONF_MCAN0_TX_EVENT_FIFO         8             
+#define CONF_MCAN0_TX_BUFFER_NUM         4
+/** Range: 1..16 */
+#define CONF_MCAN0_TX_FIFO_QUEUE_NUM     4
+/** Range: 1..32 */
+#define CONF_MCAN0_TX_EVENT_FIFO         8
 /** Range: 1..128 */
-#define CONF_MCAN0_RX_STANDARD_ID_FILTER_NUM     32    
+#define CONF_MCAN0_RX_STANDARD_ID_FILTER_NUM     1
 /** Range: 1..64 */
-#define CONF_MCAN0_RX_EXTENDED_ID_FILTER_NUM     16    
+#define CONF_MCAN0_RX_EXTENDED_ID_FILTER_NUM     1
 /** Range: 1..64 */
-#define CONF_MCAN1_RX_FIFO_0_NUM         16             
+#define CONF_MCAN1_RX_FIFO_0_NUM         16
 /** Range: 1..64 */
-#define CONF_MCAN1_RX_FIFO_1_NUM         16  
-/** Range: 1..64 */          
-#define CONF_MCAN1_RX_BUFFER_NUM         16      
-/** Range: 1..16 */     
-#define CONF_MCAN1_TX_BUFFER_NUM         4 
-/** Range: 1..16 */     
-#define CONF_MCAN1_TX_FIFO_QUEUE_NUM     4     
-/** Range: 1..32 */        
-#define CONF_MCAN1_TX_EVENT_FIFO         8             
+#define CONF_MCAN1_RX_FIFO_1_NUM         16
+/** Range: 1..64 */
+#define CONF_MCAN1_RX_BUFFER_NUM         4
+/** Range: 1..16 */
+#define CONF_MCAN1_TX_BUFFER_NUM         6
+/** Range: 1..16 */
+#define CONF_MCAN1_TX_FIFO_QUEUE_NUM     4
+/** Range: 1..32 */
+#define CONF_MCAN1_TX_EVENT_FIFO         8
 /** Range: 1..128 */
-#define CONF_MCAN1_RX_STANDARD_ID_FILTER_NUM     32    
+#define CONF_MCAN1_RX_STANDARD_ID_FILTER_NUM     1
 /** Range: 1..64 */
-#define CONF_MCAN1_RX_EXTENDED_ID_FILTER_NUM     16    
+#define CONF_MCAN1_RX_EXTENDED_ID_FILTER_NUM     3
 
 /** The value should be 8/12/16/20/24/32/48/64. */
 #define CONF_MCAN_ELEMENT_DATA_SIZE         64

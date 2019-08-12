@@ -126,7 +126,7 @@ static void _mcan_message_memory_init(Mcan *hw)
 	/**
 	 * The data size in conf_mcan.h should be 8/12/16/20/24/32/48/64,
 	 * The corresponding setting value in register is 0/1//2/3/4/5/6/7.
-	 * To simplify the calculation, seperate to two group 8/12/16/20/24 which
+	 * To simplify the calculation, separate to two group 8/12/16/20/24 which
 	 * increased with 4 and 32/48/64 which increased with 16.
 	 */
 	if (CONF_MCAN_ELEMENT_DATA_SIZE <= 24) {
@@ -335,7 +335,7 @@ void mcan_fd_set_baudrate(Mcan *hw, uint32_t baudrate)
 	uint32_t mcan_fd_dbtp_dsgw_value = 3, mcan_fd_dbtp_dtseg1_value = 9, mcan_fd_dbtp_dtseg2_value = 3;
 
 	gclk_mcan_fd_value = sysclk_get_peripheral_hz();
-	
+
 	mcan_fd_dbtp_dbrp_value = gclk_mcan_fd_value / baudrate / (3 + mcan_fd_dbtp_dtseg1_value + mcan_fd_dbtp_dtseg2_value);
 #if (SAMV71B || SAME70B || SAMV70B)
 	hw->MCAN_DBTP = MCAN_DBTP_DBRP(mcan_fd_dbtp_dbrp_value) |
@@ -397,7 +397,7 @@ void mcan_enable_fd_mode(struct mcan_module *const module_inst)
 
 }
 
-/** 
+/**
  * \brief disable fd mode of mcan module.
  *
  * \param module_inst  MCAN instance
