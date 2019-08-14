@@ -129,7 +129,9 @@ SECTIONS
         _erelocate = .;
     } > ram
 
-    /* .bss section which is used for uninitialized data. The MCAN buffers must be within the first 64Kb. */
+  	_firmware_crc = _etext + (_erelocate - _srelocate);		/* We append the CRC32 to the binary file. This is its offset in memory. */
+
+   /* .bss section which is used for uninitialized data. The MCAN buffers must be within the first 64Kb. */
     .bss ALIGN(4) (NOLOAD) :
     {
         . = ALIGN(4);
