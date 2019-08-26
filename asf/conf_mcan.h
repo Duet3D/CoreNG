@@ -45,9 +45,9 @@
 /** Range: 1..64 */
 #define CONF_MCAN0_RX_FIFO_1_NUM         16
 /** Range: 1..64 */
-#define CONF_MCAN0_RX_BUFFER_NUM         16
+#define CONF_MCAN0_RX_BUFFER_NUM         4
 /** Range: 1..16 */
-#define CONF_MCAN0_TX_BUFFER_NUM         4
+#define CONF_MCAN0_TX_BUFFER_NUM         6
 /** Range: 1..16 */
 #define CONF_MCAN0_TX_FIFO_QUEUE_NUM     4
 /** Range: 1..32 */
@@ -55,7 +55,7 @@
 /** Range: 1..128 */
 #define CONF_MCAN0_RX_STANDARD_ID_FILTER_NUM     1
 /** Range: 1..64 */
-#define CONF_MCAN0_RX_EXTENDED_ID_FILTER_NUM     1
+#define CONF_MCAN0_RX_EXTENDED_ID_FILTER_NUM     3
 /** Range: 1..64 */
 #define CONF_MCAN1_RX_FIFO_0_NUM         16
 /** Range: 1..64 */
