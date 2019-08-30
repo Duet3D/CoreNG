@@ -194,7 +194,8 @@ void Reset_Handler(void)
 	}
 
 	/* Clear the zero segment */
-	for (pDest = &_szero; pDest < &_ezero;) {
+	for (pDest = &_szero; pDest < &_ezero;)
+	{
 		*pDest++ = 0;
 	}
 
