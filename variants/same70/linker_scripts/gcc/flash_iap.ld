@@ -112,6 +112,8 @@ SECTIONS
         _erelocate = .;
     } > ram
 
+  	_firmware_crc = _etext + (_erelocate - _srelocate);		/* We append the CRC32 to the binary file. This is its offset in memory. */
+
     /* .bss section which is used for uninitialized data */
     .bss ALIGN(4) (NOLOAD) :
     {
