@@ -18,7 +18,14 @@ void AnalogInInit();
 // Enable or disable a channel. Use AnalogCheckReady to make sure the ADC is ready before calling this.
 void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable);
 
-// Read the most recent 12-bit result from a channel
+// Return the number of bits provided by a call to AnalogInReadChannel
+#if SAME70
+static constexpr unsigned int AdcBits = 14;
+#else
+static constexpr unsigned int AdcBits = 12;
+#endif
+
+// Read the most recent result from a channel
 uint16_t AnalogInReadChannel(AnalogChannelNumber channel);
 
 typedef void (*AnalogCallback_t)(void);
@@ -28,6 +35,13 @@ AnalogCallback_t AnalogInSetCallback(AnalogCallback_t);
 
 // Start converting the enabled channels, to include the specified ones. Disabled channels are ignored.
 void AnalogInStartConversion(uint32_t channels = 0xFFFFFFFF);
+
+// Finalise a conversion
+#if SAME70
+void AnalogInFinaliseConversion();
+#else
+static inline void AnalogInFinaliseConversion() { }
+#endif
 
 // Check whether all conversions of the specified channels have been completed since the last call to AnalogStartConversion.
 // Disabled channels are ignored

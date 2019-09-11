@@ -5,6 +5,21 @@
  *      Author: David
  */
 
+/*
+ * A note on the ADCs in the SAME70
+ * The ADCs on the SAME70 suffer from noise as mentioned in the errata for the chip.
+ * The ADCs support hardware averaging, so we use that to reduce the noise. However, out tests show that hardware averaging above x16 gives the wrong results
+ * if a sequence of channels is converted, except for the last channel converted.
+ * Duet 3 uses AFEC1 for thermistor, Vref and Vssa monitoring and for the IO_8_IN pin analog functionality. The voltage monitoring, MCU temperature and all other IO_x_IN pins use AFEC1.
+ * So we program the AFECs as follows:
+ * - AFEC0 is programmed in x16 averaging mode with all active channels converted in sequence.
+ *   The maximum number of clock cycles needed is 12 channels * 16 samples * 23 clock/cycle = 4416. So a 10MHz clock is more than enough to convert the sequence within 1ms.
+ * - AFEC1 is programmed in x256 averaging mode and is only asked to convert 1 input per tick.
+ *   The maximum number of clock cycles needed is 256 samples * 23 clocks/cycle = 5888. So again a 10MHz clock is sufficient.
+ * When averaging mode is used, the current data register is not always the last converted result for the corresponding channel. So we need to save all the values
+ * before starting another conversion. Call the AnalogInFinaliseConversion function to do this.
+ * In order to make AdcBits a constant, we shift the 16-bit results from ADC1 right 2 bits before returning them.
+ */
 #include "Core.h"
 #include "AnalogIn.h"
 
@@ -31,6 +46,10 @@ constexpr uint32_t AfecHighChannelMask = 0x0FFF0000;
 #endif
 
 static uint32_t activeChannels = 0;
+
+#if SAME70
+static volatile uint16_t results[NumChannels] = { 0 };
+#endif
 
 #if SAM3XA || SAM4S
 static inline adc_channel_num_t GetAdcChannel(AnalogChannelNumber channel)
@@ -68,12 +87,13 @@ void AnalogInInit()
 
 # if SAME70
 	// afec_get_config_defaults returns the wrong values for the SAME70
-	cfg.resolution = AFEC_12_BITS;
+	cfg.resolution = AFEC_14_BITS;					// the SAME70 ADC is noisy, so use x16 hardware averaging on ADC0, 14-bit result
 	cfg.mck = SystemPeripheralClock();
 	cfg.afec_clock = 10000000UL;					// datasheet says typical AFEC clock is 20MHz, minimum 4, maximum 40. App note 44093 says don't use 40MHz, use 10 or 20.
+													// 20MHz with x64 averaging allows us to sample up to 13 channels per clock tick
 	cfg.startup_time = AFEC_STARTUP_TIME_4;
-	cfg.tracktim = 2;								// as recommended on the 2018 datasheet
-	cfg.transfer = 2;								// not used
+	cfg.tracktim = 0;								// datasheet says don't modify this field
+	cfg.transfer = 2;								// as recommended on the 2018 datasheet
 	cfg.anach = true;
 	cfg.useq = false;
 	cfg.tag = true;
@@ -87,10 +107,16 @@ void AnalogInInit()
 	{
 		(void)afec_get_latest_value(AFEC0);
 	}
+
+#if SAME70
+	cfg.resolution = AFEC_16_BITS;					// the SAME70 ADC is noisy, so use x256 hardware averaging on ADC1, 16-bit result
+#endif
+
 	while (afec_init(AFEC1, &cfg) != STATUS_OK)
 	{
 		(void)afec_get_latest_value(AFEC1);
 	}
+
 	afec_disable_interrupt(AFEC0, AFEC_INTERRUPT_ALL);
 	afec_disable_interrupt(AFEC1, AFEC_INTERRUPT_ALL);
 	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
@@ -168,10 +194,15 @@ uint16_t AnalogInReadChannel(AnalogChannelNumber channel)
 	{
 #if SAM3XA || SAM4S
 		return *(ADC->ADC_CDR + GetAdcChannel(channel));
-#elif SAM4E || SAME70
+#elif SAM4E
 		Afec * const afec = GetAfec(channel);
+		const irqflags_t flags = cpu_irq_save();
 		afec->AFEC_CSELR = GetAfecChannel(channel);
-		return afec->AFEC_CDR;
+		const uint16_t rslt = afec->AFEC_CDR;
+		cpu_irq_restore(flags);
+		return rslt;
+#elif SAME70
+		return (channel >= 16) ? results[channel] >> 2 : results[channel];		// normalise to 14-bit result
 #endif
 	}
 	return 0;
@@ -215,6 +246,9 @@ static void StartConversion(Afec *afec)
 		afec->AFEC_CSELR = chan;
 		(void) afec->AFEC_CDR;
 	}
+#if SAME70
+	(void)afec->AFEC_OVER;
+#endif
 	afec_start_software_conversion(afec);
 }
 
@@ -234,14 +268,50 @@ void AnalogInStartConversion(uint32_t channels)
 	channels &= activeChannels;
 	if ((channels & AfecLowChannelMask) != 0)
 	{
+		AFEC1->AFEC_CHDR = AfecLowChannelMask;
+		AFEC1->AFEC_CHER = channels & AfecLowChannelMask;
 		StartConversion(AFEC0);
 	}
 	if ((channels & AfecHighChannelMask) != 0)
 	{
+		AFEC1->AFEC_CHDR = AfecHighChannelMask >> 16;
+		AFEC1->AFEC_CHER = (channels & AfecHighChannelMask) >> 16;
 		StartConversion(AFEC1);
 	}
 #endif
 }
+
+#if SAME70
+
+static void SaveResults(Afec *afec, volatile uint16_t * resultArea)
+{
+	uint32_t channelsCompleted = afec->AFEC_CHSR & afec->AFEC_ISR & ~afec->AFEC_OVER & 0x00000FFF;
+	uint32_t channel = 0;
+	while (channelsCompleted != 0)
+	{
+		if (channelsCompleted & 1u)
+		{
+			const irqflags_t flags = cpu_irq_save();
+			afec->AFEC_CSELR = channel;
+			resultArea[channel] = afec->AFEC_CDR;
+			cpu_irq_restore(flags);
+		}
+		channelsCompleted >>= 1;
+		++channel;
+	}
+}
+
+
+// Finalise a conversion
+void AnalogInFinaliseConversion()
+{
+	// We use the SAME70 ADCs in averaging mode in order to reduce noise. This means that the result registers don;t always hold the result of the most recent conversion.
+	// So when the conversion has finished, we save all the results.
+	SaveResults(AFEC0, results);
+	SaveResults(AFEC1, results + 16);
+}
+
+#endif
 
 // Check whether all conversions have been completed since the last call to AnalogStartConversion
 bool AnalogInCheckReady(uint32_t channels)

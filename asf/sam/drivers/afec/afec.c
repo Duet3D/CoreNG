@@ -152,13 +152,9 @@ static void afec_set_config(Afec *const afec, struct afec_config *config)
 		#else
 			(config->anach ? AFEC_MR_ANACH_ALLOWED : 0) |
 			AFEC_MR_PRESCAL(config->mck / (2 * config->afec_clock) - 1) |
-			(config->settling_time) |		
+			(config->settling_time) |
 		#endif
-#if SAME70	//dc42
-			(afec->AFEC_MR & (15 << 24)) |				// datasheet says we mustn't modify this field
-#else
 			AFEC_MR_TRACKTIM(config->tracktim) |
-#endif
 			AFEC_MR_TRANSFER(config->transfer) |
 			(config->startup_time);
 
@@ -216,7 +212,7 @@ void afec_temp_sensor_set_config(Afec *const afec,
 
 	afec->AFEC_TEMPCWR = AFEC_TEMPCWR_TLOWTHRES(config->low_threshold) |
 			AFEC_TEMPCWR_THIGHTHRES(config->high_threshold);
-			
+
 }
 
 /**
@@ -251,7 +247,7 @@ void afec_get_config_defaults(struct afec_config *const cfg)
 		cfg->startup_time = AFEC_STARTUP_TIME_4;
 	#if !(SAMV71 || SAMV70 || SAME70 || SAMS70)
 		cfg->settling_time = AFEC_SETTLING_TIME_0;
-	#endif	
+	#endif
 		cfg->tracktim = 2;
 		cfg->transfer = 1;
 		cfg->anach = true;
@@ -449,8 +445,8 @@ void afec_enable_interrupt(Afec *const afec,
 			afec->AFEC_IER = 1 << AFEC_TEMP_INT_SOURCE_NUM;
 	  #else
 		if (interrupt_source == AFEC_INTERRUPT_EOC_15) {
-			afec->AFEC_IER = 1 << AFEC_TEMP_INT_SOURCE_NUM;	  
-	  #endif 
+			afec->AFEC_IER = 1 << AFEC_TEMP_INT_SOURCE_NUM;
+	  #endif
 		} else {
 			afec->AFEC_IER = 1 << interrupt_source;
 		}
@@ -482,7 +478,7 @@ void afec_disable_interrupt(Afec *const afec,
 			afec->AFEC_IDR = 1 << AFEC_TEMP_INT_SOURCE_NUM;
 	  #else
 		if (interrupt_source == AFEC_INTERRUPT_EOC_15) {
-			afec->AFEC_IDR = 1 << AFEC_TEMP_INT_SOURCE_NUM;	  
+			afec->AFEC_IDR = 1 << AFEC_TEMP_INT_SOURCE_NUM;
 	  #endif
 		} else {
 			afec->AFEC_IDR = 1 << interrupt_source;
@@ -664,8 +660,8 @@ void afec_configure_auto_error_correction(Afec *const afec,
 	afec->AFEC_CECR = reg;
 
 	afec->AFEC_COSR = AFEC_COSR_CSEL;
-    afec->AFEC_CVR = AFEC_CVR_OFFSETCORR(offsetcorr) | AFEC_CVR_GAINCORR(gaincorr);		 
-	
+    afec->AFEC_CVR = AFEC_CVR_OFFSETCORR(offsetcorr) | AFEC_CVR_GAINCORR(gaincorr);
+
 }
 
 /**
@@ -678,19 +674,19 @@ void afec_configure_auto_error_correction(Afec *const afec,
  */
  uint32_t afec_get_correction_value(Afec *const afec,
 		const enum afec_channel_num afec_ch)
-{	
+{
 	uint32_t corrected_data = 0;
 	uint32_t converted_data = 0;
-	
+
 	afec_ch_sanity_check(afec, afec_ch);
 
 	afec->AFEC_CSELR = afec_ch;
 	converted_data = afec->AFEC_CDR;
 
-	corrected_data = (converted_data + (afec->AFEC_CVR & AFEC_CVR_OFFSETCORR_Msk)) * 
+	corrected_data = (converted_data + (afec->AFEC_CVR & AFEC_CVR_OFFSETCORR_Msk)) *
 			(afec->AFEC_CVR >> AFEC_CVR_GAINCORR_Pos) / 1024u;
 	return corrected_data;
-	
+
 }
 
 /**
@@ -706,19 +702,19 @@ void afec_set_sample_hold_mode(Afec *const afec,
 	if (channel != AFEC_CHANNEL_ALL) {
 		afec_ch_sanity_check(afec, channel);
 	}
-		
+
 	uint32_t reg = 0;
 	reg = afec->AFEC_SHMR;
 	if (mode == AFEC_SAMPLE_HOLD_MODE_1) {
-		
+
 		reg |= (channel == AFEC_CHANNEL_ALL)? AFEC_CHANNEL_ALL : 0x1u << channel;
 	}
 	else {
-		
+
 		reg = (channel == AFEC_CHANNEL_ALL)? 0 : ~(0x1u << channel);
 	}
 	afec->AFEC_SHMR = reg;
-		
+
 }
 #endif
 
