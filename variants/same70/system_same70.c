@@ -56,6 +56,9 @@ extern "C" {
 #if VARIANT_MCK == 150000000
 const uint32_t PllaMul = 50;
 const uint32_t FlashWaitStates = 6;
+#elif VARIANT_MCK == 144000000
+const uint32_t PllaMul = 48;
+const uint32_t FlashWaitStates = 6;
 #elif VARIANT_MCK == 120000000
 const uint32_t PllaMul = 40;
 const uint32_t FlashWaitStates = 5;

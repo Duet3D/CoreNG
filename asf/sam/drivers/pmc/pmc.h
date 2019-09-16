@@ -96,7 +96,7 @@ extern "C" {
 #define PMC_PCK_4               4 /* PCK4 ID */
 #define PMC_PCK_5               5 /* PCK5 ID */
 #define PMC_PCK_6               6 /* PCK6 ID */
-#if SAMG55
+#if SAMG55 || SAME70
 #define PMC_PCK_7               7 /* PCK7 ID */
 #endif
 #endif
