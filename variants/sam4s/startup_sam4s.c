@@ -63,6 +63,7 @@ extern uint32_t _szero;
 extern uint32_t _ezero;
 //extern uint32_t _sstack;
 extern uint32_t _estack;
+extern uint32_t _firmware_crc;
 
 /* Exception Table */
 __attribute__ ((section(".vectors")))
@@ -77,7 +78,11 @@ const DeviceVectors exception_table =
 	.pfnMemManage_Handler  = (void*) MemManage_Handler,
 	.pfnBusFault_Handler   = (void*) BusFault_Handler,
 	.pfnUsageFault_Handler = (void*) UsageFault_Handler,
+#if 1
+	.pfnReserved1_Handler  = (void*) &_firmware_crc,
+#else
 	.pfnReserved1_Handler  = (void*) (0UL),          /* Reserved */
+#endif
 	.pfnReserved2_Handler  = (void*) (0UL),          /* Reserved */
 	.pfnReserved3_Handler  = (void*) (0UL),          /* Reserved */
 	.pfnReserved4_Handler  = (void*) (0UL),          /* Reserved */

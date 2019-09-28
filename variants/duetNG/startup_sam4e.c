@@ -70,6 +70,7 @@ extern uint32_t _szero;
 extern uint32_t _ezero;
 //extern uint32_t _sstack;
 extern uint32_t _estack;
+extern uint32_t _firmware_crc;
 
 /* Exception Table */
 __attribute__ ((section(".vectors")))
@@ -84,7 +85,11 @@ const DeviceVectors exception_table = {
 	(void*) MemManage_Handler,
 	(void*) BusFault_Handler,
 	(void*) UsageFault_Handler,
+#if 1
+	(void*) &_firmware_crc,
+#else
 	(void*) (0UL),          /* Reserved */
+#endif
 	(void*) (0UL),          /* Reserved */
 	(void*) (0UL),          /* Reserved */
 	(void*) (0UL),          /* Reserved */
