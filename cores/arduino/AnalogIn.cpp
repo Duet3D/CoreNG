@@ -268,13 +268,13 @@ void AnalogInStartConversion(uint32_t channels)
 	channels &= activeChannels;
 	if ((channels & AfecLowChannelMask) != 0)
 	{
-		AFEC1->AFEC_CHDR = AfecLowChannelMask;
-		AFEC1->AFEC_CHER = channels & AfecLowChannelMask;
+		AFEC0->AFEC_CHDR = ~channels & AfecLowChannelMask;
+		AFEC0->AFEC_CHER = channels & AfecLowChannelMask;
 		StartConversion(AFEC0);
 	}
 	if ((channels & AfecHighChannelMask) != 0)
 	{
-		AFEC1->AFEC_CHDR = AfecHighChannelMask >> 16;
+		AFEC1->AFEC_CHDR = (~channels & AfecHighChannelMask) >> 16;
 		AFEC1->AFEC_CHER = (channels & AfecHighChannelMask) >> 16;
 		StartConversion(AFEC1);
 	}
