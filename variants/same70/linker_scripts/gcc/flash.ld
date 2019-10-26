@@ -48,10 +48,12 @@ OUTPUT_ARCH(arm)
 SEARCH_DIR(.)
 
 /* Memory Spaces Definitions */
+/* We put the non-cached RAM at the start of RAM because the CAN buffers must be within the first 64kb. */
 MEMORY
 {
   rom (rx)  : ORIGIN = 0x00400000, LENGTH = 0x00100000
-  ram (rwx) : ORIGIN = 0x20400000, LENGTH = 0x00060000
+  ram_not_cached (rw) : ORIGIN = 0x20400000, LENGTH = 0x00010000
+  ram (rwx) : ORIGIN = 0x20410000, LENGTH = 0x00050000
 }
 
 /* Section Definitions */
@@ -117,6 +119,15 @@ SECTIONS
     . = ALIGN(4);
     _etext = .;
 
+ 	.ram_nocache (NOLOAD) :
+	{
+        . = ALIGN(4);
+        _szero_nocache = .;
+		*(.ram_nocache .ram_nocache.*)
+        . = ALIGN(4);
+        _ezero_nocache = .;
+ 	} > ram_not_cached
+	
     .relocate : AT (_etext)
     {
         . = ALIGN(4);
@@ -131,13 +142,12 @@ SECTIONS
 
   	_firmware_crc = _etext + (_erelocate - _srelocate);		/* We append the CRC32 to the binary file. This is its offset in memory. */
 
-   /* .bss section which is used for uninitialized data. The MCAN buffers must be within the first 64Kb. */
+   /* .bss section which is used for uninitialized data */
     .bss ALIGN(4) (NOLOAD) :
     {
         . = ALIGN(4);
         _sbss = . ;
         _szero = .;
-		*mcan.o(.bss .bss.*);
         *(.bss .bss.*)
         *(COMMON)
         . = ALIGN(4);
@@ -148,7 +158,7 @@ SECTIONS
     . = ALIGN(4);
     _end = . ;
 
-    /* .stack_dummy section doesn't contains any symbols. It is only
+   /* .stack_dummy section doesn't contains any symbols. It is only
        used for linker to calculate size of stack sections, and assign
        values to stack symbols later */
     .stack_dummy :

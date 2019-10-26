@@ -53,7 +53,7 @@
 extern void __libc_init_array(void);
 extern void init(void);
 extern void UrgentInit(void);
-extern void AppMain();
+extern __attribute__((noreturn)) void AppMain();
 
 /* Initialize segments */
 extern uint32_t _sfixed;
@@ -63,6 +63,8 @@ extern uint32_t _srelocate;
 extern uint32_t _erelocate;
 extern uint32_t _szero;
 extern uint32_t _ezero;
+extern uint32_t _szero_nocache;
+extern uint32_t _ezero_nocache;
 //extern uint32_t _sstack;
 extern uint32_t _estack;
 extern uint32_t _firmware_crc;
@@ -317,27 +319,36 @@ const DeviceVectors exception_table = {
  * \brief This is the code that gets called on processor reset.
  * To initialize the device, and call the main() routine.
  */
-void Reset_Handler(void)
+__attribute__((noreturn)) void Reset_Handler(void)
 {
-	uint32_t *pSrc, *pDest;
+	// Clear the nocache RAM segment
+	for (uint32_t *pDest = &_szero_nocache; pDest < &_ezero_nocache;)
+	{
+		*pDest++ = 0;
+	}
 
 	/* Initialize the relocate segment */
-	pSrc = &_etext;
-	pDest = &_srelocate;
+	{
+		const uint32_t *pSrc = &_etext;
+		uint32_t *pDest = &_srelocate;
 
-	if (pSrc != pDest) {
-		for (; pDest < &_erelocate;) {
-			*pDest++ = *pSrc++;
+		if (pSrc != pDest)
+		{
+			while (pDest < &_erelocate)
+			{
+				*pDest++ = *pSrc++;
+			}
 		}
 	}
 
 	/* Clear the zero segment */
-	for (pDest = &_szero; pDest < &_ezero;) {
+	for (uint32_t *pDest = &_szero; pDest < &_ezero;)
+	{
 		*pDest++ = 0;
 	}
 
 	/* Set the vector table base address */
-	pSrc = (uint32_t *) & _sfixed;
+	const uint32_t * const pSrc = (uint32_t *) & _sfixed;
 	SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 
 #if __FPU_USED
