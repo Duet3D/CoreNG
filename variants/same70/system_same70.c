@@ -53,23 +53,25 @@ extern "C" {
 /**INDENT-ON**/
 /* @endcond */
 
+// Definitions for the clock system
+// Max processor clock is 300MHz
+// Max PLLA output frequency is 500MHz
 #if VARIANT_MCK == 150000000
-const uint32_t PllaMul = 50;
-const uint32_t FlashWaitStates = 6;
+const uint32_t PllaMul = 25;			// the multiplier we need from 12MHz to get the required PLLA clock
+const uint32_t FlashWaitStates = 6;		// the FWS value needed, one less than the actual number of flash wait states. See table 59-51 of the datasheet.
 #elif VARIANT_MCK == 144000000
-const uint32_t PllaMul = 48;
+const uint32_t PllaMul = 24;
 const uint32_t FlashWaitStates = 6;
 #elif VARIANT_MCK == 120000000
-const uint32_t PllaMul = 40;
+// For this one we could use the 480MHz USB PLL output instead (PMC_MCKR_CSS_UPLL_CLK) and divide it by 2 (PMC_MCKR_PRES_CLK_2)
+const uint32_t PllaMul = 20;
 const uint32_t FlashWaitStates = 5;
 #endif
 
-// Clock Settings (600MHz PLL VDDIO 3.3V and VDDCORE 1.2V)
-// Clock Settings (300MHz HCLK, 150MHz MCK)=> PRESC = 2, MDIV = 2
-#define SYS_BOARD_OSCOUNT   (CKGR_MOR_MOSCXTST(0x8U))
+#define SYS_BOARD_OSCOUNT   (CKGR_MOR_MOSCXTST(0x8U))									// crystal oscillator startup time is 8 * 8 slow clocks
 #define SYS_BOARD_PLLAR     (CKGR_PLLAR_ONE | CKGR_PLLAR_MULA(PllaMul - 1) | \
-                            CKGR_PLLAR_PLLACOUNT(0x3fU) | CKGR_PLLAR_DIVA(2 - 1))
-#define SYS_BOARD_MCKR      (PMC_MCKR_PRES_CLK_2 | PMC_MCKR_CSS_PLLA_CLK | (1<<8))
+                            CKGR_PLLAR_PLLACOUNT(0x3fU) | CKGR_PLLAR_DIVA_BYPASS)
+#define SYS_BOARD_MCKR      (PMC_MCKR_PRES_CLK_1 | PMC_MCKR_CSS_PLLA_CLK | PMC_MCKR_MDIV_PCK_DIV2)
 
 uint32_t SystemCoreClock = CHIP_FREQ_XTAL_12M;
 
@@ -83,23 +85,23 @@ uint32_t SystemCoreClock = CHIP_FREQ_XTAL_12M;
   EFC->EEFC_FMR = EEFC_FMR_FWS(FlashWaitStates);
 
   /* Initialize main oscillator */
-  if ( !(PMC->CKGR_MOR & CKGR_MOR_MOSCSEL) )
+  if ( !(PMC->CKGR_MOR & CKGR_MOR_MOSCSEL) )			// if the crystal oscillator is not selected
   {
-    PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | SYS_BOARD_OSCOUNT | CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN;
+    PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | SYS_BOARD_OSCOUNT | CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN;		// enable the crystal oscillator, keep the RC oscillator enabled
 
-    while ( !(PMC->PMC_SR & PMC_SR_MOSCXTS) )
+    while ( !(PMC->PMC_SR & PMC_SR_MOSCXTS) )			// wait until crystal oscillator has stablised
     {
     }
   }
 
   /* Switch to 3-20MHz Xtal oscillator */
-  PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | SYS_BOARD_OSCOUNT | CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCSEL;
+  PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | SYS_BOARD_OSCOUNT | CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCSEL;	// switch to crystal oscillator
 
-  while ( !(PMC->PMC_SR & PMC_SR_MOSCSELS) )
+  while ( !(PMC->PMC_SR & PMC_SR_MOSCSELS) )			// wait until selection is complete
   {
   }
 
-  PMC->PMC_MCKR = (PMC->PMC_MCKR & ~(uint32_t)PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_MAIN_CLK;
+  PMC->PMC_MCKR = (PMC->PMC_MCKR & ~(uint32_t)PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_MAIN_CLK;					// switch master clock to main clock
 
   while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) )
   {
@@ -124,141 +126,6 @@ uint32_t SystemCoreClock = CHIP_FREQ_XTAL_12M;
   }
 
   SystemCoreClock = (CHIP_FREQ_XTAL_12M * PllaMul)/2;		// see definitions of SYS_BOARD_PLLAR near the start of this file
-}
-
-void SystemCoreClockUpdate( void )
-{
-  /* Determine clock frequency according to clock register values */
-  switch (PMC->PMC_MCKR & (uint32_t) PMC_MCKR_CSS_Msk)
-  {
-    case PMC_MCKR_CSS_SLOW_CLK: /* Slow clock */
-      if ( SUPC->SUPC_SR & SUPC_SR_OSCSEL )
-      {
-        SystemCoreClock = CHIP_FREQ_XTAL_32K;
-      }
-      else
-      {
-        SystemCoreClock = CHIP_FREQ_SLCK_RC;
-      }
-    break;
-
-    case PMC_MCKR_CSS_MAIN_CLK: /* Main clock */
-      if ( PMC->CKGR_MOR & CKGR_MOR_MOSCSEL )
-      {
-        SystemCoreClock = CHIP_FREQ_XTAL_12M;
-      }
-      else
-      {
-        SystemCoreClock = CHIP_FREQ_MAINCK_RC_4MHZ;
-
-        switch ( PMC->CKGR_MOR & CKGR_MOR_MOSCRCF_Msk )
-        {
-          case CKGR_MOR_MOSCRCF_4_MHz:
-          break;
-
-          case CKGR_MOR_MOSCRCF_8_MHz:
-            SystemCoreClock *= 2U;
-          break;
-
-          case CKGR_MOR_MOSCRCF_12_MHz:
-            SystemCoreClock *= 3U;
-          break;
-
-          default:
-          break;
-        }
-      }
-    break;
-
-    case PMC_MCKR_CSS_PLLA_CLK:	/* PLLA clock */
-      if ( PMC->CKGR_MOR & CKGR_MOR_MOSCSEL )
-      {
-        SystemCoreClock = CHIP_FREQ_XTAL_12M ;
-      }
-      else
-      {
-        SystemCoreClock = CHIP_FREQ_MAINCK_RC_4MHZ;
-
-        switch ( PMC->CKGR_MOR & CKGR_MOR_MOSCRCF_Msk )
-        {
-          case CKGR_MOR_MOSCRCF_4_MHz:
-          break;
-
-          case CKGR_MOR_MOSCRCF_8_MHz:
-            SystemCoreClock *= 2U;
-          break;
-
-          case CKGR_MOR_MOSCRCF_12_MHz:
-            SystemCoreClock *= 3U;
-          break;
-
-          default:
-          break;
-        }
-      }
-
-      if ( (uint32_t) (PMC->PMC_MCKR & (uint32_t) PMC_MCKR_CSS_Msk) == PMC_MCKR_CSS_PLLA_CLK )
-      {
-        SystemCoreClock *= ((((PMC->CKGR_PLLAR) & CKGR_PLLAR_MULA_Msk) >> CKGR_PLLAR_MULA_Pos) + 1U);
-        SystemCoreClock /= ((((PMC->CKGR_PLLAR) & CKGR_PLLAR_DIVA_Msk) >> CKGR_PLLAR_DIVA_Pos));
-      }
-    break;
-
-    default:
-    break;
-  }
-
-  if ( (PMC->PMC_MCKR & PMC_MCKR_PRES_Msk) == PMC_MCKR_PRES_CLK_3 )
-  {
-    SystemCoreClock /= 3U;
-  }
-  else
-  {
-    SystemCoreClock >>= ((PMC->PMC_MCKR & PMC_MCKR_PRES_Msk) >> PMC_MCKR_PRES_Pos);
-  }
-}
-/**
- * Initialize flash.
- */
-void system_init_flash( uint32_t ul_clk )
-{
-  /* Set FWS for embedded Flash access according to operating frequency */
-  if ( ul_clk < CHIP_FREQ_FWS_0 )
-  {
-    EFC->EEFC_FMR = EEFC_FMR_FWS(0)|EEFC_FMR_CLOE;
-  }
-  else
-  {
-    if (ul_clk < CHIP_FREQ_FWS_1)
-    {
-      EFC->EEFC_FMR = EEFC_FMR_FWS(1)|EEFC_FMR_CLOE;
-    }
-    else
-    {
-      if (ul_clk < CHIP_FREQ_FWS_2)
-      {
-        EFC->EEFC_FMR = EEFC_FMR_FWS(2)|EEFC_FMR_CLOE;
-      }
-      else
-      {
-        if ( ul_clk < CHIP_FREQ_FWS_3 )
-        {
-          EFC->EEFC_FMR = EEFC_FMR_FWS(3)|EEFC_FMR_CLOE;
-        }
-        else
-        {
-          if ( ul_clk < CHIP_FREQ_FWS_4 )
-          {
-            EFC->EEFC_FMR = EEFC_FMR_FWS(4)|EEFC_FMR_CLOE;
-          }
-          else
-          {
-            EFC->EEFC_FMR = EEFC_FMR_FWS(5)|EEFC_FMR_CLOE;
-          }
-        }
-      }
-    }
-  }
 }
 
 // SysTick init, called by non-RTOS builds

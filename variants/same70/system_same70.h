@@ -66,15 +66,8 @@ inline uint32_t SystemPeripheralClock() { return SystemCoreClock/2; }
  */
 void SystemInit(void);
 
-/**
- * @brief Updates the SystemCoreClock with current core Clock
- * retrieved from cpu registers.
- */
+// The following are declared so that asf/common/services/clock/same70/sysclk.c will compile without warnings, however we don't use that module, therefore they are left undefined
 void SystemCoreClockUpdate(void);
-
-/**
- * Initialize flash.
- */
 void system_init_flash(uint32_t dw_clk);
 
 // Initialise the 1ms system tick. Called by non-RTOS builds only.

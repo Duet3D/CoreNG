@@ -145,7 +145,7 @@ static void _dcache_invalidate_prepare(void *addr, uint32_t dsize)
 	int32_t linesize = 32U;                // in Cortex-M7 size of cache line is fixed to 8 words (32 bytes)
 	uint32_t addr1 = op_addr;
 	uint32_t addr2 = op_addr + op_size;
-	if (addr1 & (linesize - 1) || addr2 & (linesize - 1)) {
+	if ((addr1 & (linesize - 1)) || (addr2 & (linesize - 1))) {
 		addr1 &= ~(linesize - 1);
 		addr2 &= ~(linesize - 1);
 		__ISB();
@@ -178,7 +178,11 @@ static void _dcache_invalidate(void *addr, uint32_t dsize)
 
 	while (op_size > 0) {
 		/* D-Cache Invalidate by MVA to PoC */
+#if 1	//DC42
+		SCB->DCIMVAC= op_addr;
+#else
 		*(volatile uint32_t *)(0xE000EF5C) = op_addr;
+#endif
 		op_addr += linesize;
 		op_size -= linesize;
 	}

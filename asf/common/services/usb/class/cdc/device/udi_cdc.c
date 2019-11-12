@@ -52,6 +52,12 @@
 #include "udi_cdc.h"
 #include <string.h>
 
+#if SAME70
+# define __nocache	__attribute__((section(".ram_nocache")))
+#else
+# define __nocache
+#endif
+
 #ifdef UDI_CDC_LOW_RATE
 #  ifdef USB_DEVICE_HS_SUPPORT
 #    define UDI_CDC_TX_BUFFERS     (UDI_CDC_DATA_EPS_HS_SIZE)
@@ -237,7 +243,7 @@ static volatile uint8_t udi_cdc_nb_comm_enabled = 0;
 static volatile uint8_t udi_cdc_nb_data_enabled = 0;
 static volatile bool udi_cdc_data_running = false;
 //! Buffer to receive data
-COMPILER_WORD_ALIGNED static uint8_t udi_cdc_rx_buf[UDI_CDC_PORT_NB][2][UDI_CDC_RX_BUFFERS];
+COMPILER_WORD_ALIGNED __nocache static uint8_t udi_cdc_rx_buf[UDI_CDC_PORT_NB][2][UDI_CDC_RX_BUFFERS];
 //! Data available in RX buffers
 static volatile uint16_t udi_cdc_rx_buf_nb[UDI_CDC_PORT_NB][2];
 //! Give the current RX buffer used (rx0 if 0, rx1 if 1)
@@ -251,7 +257,7 @@ static volatile bool udi_cdc_rx_trans_ongoing[UDI_CDC_PORT_NB];
 #define  UDI_CDC_TRANS_HALTED    2
 
 //! Buffer to send data
-COMPILER_WORD_ALIGNED static uint8_t udi_cdc_tx_buf[UDI_CDC_PORT_NB][2][UDI_CDC_TX_BUFFERS];
+COMPILER_WORD_ALIGNED __nocache static uint8_t udi_cdc_tx_buf[UDI_CDC_PORT_NB][2][UDI_CDC_TX_BUFFERS];
 //! Data available in TX buffers
 static uint16_t udi_cdc_tx_buf_nb[UDI_CDC_PORT_NB][2];
 //! Give current TX buffer used (tx0 if 0, tx1 if 1)
@@ -975,7 +981,7 @@ static iram_size_t udi_cdc_multi_read_no_polling(uint8_t port, void* buf, iram_s
 	if (!udi_cdc_data_running) {
 		return 0;
 	}
-	
+
 	//Get number of available data
 	// Check available data
 	flags = cpu_irq_save(); // to protect udi_cdc_rx_pos & udi_cdc_rx_buf_sel
@@ -993,7 +999,7 @@ static iram_size_t udi_cdc_multi_read_no_polling(uint8_t port, void* buf, iram_s
 		flags = cpu_irq_save(); // to protect udi_cdc_rx_pos
 		udi_cdc_rx_pos[port] += size;
 		cpu_irq_restore(flags);
-		
+
 		ptr_buf += size;
 		udi_cdc_rx_start(port);
 	}
@@ -1034,7 +1040,7 @@ iram_size_t udi_cdc_multi_get_free_tx_buffer(uint8_t port)
 			buf_sel_nb = 0;
 		}
 	}
-	retval = UDI_CDC_TX_BUFFERS - buf_sel_nb;  
+	retval = UDI_CDC_TX_BUFFERS - buf_sel_nb;
 	cpu_irq_restore(flags);
 	return retval;
 }

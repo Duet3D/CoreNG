@@ -27,9 +27,6 @@
  *        Definitions
  *----------------------------------------------------------------------------*/
 
-/** Frequency of the board main oscillator */
-#define VARIANT_MAINOSC		12000000
-
 /** Master clock frequency */
 #define VARIANT_MCK			150000000
 
