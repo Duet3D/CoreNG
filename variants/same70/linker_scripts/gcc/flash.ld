@@ -172,5 +172,8 @@ SECTIONS
     __StackLimit = __StackTop - SIZEOF(.stack_dummy);
     PROVIDE(_sstack = __StackLimit);
     PROVIDE(_estack = __StackTop);
+
+	PROVIDE(_nocache_ram_start = ORIGIN(ram_not_cached));
+	PROVIDE(_nocache_ram_end = ORIGIN(ram_not_cached) + LENGTH(ram_not_cached));
 }
 

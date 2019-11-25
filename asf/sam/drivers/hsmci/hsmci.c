@@ -46,6 +46,12 @@
 
 #if 1 	//dc42
 #include "conf_sd_mmc.h"
+
+// The following are normally in file Hardware/Cache.c in the RepRapFirmware project
+extern void CacheFlushBeforeDMAReceive(const volatile void *start, size_t length);
+extern void CacheInvalidateAfterDMAReceive(const volatile void *start, size_t length);
+extern void CacheFlushBeforeDMASend(const volatile void *start, size_t length);
+
 #endif
 
 /**
@@ -127,6 +133,11 @@ static void hsmci_set_speed(uint32_t speed, uint32_t mck);
 static bool hsmci_wait_busy(void);
 static bool hsmci_send_cmd_execute(uint32_t cmdr, sdmmc_cmd_def_t cmd,
 		uint32_t arg);
+
+#if 1	//dc42
+static void *dmaReadStart;
+static uint32_t dmaReadSize;
+#endif
 
 /**
  * \brief Reset the HSMCI interface
@@ -685,6 +696,12 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 			DMAC_CTRLA_BTSIZE_Msk >> DMAC_CTRLA_BTSIZE_Pos :
 			((DMAC_CTRLA_BTSIZE_Msk >> DMAC_CTRLA_BTSIZE_Pos) * 4)));
 
+#if 1	//dc42
+	dmaReadStart = dest;
+	dmaReadSize = nb_data;
+	CacheFlushBeforeDMAReceive(dmaReadStart, dmaReadSize);
+#endif
+
 	/* Set channel configuration register
 	 * - Enable stop on done
 	 * - Hardware Selection for the Source
@@ -747,16 +764,26 @@ bool hsmci_wait_end_of_read_blocks(void)
 			hsmci_reset();
 			// Disable DMA
 			dmac_channel_disable(DMAC, CONF_HSMCI_DMA_CHANNEL);
+#if 1	//dc42
+			CacheInvalidateAfterDMAReceive(dmaReadStart, dmaReadSize);
+#endif
 			return false;
 		}
 		if (((uint32_t)hsmci_block_size * hsmci_nb_block) > hsmci_transfert_pos) {
 			// It is not the end of all transfers
 			// then just wait end of DMA
 			if (sr & HSMCI_SR_DMADONE) {
+#if 1	//dc42
+			CacheInvalidateAfterDMAReceive(dmaReadStart, dmaReadSize);
+#endif
 				return true;
 			}
 		}
 	} while (!(sr & HSMCI_SR_XFRDONE));
+
+	#if 1	//dc42
+			CacheInvalidateAfterDMAReceive(dmaReadStart, dmaReadSize);
+#endif
 	return true;
 }
 
@@ -773,6 +800,10 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 	Assert(nb_data <= (transfert_byte ?
 			DMAC_CTRLA_BTSIZE_Msk >> DMAC_CTRLA_BTSIZE_Pos :
 			((DMAC_CTRLA_BTSIZE_Msk >> DMAC_CTRLA_BTSIZE_Pos) * 4)));
+
+#if 1	//dc42
+	CacheFlushBeforeDMASend(src, nb_data);
+#endif
 
 	/* Set channel configuration register:
 	 * - Enable stop on done
@@ -862,6 +893,12 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 	Assert(nb_data <= (((uint32_t)hsmci_block_size * hsmci_nb_block) - hsmci_transfert_pos));
 	Assert(nb_data <= (PERIPH_RCR_RXCTR_Msk >> PERIPH_RCR_RXCTR_Pos));
 
+#if 1	//dc42
+	dmaReadStart = dest;
+	dmaReadSize = nb_data;
+	CacheFlushBeforeDMAReceive(dmaReadStart, dmaReadSize);
+#endif
+
 	// Handle unaligned memory address
 	if (((uint32_t)dest & 0x3) || (hsmci_block_size & 0x3)) {
 		HSMCI->HSMCI_MR |= HSMCI_MR_FBYTE;
@@ -899,12 +936,18 @@ bool hsmci_wait_end_of_read_blocks(void)
 					__func__, sr);
 			HSMCI->HSMCI_PTCR = HSMCI_PTCR_RXTDIS | HSMCI_PTCR_TXTDIS;
 			hsmci_reset();
+#if 1	//dc42
+			CacheInvalidateAfterDMAReceive(dmaReadStart, dmaReadSize);
+#endif
 			return false;
 		}
 
 	} while (!(sr & HSMCI_SR_RXBUFF));
 
 	if (hsmci_transfert_pos < ((uint32_t)hsmci_block_size * hsmci_nb_block)) {
+#if 1	//dc42
+		CacheInvalidateAfterDMAReceive(dmaReadStart, dmaReadSize);
+#endif
 		return true;
 	}
 	// It is the last transfer, then wait command completed
@@ -922,9 +965,16 @@ bool hsmci_wait_end_of_read_blocks(void)
 			hsmci_debug("%s: PDC sr 0x%08x last transfer error\n\r",
 					__func__, sr);
 			hsmci_reset();
+#if 1	//dc42
+			CacheInvalidateAfterDMAReceive(dmaReadStart, dmaReadSize);
+#endif
 			return false;
 		}
 	} while (!(sr & HSMCI_SR_XFRDONE));
+
+#if 1	//dc42
+	CacheInvalidateAfterDMAReceive(dmaReadStart, dmaReadSize);
+#endif
 	return true;
 }
 
@@ -935,6 +985,10 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 	nb_data = nb_block * hsmci_block_size;
 	Assert(nb_data <= (((uint32_t)hsmci_block_size * hsmci_nb_block) - hsmci_transfert_pos));
 	Assert(nb_data <= (PERIPH_TCR_TXCTR_Msk >> PERIPH_TCR_TXCTR_Pos));
+
+#if 1	//dc42
+	CacheFlushBeforeDMASend(src, nb_data);
+#endif
 
 	// Handle unaligned memory address
 	if (((uint32_t)src & 0x3) || (hsmci_block_size & 0x3)) {
@@ -1020,6 +1074,12 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 
 	nb_data = nb_block * hsmci_block_size;
 
+#if 1	//dc42
+	dmaReadStart = dest;
+	dmaReadSize = nb_data;
+	CacheFlushBeforeDMAReceive(dmaReadStart, dmaReadSize);
+#endif
+
 	if((uint32_t)dest & 3) {
 		p_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
 						| XDMAC_CC_MBSIZE_SINGLE
@@ -1077,6 +1137,9 @@ bool hsmci_wait_end_of_read_blocks(void)
 			hsmci_reset();
 			// Disable XDMAC
 			xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
+#if 1	//dc42
+			CacheInvalidateAfterDMAReceive(dmaReadStart, dmaReadSize);
+#endif
 			return false;
 		}
 #if 1	// dc42
@@ -1089,10 +1152,17 @@ bool hsmci_wait_end_of_read_blocks(void)
 			// then just wait end of DMA
 			dma_sr = xdmac_channel_get_interrupt_status(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 			if (dma_sr & XDMAC_CIS_BIS) {
+#if 1	//dc42
+				CacheInvalidateAfterDMAReceive(dmaReadStart, dmaReadSize);
+#endif
 				return true;
 			}
 		}
 	} while (!(sr & HSMCI_SR_XFRDONE));
+
+#if 1	//dc42
+	CacheInvalidateAfterDMAReceive(dmaReadStart, dmaReadSize);
+#endif
 	return true;
 }
 
@@ -1107,6 +1177,10 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 	xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 
 	nb_data = nb_block * hsmci_block_size;
+
+#if 1	//dc42
+	CacheFlushBeforeDMASend(src, nb_data);
+#endif
 
 	if((uint32_t)src & 3) {
 		p_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
