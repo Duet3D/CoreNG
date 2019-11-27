@@ -320,13 +320,6 @@ Ctrl_status sd_mmc_mem_2_ram(uint8_t slot, uint32_t addr, void *ram, uint32_t nu
 	if (SD_MMC_OK != sd_mmc_wait_end_of_read_blocks(false)) {
 		return CTRL_FAIL;
 	}
-
-#if 0	//SAME70
-	// Invalidate cache lines so that we read the newly DMA'd data. Not needed if we only DMA to/from non-cached RAM.
-	// Caution, may cause collateral damage if the address is not 32-byte aligned!
-	// See http://ww1.microchip.com/downloads/en/DeviceDoc/Managing-Cache-Coherency-on-Cortex-M7-Based-MCUs-DS90003195A.pdf
-	SCB_InvalidateDCache_by_Addr((uint32_t*)addr, numBlocks * SD_MMC_BLOCK_SIZE);
-#endif
 	return CTRL_GOOD;
 }
 
@@ -342,11 +335,6 @@ Ctrl_status sd_mmc_mem_2_ram_1(uint32_t addr, void *ram, uint32_t numBlocks)
 
 Ctrl_status sd_mmc_ram_2_mem(uint8_t slot, uint32_t addr, const void *ram, uint32_t numBlocks)
 {
-#if 0	//SAME70
-	// Clean cache lines so that the data we are about to DMA to the SD card is up to date. Not needed if we only DMA to/from non-cached RAM.
-	// See http://ww1.microchip.com/downloads/en/DeviceDoc/Managing-Cache-Coherency-on-Cortex-M7-Based-MCUs-DS90003195A.pdf
-	SCB_CleanDCache_by_Addr((uint32_t*)addr, numBlocks * SD_MMC_BLOCK_SIZE);
-#endif
 	switch (sd_mmc_init_write_blocks(slot, addr, numBlocks)) {
 	case SD_MMC_OK:
 		break;
