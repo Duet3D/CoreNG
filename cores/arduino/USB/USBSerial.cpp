@@ -15,19 +15,17 @@ void core_vbus_off(CallbackParameter);
 
 // SerialCDC members
 
-SerialCDC::SerialCDC() : /* _cdc_tx_buffer(), */ txBufsize(1), isConnected(false)
+SerialCDC::SerialCDC() : /* _cdc_tx_buffer(), */ txBufsize(1), isConnected(false), vBusPin(NoPin)
 {
 }
 
-void SerialCDC::Start(Pin vBusPin)
+void SerialCDC::Start(Pin p_vBusPin)
 {
-	static bool isInterruptAttached = false;
-
+	vBusPin = p_vBusPin;
 	udc_start();
 
-	if (vBusPin != NoPin && !isInterruptAttached)
+	if (vBusPin != NoPin)
 	{
-		isInterruptAttached = true;
 		pinMode(vBusPin, INPUT);
 		attachInterrupt(vBusPin, core_vbus_off, INTERRUPT_MODE_FALLING, nullptr);
 	}
@@ -89,7 +87,7 @@ size_t SerialCDC::canWrite() const
 	return (isConnected) ? udi_cdc_get_free_tx_buffer() : 0;
 }
 
-SerialCDC::operator bool() const
+bool SerialCDC::IsConnected() const
 {
 	return isConnected;
 }

@@ -18,11 +18,12 @@ class SerialCDC : public Stream
 private:
 	size_t txBufsize;
 	bool isConnected;
+	Pin vBusPin;
 
 public:
 	SerialCDC();
 
-	void Start(Pin vBusPin);
+	void Start(Pin p_vBusPin);
 	void end(void);
 
 	int available() override;
@@ -37,7 +38,7 @@ public:
     size_t write(const char *buffer, size_t size) { return write((const uint8_t *)buffer, size); }
 
 	size_t canWrite() const override;	// Function added by DC42 so that we can tell how many characters we can write without blocking (for Duet)
-	operator bool() const;
+	bool IsConnected() const;
 
 	// Callback functions called from the cdc layer - not for general use
 	void cdcSetConnected(bool b);
