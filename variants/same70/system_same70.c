@@ -54,7 +54,7 @@ extern "C" {
 /* @endcond */
 
 // Definitions for the clock system
-// Max processor clock is 300MHz
+// Processor clock is 2 * VARIANT_MCK, maximum 300MHz
 // Max PLLA output frequency is 500MHz
 #if VARIANT_MCK == 150000000
 const uint32_t PllaMul = 25;			// the multiplier we need from 12MHz to get the required PLLA clock
@@ -81,51 +81,51 @@ uint32_t SystemCoreClock = CHIP_FREQ_XTAL_12M;
  */
  void SystemInit( void )
 {
-  /* Set FWS according to SYS_BOARD_MCKR configuration */
-  EFC->EEFC_FMR = EEFC_FMR_FWS(FlashWaitStates);
+	/* Set FWS according to SYS_BOARD_MCKR configuration */
+	EFC->EEFC_FMR = EEFC_FMR_FWS(FlashWaitStates);
 
-  /* Initialize main oscillator */
-  if ( !(PMC->CKGR_MOR & CKGR_MOR_MOSCSEL) )			// if the crystal oscillator is not selected
-  {
-    PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | SYS_BOARD_OSCOUNT | CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN;		// enable the crystal oscillator, keep the RC oscillator enabled
+	/* Initialize main oscillator */
+	if ( !(PMC->CKGR_MOR & CKGR_MOR_MOSCSEL) )			// if the crystal oscillator is not selected
+	{
+		PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | SYS_BOARD_OSCOUNT | CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN;		// enable the crystal oscillator, keep the RC oscillator enabled
 
-    while ( !(PMC->PMC_SR & PMC_SR_MOSCXTS) )			// wait until crystal oscillator has stablised
-    {
-    }
-  }
+		while ( !(PMC->PMC_SR & PMC_SR_MOSCXTS) )			// wait until crystal oscillator has stablised
+		{
+		}
+	}
 
-  /* Switch to 3-20MHz Xtal oscillator */
-  PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | SYS_BOARD_OSCOUNT | CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCSEL;	// switch to crystal oscillator
+	/* Switch to 3-20MHz Xtal oscillator */
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | SYS_BOARD_OSCOUNT | CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCSEL;	// switch to crystal oscillator
 
-  while ( !(PMC->PMC_SR & PMC_SR_MOSCSELS) )			// wait until selection is complete
-  {
-  }
+	while ( !(PMC->PMC_SR & PMC_SR_MOSCSELS) )			// wait until selection is complete
+	{
+	}
 
-  PMC->PMC_MCKR = (PMC->PMC_MCKR & ~(uint32_t)PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_MAIN_CLK;					// switch master clock to main clock
+	PMC->PMC_MCKR = (PMC->PMC_MCKR & ~(uint32_t)PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_MAIN_CLK;					// switch master clock to main clock
 
-  while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) )
-  {
-  }
+	while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) )
+	{
+	}
 
-  /* Initialize PLLA */
-  PMC->CKGR_PLLAR = SYS_BOARD_PLLAR;
-  while ( !(PMC->PMC_SR & PMC_SR_LOCKA) )
-  {
-  }
+	/* Initialize PLLA */
+	PMC->CKGR_PLLAR = SYS_BOARD_PLLAR;
+	while ( !(PMC->PMC_SR & PMC_SR_LOCKA) )
+	{
+	}
 
-  /* Switch to main clock */
-  PMC->PMC_MCKR = (SYS_BOARD_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_MAIN_CLK;
-  while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) )
-  {
-  }
+	/* Switch to main clock */
+	PMC->PMC_MCKR = (SYS_BOARD_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_MAIN_CLK;
+	while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) )
+	{
+	}
 
-  /* Switch to PLLA */
-  PMC->PMC_MCKR = SYS_BOARD_MCKR;
-  while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) )
-  {
-  }
+	/* Switch to PLLA */
+	PMC->PMC_MCKR = SYS_BOARD_MCKR;
+	while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) )
+	{
+	}
 
-  SystemCoreClock = (CHIP_FREQ_XTAL_12M * PllaMul)/2;		// see definitions of SYS_BOARD_PLLAR near the start of this file
+	SystemCoreClock = CHIP_FREQ_XTAL_12M * PllaMul;
 }
 
 // SysTick init, called by non-RTOS builds
