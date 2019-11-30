@@ -147,7 +147,7 @@ extern "C" void pinModeDuet(Pin pin, enum PinMode ulMode, uint32_t debounceCutof
 }
 
 // This has now been optimised to speed it up, so it may no longer be used to enable the pullup resistor on an input pin (use mode INPUT_PULLUP instead).
-extern "C"  void digitalWrite(Pin pin, bool ulVal)
+extern "C" void digitalWrite(Pin pin, bool ulVal)
 {
 	if (pin <= MaxPinNumber)
 	{
