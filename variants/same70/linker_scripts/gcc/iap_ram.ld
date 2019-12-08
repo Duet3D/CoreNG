@@ -34,9 +34,9 @@ SEARCH_DIR(.)
 /* Memory Spaces Definitions */
 MEMORY
 {
-	/* IAP binaries lie at the end of the Flash memory, so we adjust this */
-	rom (rx)  : ORIGIN = 0x00470000, LENGTH = 0x00010000
-	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00020000
+	/* This file is for IAP binaries that load into the last 64kb of RAM */
+	code_ram (rx)  : ORIGIN = 0x20450000, LENGTH = 0x00010000
+    ram (rwx) : ORIGIN = 0x20400000, LENGTH = 0x00050000
 }
 
 /* Section Definitions */
@@ -50,6 +50,8 @@ SECTIONS
         *(.text .text.* .gnu.linkonce.t.*)
         *(.glue_7t) *(.glue_7)
         *(.rodata .rodata* .gnu.linkonce.r.*)
+        *(.ramfunc .ramfunc.*);
+        *(.data .data.*);
         *(.ARM.extab* .gnu.linkonce.armextab.*)
 
         /* Support C constructors, and C destructors in both user code
@@ -89,33 +91,24 @@ SECTIONS
 
         . = ALIGN(4);
         _efixed = .;            /* End of text section */
-    } > rom
+    } > code_ram
 
     /* .ARM.exidx is sorted, so has to go in its own output section.  */
     PROVIDE_HIDDEN (__exidx_start = .);
     .ARM.exidx :
     {
       *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-    } > rom
+    } > code_ram
     PROVIDE_HIDDEN (__exidx_end = .);
 
     . = ALIGN(4);
     _etext = .;
-
-    .relocate : AT (_etext)
-    {
-        . = ALIGN(4);
-        _srelocate = .;
-        *(.ramfunc .ramfunc.*);
-        *(.data .data.*);
-        . = ALIGN(4);
-        _erelocate = .;
-    } > ram
-
-  	_firmware_crc = _etext + (_erelocate - _srelocate);		/* We append the CRC32 to the binary file. This is its offset in memory. */
+    _srelocate = .;
+    _erelocate = .;
+	_firmware_crc = .;
 
     /* .bss section which is used for uninitialized data */
-    .bss ALIGN(4) (NOLOAD) :
+    .bss (NOLOAD) :
     {
         . = ALIGN(4);
         _sbss = . ;
@@ -125,6 +118,8 @@ SECTIONS
         . = ALIGN(4);
         _ebss = . ;
         _ezero = .;
+		_szero_nocache = .;
+		_ezero_nocache = .;
     } > ram
 
     . = ALIGN(4);

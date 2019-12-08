@@ -125,6 +125,8 @@ SECTIONS
         . = ALIGN(4);
         _ebss = . ;
         _ezero = .;
+		_szero_nocache = .;
+		_ezero_nocache = .;
     } > ram
 
     . = ALIGN(4);
