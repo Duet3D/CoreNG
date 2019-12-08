@@ -68,10 +68,10 @@ extern "C" {
 #define LWIP_NETIF_TX_SINGLE_PBUF                     1
 
 /** Number of buffer for RX */
-# define GMAC_RX_BUFFERS  3
+# define GMAC_RX_BUFFERS  8
 
 /** Number of buffer for TX */
-# define GMAC_TX_BUFFERS  3
+# define GMAC_TX_BUFFERS  4
 
 /** MAC PHY operation max retry count */
 # define MAC_PHY_RETRY_MAX 1000000
