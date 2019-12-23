@@ -45,7 +45,10 @@
 /*@{*/
 
 #ifdef __cplusplus
+# define NOEXCEPT	noexcept		// DC added
  extern "C" {
+#else
+# define NOEXCEPT					// DC added
 #endif
 
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -193,59 +196,59 @@ typedef struct _DeviceVectors
 } DeviceVectors;
 
 /* Cortex-M3 core handlers */
-void Reset_Handler      ( void );
-void NMI_Handler        ( void );
-void HardFault_Handler  ( void );
-void MemManage_Handler  ( void );
-void BusFault_Handler   ( void );
-void UsageFault_Handler ( void );
-void SVC_Handler        ( void );
-void DebugMon_Handler   ( void );
-void PendSV_Handler     ( void );
-void SysTick_Handler    ( void );
+void Reset_Handler      ( void ) NOEXCEPT;
+void NMI_Handler        ( void ) NOEXCEPT;
+void HardFault_Handler  ( void ) NOEXCEPT;
+void MemManage_Handler  ( void ) NOEXCEPT;
+void BusFault_Handler   ( void ) NOEXCEPT;
+void UsageFault_Handler ( void ) NOEXCEPT;
+void SVC_Handler        ( void ) NOEXCEPT;
+void DebugMon_Handler   ( void ) NOEXCEPT;
+void PendSV_Handler     ( void ) NOEXCEPT;
+void SysTick_Handler    ( void ) NOEXCEPT;
 
 /* Peripherals handlers */
-void ADC_Handler        ( void );
-void CAN0_Handler       ( void );
-void CAN1_Handler       ( void );
-void DACC_Handler       ( void );
-void DMAC_Handler       ( void );
-void EFC0_Handler       ( void );
-void EFC1_Handler       ( void );
-void EMAC_Handler       ( void );
-void HSMCI_Handler      ( void );
-void PIOA_Handler       ( void );
-void PIOB_Handler       ( void );
-void PIOC_Handler       ( void );
-void PIOD_Handler       ( void );
-void PMC_Handler        ( void );
-void PWM_Handler        ( void );
-void RSTC_Handler       ( void );
-void RTC_Handler        ( void );
-void RTT_Handler        ( void );
-void SMC_Handler        ( void );
-void SPI0_Handler       ( void );
-void SSC_Handler        ( void );
-void SUPC_Handler       ( void );
-void TC0_Handler        ( void );
-void TC1_Handler        ( void );
-void TC2_Handler        ( void );
-void TC3_Handler        ( void );
-void TC4_Handler        ( void );
-void TC5_Handler        ( void );
-void TC6_Handler        ( void );
-void TC7_Handler        ( void );
-void TC8_Handler        ( void );
-void TRNG_Handler       ( void );
-void TWI0_Handler       ( void );
-void TWI1_Handler       ( void );
-void UART_Handler       ( void );
-void UOTGHS_Handler     ( void );
-void USART0_Handler     ( void );
-void USART1_Handler     ( void );
-void USART2_Handler     ( void );
-void USART3_Handler     ( void );
-void WDT_Handler        ( void );
+void ADC_Handler        ( void ) NOEXCEPT;
+void CAN0_Handler       ( void ) NOEXCEPT;
+void CAN1_Handler       ( void ) NOEXCEPT;
+void DACC_Handler       ( void ) NOEXCEPT;
+void DMAC_Handler       ( void ) NOEXCEPT;
+void EFC0_Handler       ( void ) NOEXCEPT;
+void EFC1_Handler       ( void ) NOEXCEPT;
+void EMAC_Handler       ( void ) NOEXCEPT;
+void HSMCI_Handler      ( void ) NOEXCEPT;
+void PIOA_Handler       ( void ) NOEXCEPT;
+void PIOB_Handler       ( void ) NOEXCEPT;
+void PIOC_Handler       ( void ) NOEXCEPT;
+void PIOD_Handler       ( void ) NOEXCEPT;
+void PMC_Handler        ( void ) NOEXCEPT;
+void PWM_Handler        ( void ) NOEXCEPT;
+void RSTC_Handler       ( void ) NOEXCEPT;
+void RTC_Handler        ( void ) NOEXCEPT;
+void RTT_Handler        ( void ) NOEXCEPT;
+void SMC_Handler        ( void ) NOEXCEPT;
+void SPI0_Handler       ( void ) NOEXCEPT;
+void SSC_Handler        ( void ) NOEXCEPT;
+void SUPC_Handler       ( void ) NOEXCEPT;
+void TC0_Handler        ( void ) NOEXCEPT;
+void TC1_Handler        ( void ) NOEXCEPT;
+void TC2_Handler        ( void ) NOEXCEPT;
+void TC3_Handler        ( void ) NOEXCEPT;
+void TC4_Handler        ( void ) NOEXCEPT;
+void TC5_Handler        ( void ) NOEXCEPT;
+void TC6_Handler        ( void ) NOEXCEPT;
+void TC7_Handler        ( void ) NOEXCEPT;
+void TC8_Handler        ( void ) NOEXCEPT;
+void TRNG_Handler       ( void ) NOEXCEPT;
+void TWI0_Handler       ( void ) NOEXCEPT;
+void TWI1_Handler       ( void ) NOEXCEPT;
+void UART_Handler       ( void ) NOEXCEPT;
+void UOTGHS_Handler     ( void ) NOEXCEPT;
+void USART0_Handler     ( void ) NOEXCEPT;
+void USART1_Handler     ( void ) NOEXCEPT;
+void USART2_Handler     ( void ) NOEXCEPT;
+void USART3_Handler     ( void ) NOEXCEPT;
+void WDT_Handler        ( void ) NOEXCEPT;
 
 /**
  * \brief Configuration of the Cortex-M3 Processor and Core Peripherals
