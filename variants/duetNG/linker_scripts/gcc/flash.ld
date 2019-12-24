@@ -49,8 +49,7 @@ SECTIONS
         *(.text .text.* .gnu.linkonce.t.*)
         *(.glue_7t) *(.glue_7)
         *(.rodata .rodata* .gnu.linkonce.r.*)
-        *(.ARM.extab* .gnu.linkonce.armextab.*)
-
+ 
         /* Support C constructors, and C destructors in both user code
            and the C library. This also provides support for C++ code. */
         . = ALIGN(4);
@@ -90,13 +89,18 @@ SECTIONS
         _efixed = .;            /* End of text section */
     } > rom
 
-    /* .ARM.exidx is sorted, so has to go in its own output section.  */
-    PROVIDE_HIDDEN (__exidx_start = .);
+    .ARM.extab :
+    {
+        *(.ARM.extab* .gnu.linkonce.armextab.*)
+    } > rom
+
+	/* .ARM.exidx is sorted, so has to go in its own output section.  */
     .ARM.exidx :
     {
-      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+		__exidx_start = .;
+		*(.ARM.exidx* .gnu.linkonce.armexidx.*)
+		__exidx_end = .;
     } > rom
-    PROVIDE_HIDDEN (__exidx_end = .);
 
     . = ALIGN(4);
     _etext = .;
