@@ -22,8 +22,8 @@
 RingBuffer::RingBuffer( void )
 {
     memset((void *)_aucBuffer, 0, SERIAL_BUFFER_SIZE) ;
-    _iHead=0 ;
-    _iTail=0 ;
+    _iHead=0;
+    _iTail=0;
 }
 
 // Store a block of data. Returns the number of bytes actually stored, which may be less than the number requested.
