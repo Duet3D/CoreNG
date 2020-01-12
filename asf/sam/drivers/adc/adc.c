@@ -786,6 +786,11 @@ uint32_t adc_get_writeprotect_status(const Adc *p_adc)
 	}
 }
 
+#if 1
+// DC remove function adc_check(), otherwise it pulls in printf from libc
+
+#else
+
 /**
  * \brief calcul_startup
  */
@@ -894,6 +899,7 @@ void adc_check(Adc *p_adc, const uint32_t ul_mck)
 #endif
 	}
 }
+#endif	// DC
 #endif
 
 /**
