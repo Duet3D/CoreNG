@@ -316,7 +316,11 @@ extern const PinDescription g_APinDescription[] =
   // PIO E
 
   // 128-133 PE0-5 (connected to RAM on the XPLD)
+#if defined(SAME70_DUET3V03) || defined(SAME70XPLD)
+  { PIOE, PIO_PE0,             ID_PIOE, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC27,  NOT_ON_PWM,  NOT_ON_TIMER },
+#else
   { PIOE, PIO_PE0B_TIOA9,      ID_PIOE, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_TIMER),   NO_ADC, NOT_ON_PWM,  TC3_CHA9 },
+#endif
   { PIOE, PIO_PE1,             ID_PIOE, PIO_INPUT,    PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOE, PIO_PE2,             ID_PIOE, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_DIGITAL,                   NO_ADC, NOT_ON_PWM,  NOT_ON_TIMER },
   { PIOE, PIO_PE3,             ID_PIOE, PIO_INPUT,	  PIO_DEFAULT,  PIN_ATTR_ANALOG,                    ADC26,  NOT_ON_PWM,  NOT_ON_TIMER },
