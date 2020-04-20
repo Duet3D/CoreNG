@@ -8,7 +8,7 @@
 
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   See the GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public
@@ -27,19 +27,19 @@ union CallbackParameter
 	uint32_t u32;
 	int32_t i32;
 
-	CallbackParameter(void *pp) : vp(pp) { }
-	CallbackParameter(uint32_t pp) : u32(pp) { }
-	CallbackParameter(int32_t pp) : i32(pp) { }
-	CallbackParameter() : u32(0) { }
+	CallbackParameter(void *pp) noexcept : vp(pp) { }
+	CallbackParameter(uint32_t pp) noexcept : u32(pp) { }
+	CallbackParameter(int32_t pp) noexcept : i32(pp) { }
+	CallbackParameter() noexcept : u32(0) { }
 };
 
-typedef void (*StandardCallbackFunction)(CallbackParameter);
+typedef void (*StandardCallbackFunction)(CallbackParameter) noexcept;
 
-bool attachInterrupt(uint32_t pin, StandardCallbackFunction callback, enum InterruptMode mode, CallbackParameter param);
+bool attachInterrupt(uint32_t pin, StandardCallbackFunction callback, enum InterruptMode mode, CallbackParameter param) noexcept;
 
-void detachInterrupt(uint32_t pin);
+void detachInterrupt(uint32_t pin) noexcept;
 
 // Return true if we are in an interrupt service routine
-bool inInterrupt();
+bool inInterrupt() noexcept;
 
 #endif /* _WIRING_INTERRUPTS_ */

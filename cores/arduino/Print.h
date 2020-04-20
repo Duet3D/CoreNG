@@ -24,8 +24,6 @@
 #include <stdio.h> // for size_t
 #include <string.h>
 
-#include "Printable.h"
-
 #define DEC 10
 #define HEX 16
 #define OCT 8
@@ -35,51 +33,51 @@ class Print
 {
 private:
 	int write_error;
-	size_t printNumber(unsigned long, uint8_t);
-	size_t printFloat(double, uint8_t);
+	size_t printNumber(unsigned long, uint8_t) noexcept;
+	size_t printFloat(double, uint8_t) noexcept;
 
 protected:
-	void setWriteError(int err = 1) { write_error = err; }
+	void setWriteError(int err = 1) noexcept { write_error = err; }
 
 public:
-    Print() : write_error(0) {}
+    Print() noexcept : write_error(0) {}
     virtual ~Print() {}
-  
-    int getWriteError() { return write_error; }
-    void clearWriteError() { setWriteError(0); }
-  
-    virtual size_t write(uint8_t) = 0;
 
-    size_t write(const char *str) {
+    int getWriteError() noexcept { return write_error; }
+    void clearWriteError() noexcept { setWriteError(0); }
+
+    virtual size_t write(uint8_t) noexcept = 0;
+
+    size_t write(const char *str) noexcept
+    {
     	return (str == NULL) ? 0 : write((const uint8_t *)str, strlen(str));
     }
 
-    virtual size_t write(const uint8_t *buffer, size_t size);
+    virtual size_t write(const uint8_t *buffer, size_t size) noexcept;
 
-    size_t write(const char *buffer, size_t size) {
+    size_t write(const char *buffer, size_t size) noexcept
+    {
     	return write((const uint8_t *)buffer, size);
     }
-    
-    size_t print(const char[]);
-    size_t print(char);
-    size_t print(unsigned char, int = DEC);
-    size_t print(int, int = DEC);
-    size_t print(unsigned int, int = DEC);
-    size_t print(long, int = DEC);
-    size_t print(unsigned long, int = DEC);
-    size_t print(double, int = 2);
-    size_t print(const Printable&);
 
-    size_t println(const char[]);
-    size_t println(char);
-    size_t println(unsigned char, int = DEC);
-    size_t println(int, int = DEC);
-    size_t println(unsigned int, int = DEC);
-    size_t println(long, int = DEC);
-    size_t println(unsigned long, int = DEC);
-    size_t println(double, int = 2);
-    size_t println(const Printable&);
-    size_t println(void);
+    size_t print(const char[]) noexcept;
+    size_t print(char) noexcept;
+    size_t print(unsigned char, int = DEC) noexcept;
+    size_t print(int, int = DEC) noexcept;
+    size_t print(unsigned int, int = DEC) noexcept;
+    size_t print(long, int = DEC) noexcept;
+    size_t print(unsigned long, int = DEC) noexcept;
+    size_t print(double, int = 2) noexcept;
+
+    size_t println(const char[]) noexcept;
+    size_t println(char) noexcept;
+    size_t println(unsigned char, int = DEC) noexcept;
+    size_t println(int, int = DEC) noexcept;
+    size_t println(unsigned int, int = DEC) noexcept;
+    size_t println(long, int = DEC) noexcept;
+    size_t println(unsigned long, int = DEC) noexcept;
+    size_t println(double, int = 2) noexcept;
+    size_t println(void) noexcept;
 };
 
 #endif

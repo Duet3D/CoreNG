@@ -60,27 +60,27 @@ extern "C" {
 
 extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
 
-inline uint32_t SystemPeripheralClock() { return SystemCoreClock; }
+inline uint32_t SystemPeripheralClock() noexcept { return SystemCoreClock; }
 
 /**
  * @brief Setup the microcontroller system.
  * Initialize the System and update the SystemCoreClock variable.
  */
-void SystemInit(void);
+void SystemInit(void) noexcept;
 
 /**
  * @brief Updates the SystemCoreClock with current core Clock
  * retrieved from cpu registers.
  */
-void SystemCoreClockUpdate(void);
+void SystemCoreClockUpdate(void) noexcept;
 
 /**
  * Initialize flash.
  */
-void system_init_flash(uint32_t dw_clk);
+void system_init_flash(uint32_t dw_clk) noexcept;
 
 // Initialise the 1ms system tick. Called by non-RTOS builds only.
-void SysTickInit(void);
+void SysTickInit(void) noexcept;
 
 /* @cond 0 */
 /**INDENT-OFF**/

@@ -8,7 +8,7 @@
 
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   See the GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public
@@ -38,7 +38,7 @@
 class UARTClass : public HardwareSerial
 {
   public:
-	typedef void (*InterruptCallbackFn)(UARTClass*);
+	typedef void (*InterruptCallbackFn)(UARTClass*) noexcept;
 
     enum UARTModes {
       Mode_8N1 = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_NO,
@@ -47,33 +47,33 @@ class UARTClass : public HardwareSerial
       Mode_8M1 = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_MARK,
       Mode_8S1 = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_SPACE,
     };
-    UARTClass(Uart* pUart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer* pRx_buffer, RingBuffer* pTx_buffer);
+    UARTClass(Uart* pUart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer* pRx_buffer, RingBuffer* pTx_buffer) noexcept;
 
-    void begin(const uint32_t dwBaudRate);
-    void begin(const uint32_t dwBaudRate, const UARTModes config);
-    void end(void);
-    int available(void);
-    int availableForWrite(void);
-    int peek(void);
-    int read(void);
-    void flush(void);
-    size_t write(const uint8_t c) override;
-    size_t write(const uint8_t *buffer, size_t size) override;
+    void begin(const uint32_t dwBaudRate) noexcept;
+    void begin(const uint32_t dwBaudRate, const UARTModes config) noexcept;
+    void end(void) noexcept;
+    int available(void) noexcept;
+    int availableForWrite(void) noexcept;
+    int peek(void) noexcept;
+    int read(void) noexcept;
+    void flush(void) noexcept;
+    size_t write(const uint8_t c) noexcept override;
+    size_t write(const uint8_t *buffer, size_t size) noexcept override;
 
     using Print::write; // pull in write(str) and write(buf, size) from Print
-    size_t canWrite( void ) const override;	//***** DC42 added for Duet
+    size_t canWrite(void) const noexcept override;	//***** DC42 added for Duet
 
-    void setInterruptPriority(uint32_t priority);
-    uint32_t getInterruptPriority();
+    void setInterruptPriority(uint32_t priority) noexcept;
+    uint32_t getInterruptPriority() noexcept;
 
-    void IrqHandler(void);
+    void IrqHandler(void) noexcept;
 
-    operator bool() { return true; }; // UART always active
+    operator bool() noexcept { return true; }; // UART always active
 
-    InterruptCallbackFn SetInterruptCallback(InterruptCallbackFn f);
+    InterruptCallbackFn SetInterruptCallback(InterruptCallbackFn f) noexcept;
 
   protected:
-    void init(const uint32_t dwBaudRate, const uint32_t config);
+    void init(const uint32_t dwBaudRate, const uint32_t config) noexcept;
 
     RingBuffer * const _rx_buffer;
     RingBuffer * const _tx_buffer;

@@ -84,13 +84,13 @@ typedef uint8_t sd_mmc_spi_errno_t;
  *
  * \return error code
  */
-sd_mmc_spi_errno_t sd_mmc_spi_get_errno(void);
+sd_mmc_spi_errno_t sd_mmc_spi_get_errno(void) noexcept;
 
 /** \brief Initializes the low level driver
  *
  * This enable the clock required and the hardware interface.
  */
-void sd_mmc_spi_init(const Pin csPins[SD_MMC_SPI_MEM_CNT]);
+void sd_mmc_spi_init(const Pin csPins[SD_MMC_SPI_MEM_CNT]) noexcept;
 
 /** \brief Return the maximum bus width of a slot
  *
@@ -98,7 +98,8 @@ void sd_mmc_spi_init(const Pin csPins[SD_MMC_SPI_MEM_CNT]);
  *
  * \return 1, 4 or 8 lines.
  */
-static __inline__ uint8_t sd_mmc_spi_get_bus_width(uint8_t slot) {
+static __inline__ uint8_t sd_mmc_spi_get_bus_width(uint8_t slot) noexcept
+{
 	UNUSED(slot);
 	return 1;
 }
@@ -107,7 +108,8 @@ static __inline__ uint8_t sd_mmc_spi_get_bus_width(uint8_t slot) {
  *
  * \return true, if the high speed is supported
  */
-static __inline__ bool sd_mmc_spi_is_high_speed_capable(void) {
+static __inline__ bool sd_mmc_spi_is_high_speed_capable(void) noexcept
+{
 	return false;
 }
 
@@ -119,20 +121,19 @@ static __inline__ bool sd_mmc_spi_is_high_speed_capable(void) {
  * \param bus_width  Bus width to use (1, 4 or 8)
  * \param high_speed true, to enable high speed mode
  */
-void sd_mmc_spi_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width,
-		bool high_speed);
+void sd_mmc_spi_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width, bool high_speed) noexcept;
 
 /**
  * \brief Deselect a slot
  *
  * \param slot       Selected slot
  */
-void sd_mmc_spi_deselect_device(uint8_t slot);
+void sd_mmc_spi_deselect_device(uint8_t slot) noexcept;
 
 /** \brief Send 74 clock cycles on the line of selected slot
  * Note: It is required after card plug and before card install.
  */
-void sd_mmc_spi_send_clock(void);
+void sd_mmc_spi_send_clock(void) noexcept;
 
 /** \brief Send a command on the selected slot
  *
@@ -141,14 +142,15 @@ void sd_mmc_spi_send_clock(void);
  *
  * \return true if success, otherwise false
  */
-bool sd_mmc_spi_send_cmd(sdmmc_cmd_def_t cmd, uint32_t arg);
+bool sd_mmc_spi_send_cmd(sdmmc_cmd_def_t cmd, uint32_t arg) noexcept;
 
 /** \brief Return the 32 bits response of the last command
  *
  * \return 32 bits response
  */
-uint32_t sd_mmc_spi_get_response(void);
-static __inline__ void sd_mmc_spi_get_response_128(uint8_t *resp) {
+uint32_t sd_mmc_spi_get_response(void) noexcept;
+static __inline__ void sd_mmc_spi_get_response_128(uint8_t *resp) noexcept
+{
 	UNUSED(resp);
 	return;
 }
@@ -168,8 +170,7 @@ static __inline__ void sd_mmc_spi_get_response_128(uint8_t *resp) {
  *
  * \return true if success, otherwise false
  */
-bool sd_mmc_spi_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg,
-		uint16_t block_size, uint16_t nb_block, bool access_block);
+bool sd_mmc_spi_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size, uint16_t nb_block, bool access_block) noexcept;
 
 /** \brief Send a command to stop a adtc command on the selected slot
  *
@@ -178,7 +179,7 @@ bool sd_mmc_spi_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg,
  *
  * \return true if success, otherwise false
  */
-bool sd_mmc_spi_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg);
+bool sd_mmc_spi_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg) noexcept;
 
 /** \brief Read a word on the line
  *
@@ -186,7 +187,7 @@ bool sd_mmc_spi_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg);
  *
  * \return true if success, otherwise false
  */
-bool sd_mmc_spi_read_word(uint32_t* value);
+bool sd_mmc_spi_read_word(uint32_t* value) noexcept;
 
 /** \brief Write a word on the line
  *
@@ -194,7 +195,7 @@ bool sd_mmc_spi_read_word(uint32_t* value);
  *
  * \return true if success, otherwise false
  */
-bool sd_mmc_spi_write_word(uint32_t value);
+bool sd_mmc_spi_write_word(uint32_t value) noexcept;
 
 /** \brief Start a read blocks transfer on the line
  * Note: The driver will use the DMA available to speed up the transfer.
@@ -204,13 +205,13 @@ bool sd_mmc_spi_write_word(uint32_t value);
  *
  * \return true if started, otherwise false
  */
-bool sd_mmc_spi_start_read_blocks(void *dest, uint16_t nb_block);
+bool sd_mmc_spi_start_read_blocks(void *dest, uint16_t nb_block) noexcept;
 
 /** \brief Wait the end of transfer initiated by mci_start_read_blocks()
  *
  * \return true if success, otherwise false
  */
-bool sd_mmc_spi_wait_end_of_read_blocks(void);
+bool sd_mmc_spi_wait_end_of_read_blocks(void) noexcept;
 
 /** \brief Start a write blocks transfer on the line
  * Note: The driver will use the DMA available to speed up the transfer.
@@ -220,23 +221,23 @@ bool sd_mmc_spi_wait_end_of_read_blocks(void);
  *
  * \return true if started, otherwise false
  */
-bool sd_mmc_spi_start_write_blocks(const void *src, uint16_t nb_block);
+bool sd_mmc_spi_start_write_blocks(const void *src, uint16_t nb_block) noexcept;
 
 /** \brief Wait the end of transfer initiated by mci_start_write_blocks()
  *
  * \return true if success, otherwise false
  */
-bool sd_mmc_spi_wait_end_of_write_blocks(void);
+bool sd_mmc_spi_wait_end_of_write_blocks(void) noexcept;
 
 #if 1	//dc42
 
 // Get the speed of the SPI SD card interface for reporting purposes, in bytes/sec
-uint32_t spi_mmc_get_speed(void);
+uint32_t spi_mmc_get_speed(void) noexcept;
 
-typedef void (*spiIdleFunc_t)(uint32_t, uint32_t);
+typedef void (*spiIdleFunc_t)(uint32_t, uint32_t) noexcept;
 
 // Set the idle function and return the old one
-spiIdleFunc_t sd_mmc_spi_set_idle_func(spiIdleFunc_t);
+spiIdleFunc_t sd_mmc_spi_set_idle_func(spiIdleFunc_t) noexcept;
 
 #endif
 //! @}

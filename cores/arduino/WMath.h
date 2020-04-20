@@ -25,9 +25,9 @@
 #if SAM3XA || SAME70
 
 #ifdef __cplusplus
-extern "C" uint32_t trueRandom();
+extern "C" uint32_t trueRandom() noexcept;
 #else
-extern uint32_t trueRandom();
+extern uint32_t trueRandom() noexcept;
 #endif
 
 #endif	// SAM3XA || SAME70
@@ -50,80 +50,80 @@ extern uint32_t trueRandom();
 
 extern "C++" {
 
-	extern int32_t random(int32_t);
-	extern int32_t random(int32_t, int32_t);
-	extern int32_t map(int32_t, int32_t, int32_t, int32_t, int32_t);
+	extern int32_t random(int32_t) noexcept;
+	extern int32_t random(int32_t, int32_t) noexcept;
+	extern int32_t map(int32_t, int32_t, int32_t, int32_t, int32_t) noexcept;
 
-	template<class X> inline constexpr X min(X _a, X _b)
+	template<class X> inline constexpr X min(X _a, X _b) noexcept
 	{
 		return (_a < _b) ? _a : _b;
 	}
 
-	template<class X> inline constexpr X max(X _a, X _b)
+	template<class X> inline constexpr X max(X _a, X _b) noexcept
 	{
 		return (_a > _b) ? _a : _b;
 	}
 
 	// Specialisations for float and double to handle NaNs properly
-	template<> inline constexpr float min(float _a, float _b)
+	template<> inline constexpr float min(float _a, float _b) noexcept
 	{
 		return (std::isnan(_a) || _a < _b) ? _a : _b;
 	}
 
-	template<> inline constexpr float max(float _a, float _b)
+	template<> inline constexpr float max(float _a, float _b) noexcept
 	{
 		return (std::isnan(_a) || _a > _b) ? _a : _b;
 	}
 
-	template<> inline constexpr double min(double _a, double _b)
+	template<> inline constexpr double min(double _a, double _b) noexcept
 	{
 		return (std::isnan(_a) || _a < _b) ? _a : _b;
 	}
 
-	template<> inline constexpr double max(double _a, double _b)
+	template<> inline constexpr double max(double _a, double _b) noexcept
 	{
 		return (std::isnan(_a) || _a > _b) ? _a : _b;
 	}
 
 	// Note that constrain<float> will return NaN for a NaN input because of the way we define min<float> and max<float>
-	template<class T> inline constexpr T constrain(T val, T vmin, T vmax)
+	template<class T> inline constexpr T constrain(T val, T vmin, T vmax) noexcept
 	{
 		return max<T>(min<T>(val, vmax), vmin);
 	}
 
-	inline constexpr float fsquare(float arg)
+	inline constexpr float fsquare(float arg) noexcept
 	{
 		return arg * arg;
 	}
 
-	inline constexpr double dsquare(double arg)
+	inline constexpr double dsquare(double arg) noexcept
 	{
 		return arg * arg;
 	}
 
-	inline constexpr uint64_t isquare64(int32_t arg)
+	inline constexpr uint64_t isquare64(int32_t arg) noexcept
 	{
 		return (uint64_t)((int64_t)arg * arg);
 	}
 
-	inline constexpr uint64_t isquare64(uint32_t arg)
+	inline constexpr uint64_t isquare64(uint32_t arg) noexcept
 	{
 		return (uint64_t)arg * arg;
 	}
 
 	// Find the lowest set bit. Returns the lowest set bit number, undefined if no bits are set.
 	// GCC provides intrinsics, but unhelpfully they are in terms of int, long and long long instead of uint32_t, uint64_t etc.
-	inline unsigned int LowestSetBitNumber(unsigned int val)
+	inline unsigned int LowestSetBitNumber(unsigned int val) noexcept
 	{
 		return (unsigned int)__builtin_ctz(val);
 	}
 
-	inline unsigned int LowestSetBitNumber(unsigned long val)
+	inline unsigned int LowestSetBitNumber(unsigned long val) noexcept
 	{
 		return (unsigned int)__builtin_ctzl(val);
 	}
 
-	inline unsigned int LowestSetBitNumber(unsigned long long val)
+	inline unsigned int LowestSetBitNumber(unsigned long long val) noexcept
 	{
 		return (unsigned int)__builtin_ctzll(val);
 	}

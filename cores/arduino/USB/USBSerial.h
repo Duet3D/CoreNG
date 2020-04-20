@@ -21,29 +21,29 @@ private:
 	Pin vBusPin;
 
 public:
-	SerialCDC();
+	SerialCDC() noexcept;
 
-	void Start(Pin p_vBusPin);
-	void end(void);
+	void Start(Pin p_vBusPin) noexcept;
+	void end(void) noexcept;
 
-	int available() override;
-	int peek() override;
-	int read() override;
-	size_t readBytes(char *buffer, size_t length) override;
-	void flush() override;
-	size_t write(uint8_t) override;
-	size_t write(const uint8_t *buffer, size_t size) override;
+	int available() noexcept override;
+	int peek() noexcept override;
+	int read() noexcept override;
+	size_t readBytes(char *buffer, size_t length) noexcept override;
+	void flush() noexcept override;
+	size_t write(uint8_t) noexcept override;
+	size_t write(const uint8_t *buffer, size_t size) noexcept override;
 
-	size_t write(const char *str) { return Print::write(str); }
-    size_t write(const char *buffer, size_t size) { return write((const uint8_t *)buffer, size); }
+	size_t write(const char *str) noexcept { return Print::write(str); }
+    size_t write(const char *buffer, size_t size) noexcept { return write((const uint8_t *)buffer, size); }
 
-	size_t canWrite() const override;	// Function added by DC42 so that we can tell how many characters we can write without blocking (for Duet)
-	bool IsConnected() const;
+	size_t canWrite() const noexcept override;	// Function added by DC42 so that we can tell how many characters we can write without blocking (for Duet)
+	bool IsConnected() const noexcept;
 
 	// Callback functions called from the cdc layer - not for general use
-	void cdcSetConnected(bool b);
-	void cdcRxNotify();
-	void cdcTxEmptyNotify();
+	void cdcSetConnected(bool b) noexcept;
+	void cdcRxNotify() noexcept;
+	void cdcTxEmptyNotify() noexcept;
 };
 
 extern SerialCDC SerialUSB;

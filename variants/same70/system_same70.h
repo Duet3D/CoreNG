@@ -58,20 +58,20 @@ extern "C" {
 extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
 
 // On the SAME70 the peripheral clock is half the frequency of the core clock
-inline uint32_t SystemPeripheralClock() { return SystemCoreClock/2; }
+inline uint32_t SystemPeripheralClock() noexcept { return SystemCoreClock/2; }
 
 /**
  * @brief Setup the microcontroller system.
  * Initialize the System and update the SystemCoreClock variable.
  */
-void SystemInit(void);
+void SystemInit(void) noexcept;
 
 // The following are declared so that asf/common/services/clock/same70/sysclk.c will compile without warnings, however we don't use that module, therefore they are left undefined
-void SystemCoreClockUpdate(void);
-void system_init_flash(uint32_t dw_clk);
+void SystemCoreClockUpdate(void) noexcept;
+void system_init_flash(uint32_t dw_clk) noexcept;
 
 // Initialise the 1ms system tick. Called by non-RTOS builds only.
-void SysTickInit(void);
+void SysTickInit(void) noexcept;
 
 /* @cond 0 */
 /**INDENT-OFF**/

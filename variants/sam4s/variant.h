@@ -69,12 +69,12 @@ extern "C"{
 constexpr uint32_t MaxPinNumber = 67;						// last GPIO pin
 
 // The following must be kept in step with the way we organise the pin table in variant.cpp
-static inline constexpr Pin PortAPin(unsigned int pin)
+static inline constexpr Pin PortAPin(unsigned int pin) noexcept
 {
 	return (Pin)pin;							// PA0-24 are 0-25
 }
 
-static inline constexpr Pin PortBPin(unsigned int pin)
+static inline constexpr Pin PortBPin(unsigned int pin) noexcept
 {
 	return (Pin)(
 					(pin <= 7) ? 26 + pin		// PB0-7 are 26-33
@@ -82,7 +82,7 @@ static inline constexpr Pin PortBPin(unsigned int pin)
 				);
 }
 
-static inline constexpr Pin PortCPin(unsigned int pin)
+static inline constexpr Pin PortCPin(unsigned int pin) noexcept
 {
 	return (Pin)(36 + pin);						// PC0-31 are 36-67
 }
@@ -153,9 +153,9 @@ constexpr Pin APINS_TWI = 70;
 extern UARTClass Serial;
 #endif
 
-extern void ConfigurePin(const PinDescription& pinDesc);
-extern void ConfigurePin(Pin pin);
-extern bool IsPwmCapable(Pin pin);						// Return true if this pin exists and can do PWM
+extern void ConfigurePin(const PinDescription& pinDesc) noexcept;
+extern void ConfigurePin(Pin pin) noexcept;
+extern bool IsPwmCapable(Pin pin) noexcept;						// Return true if this pin exists and can do PWM
 
 #endif
 

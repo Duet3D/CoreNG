@@ -8,7 +8,7 @@
 
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   See the GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 #define ANALOGOUT_H
 
 // Initialise this module
-extern void AnalogOutInit();
+extern void AnalogOutInit() noexcept;
 
 /*
  * \brief Writes an analog value (PWM wave) to a pin.
@@ -29,6 +29,6 @@ extern void AnalogOutInit();
  * \param ulValue, will be constrained to be within 0.0 to 1.0 within this function
  * \param freq (optional)
  */
-extern void AnalogOut(Pin pin, float ulValue, uint16_t freq = 1000);
+extern void AnalogOut(Pin pin, float ulValue, uint16_t freq = 1000) noexcept;
 
 #endif // ANALOGOUT_H

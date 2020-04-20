@@ -8,7 +8,7 @@
 
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   See the GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public
@@ -36,13 +36,13 @@ class RingBuffer
     volatile size_t _iTail;
 
   public:
-    RingBuffer();
-    void store_char(uint8_t c);
-    size_t storeBlock(const uint8_t *data, size_t len);
-    size_t roomLeft() const;
+    RingBuffer() noexcept;
+    void store_char(uint8_t c) noexcept;
+    size_t storeBlock(const uint8_t *data, size_t len) noexcept;
+    size_t roomLeft() const noexcept;
 };
 
-inline void RingBuffer::store_char(uint8_t c)
+inline void RingBuffer::store_char(uint8_t c) noexcept
 {
   size_t i = (_iHead + 1) % SERIAL_BUFFER_SIZE;
 
@@ -61,7 +61,7 @@ inline void RingBuffer::store_char(uint8_t c)
   }
 }
 
-inline size_t RingBuffer::roomLeft() const
+inline size_t RingBuffer::roomLeft() const noexcept
 {
 	return (_iTail + (SERIAL_BUFFER_SIZE - 1) - _iHead) % SERIAL_BUFFER_SIZE;
 }

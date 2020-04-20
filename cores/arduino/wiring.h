@@ -9,7 +9,7 @@
 
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   See the GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public
@@ -27,8 +27,8 @@ extern "C" {
 /**
  *
  */
-extern void initVariant( void ) ;
-extern void init( void ) ;
+extern void initVariant( void ) noexcept ;
+extern void init( void ) noexcept ;
 
 /**
  * \brief Returns the number of milliseconds since the core started.
@@ -37,26 +37,13 @@ extern void init( void ) ;
  *
  * \return Number of milliseconds since the program started (uint32_t)
  */
-extern uint32_t millis( void ) ;
+extern uint32_t millis( void ) noexcept ;
 
 /**
  * \brief Returns the number of milliseconds since the core started.
  * \return Number of milliseconds since the program started (uint64_t)
  */
-extern uint64_t millis64( void ) ;
-
-#if 0	// this function is not reliable if other ISRs can preempt the Systick interrupt
-
-/**
- * \brief Returns the number of microseconds since the core started.
- *
- * This number will overflow (go back to zero), after approximately 70 minutes.
- *
- * \note There are 1,000 microseconds in a millisecond and 1,000,000 microseconds in a second.
- */
-extern uint32_t micros( void ) ;
-
-#endif
+extern uint64_t millis64( void ) noexcept ;
 
 /**
  * \brief Pauses the program for the amount of time (in miliseconds) specified as parameter.
@@ -65,15 +52,16 @@ extern uint32_t micros( void ) ;
  * \param dwMs the number of milliseconds to pause (uint32_t)
  */
 // This has been renamed from delay to coreDelay so that RTOS-based applications can use a different definition of delay()
-extern void coreDelay( uint32_t dwMs ) ;
+extern void coreDelay( uint32_t dwMs ) noexcept ;
 
 /**
  * \brief Pauses the program for the amount of time (in microseconds) specified as parameter.
  *
  * \param dwUs the number of microseconds to pause (uint32_t)
  */
-static inline void delayMicroseconds(uint32_t) __attribute__((always_inline, unused));
-static inline void delayMicroseconds(uint32_t usec){
+static inline void delayMicroseconds(uint32_t) noexcept __attribute__((always_inline, unused));
+static inline void delayMicroseconds(uint32_t usec) noexcept
+{
     /*
      * Based on Paul Stoffregen's implementation
      * for Teensy 3.0 (http://www.pjrc.com/)

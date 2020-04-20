@@ -11,15 +11,15 @@
 #include "udc.h"
 #include "WInterrupts.h"
 
-void core_vbus_off(CallbackParameter);
+void core_vbus_off(CallbackParameter) noexcept;
 
 // SerialCDC members
 
-SerialCDC::SerialCDC() : /* _cdc_tx_buffer(), */ txBufsize(1), isConnected(false), vBusPin(NoPin)
+SerialCDC::SerialCDC() noexcept : /* _cdc_tx_buffer(), */ txBufsize(1), isConnected(false), vBusPin(NoPin)
 {
 }
 
-void SerialCDC::Start(Pin p_vBusPin)
+void SerialCDC::Start(Pin p_vBusPin) noexcept
 {
 	vBusPin = p_vBusPin;
 	udc_start();
@@ -31,38 +31,38 @@ void SerialCDC::Start(Pin p_vBusPin)
 	}
 }
 
-void SerialCDC::end()
+void SerialCDC::end() noexcept
 {
 	isConnected = false;
 	udc_stop();
 }
 
-int SerialCDC::available()
+int SerialCDC::available() noexcept
 {
 	return (isConnected) ? udi_cdc_get_nb_received_data() : 0;
 }
 
-int SerialCDC::peek()
+int SerialCDC::peek() noexcept
 {
 	return -1;				// not supported
 }
 
-int SerialCDC::read()
+int SerialCDC::read() noexcept
 {
 	return (udi_cdc_is_rx_ready()) ? udi_cdc_getc() : -1;
 }
 
-size_t SerialCDC::readBytes(char *buffer, size_t length)
+size_t SerialCDC::readBytes(char *buffer, size_t length) noexcept
 {
 	return (udi_cdc_is_rx_ready()) ? udi_cdc_read_buf(buffer, length) : 0;
 }
 
-void SerialCDC::flush(void)
+void SerialCDC::flush(void) noexcept
 {
 	while (isConnected && udi_cdc_get_free_tx_buffer() < txBufsize) {}
 }
 
-size_t SerialCDC::write(uint8_t c)
+size_t SerialCDC::write(uint8_t c) noexcept
 {
 	if (isConnected)
 	{
@@ -72,7 +72,7 @@ size_t SerialCDC::write(uint8_t c)
 }
 
 // Non-blocking write to USB. Returns number of bytes written. If we are not connected, pretend that all bytes have been written.
-size_t SerialCDC::write(const uint8_t *buffer, size_t size)
+size_t SerialCDC::write(const uint8_t *buffer, size_t size) noexcept
 {
 	if (isConnected && size != 0)
 	{
@@ -82,27 +82,27 @@ size_t SerialCDC::write(const uint8_t *buffer, size_t size)
 	return size;
 }
 
-size_t SerialCDC::canWrite() const
+size_t SerialCDC::canWrite() const noexcept
 {
 	return (isConnected) ? udi_cdc_get_free_tx_buffer() : 0;
 }
 
-bool SerialCDC::IsConnected() const
+bool SerialCDC::IsConnected() const noexcept
 {
 	return isConnected;
 }
 
-void SerialCDC::cdcSetConnected(bool b)
+void SerialCDC::cdcSetConnected(bool b) noexcept
 {
 	isConnected = b;
 }
 
-void SerialCDC::cdcRxNotify()
+void SerialCDC::cdcRxNotify() noexcept
 {
 	// nothing here until we use a Rx buffer
 }
 
-void SerialCDC::cdcTxEmptyNotify()
+void SerialCDC::cdcTxEmptyNotify() noexcept
 {
 	// If we haven't yet found out how large the transmit buffer is, find out now
 	if (txBufsize == 1)
@@ -117,32 +117,32 @@ SerialCDC SerialUSB;
 // Callback glue functions, all called from the USB ISR
 
 // This is called when we are plugged in and connect to a host
-extern "C" bool core_cdc_enable(uint8_t port)
+extern "C" bool core_cdc_enable(uint8_t port) noexcept
 {
 	SerialUSB.cdcSetConnected(true);
 	return true;
 }
 
 // This is called when we get disconnected from the host
-extern "C" void core_cdc_disable(uint8_t port)
+extern "C" void core_cdc_disable(uint8_t port) noexcept
 {
 	SerialUSB.cdcSetConnected(false);
 }
 
 // This is called when data has been received
-extern "C" void core_cdc_rx_notify(uint8_t port)
+extern "C" void core_cdc_rx_notify(uint8_t port) noexcept
 {
 	SerialUSB.cdcRxNotify();
 }
 
 // This is called when the transmit buffer has been emptied
-extern "C" void core_cdc_tx_empty_notify(uint8_t port)
+extern "C" void core_cdc_tx_empty_notify(uint8_t port) noexcept
 {
 	SerialUSB.cdcTxEmptyNotify();
 }
 
 // On the SAM4E and SAM4S we use a GPIO pin available to monitor the VBUS state
-void core_vbus_off(CallbackParameter)
+void core_vbus_off(CallbackParameter) noexcept
 {
 	SerialUSB.cdcSetConnected(false);
 }

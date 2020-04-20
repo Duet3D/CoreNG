@@ -25,7 +25,7 @@
 
 // Constructors ////////////////////////////////////////////////////////////////
 
-UARTClass::UARTClass(Uart *pUart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer *pRx_buffer, RingBuffer *pTx_buffer)
+UARTClass::UARTClass(Uart *pUart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer *pRx_buffer, RingBuffer *pTx_buffer) noexcept
 	: _rx_buffer(pRx_buffer), _tx_buffer(pTx_buffer), _pUart(pUart), _dwIrq(dwIrq), _dwId(dwId),
 	  numInterruptBytesMatched(0), interruptCallback(nullptr)
 {
@@ -33,18 +33,18 @@ UARTClass::UARTClass(Uart *pUart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer *pR
 
 // Public Methods //////////////////////////////////////////////////////////////
 
-void UARTClass::begin(const uint32_t dwBaudRate)
+void UARTClass::begin(const uint32_t dwBaudRate) noexcept
 {
   begin(dwBaudRate, Mode_8N1);
 }
 
-void UARTClass::begin(const uint32_t dwBaudRate, const UARTModes config)
+void UARTClass::begin(const uint32_t dwBaudRate, const UARTModes config) noexcept
 {
   uint32_t modeReg = static_cast<uint32_t>(config) & 0x00000E00;
   init(dwBaudRate, modeReg | UART_MR_CHMODE_NORMAL);
 }
 
-void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg)
+void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg) noexcept
 {
   // Configure PMC
   pmc_enable_periph_clk( _dwId );
@@ -79,7 +79,7 @@ void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg)
   _pUart->UART_CR = UART_CR_RXEN | UART_CR_TXEN;
 }
 
-void UARTClass::end( void )
+void UARTClass::end( void ) noexcept
 {
   // Clear any received data
   _rx_buffer->_iHead = _rx_buffer->_iTail;
@@ -93,22 +93,22 @@ void UARTClass::end( void )
   pmc_disable_periph_clk( _dwId );
 }
 
-void UARTClass::setInterruptPriority(uint32_t priority)
+void UARTClass::setInterruptPriority(uint32_t priority) noexcept
 {
   NVIC_SetPriority(_dwIrq, priority & 0x0F);
 }
 
-uint32_t UARTClass::getInterruptPriority()
+uint32_t UARTClass::getInterruptPriority() noexcept
 {
   return NVIC_GetPriority(_dwIrq);
 }
 
-int UARTClass::available( void )
+int UARTClass::available( void ) noexcept
 {
   return (SERIAL_BUFFER_SIZE + _rx_buffer->_iHead - _rx_buffer->_iTail) % SERIAL_BUFFER_SIZE;
 }
 
-int UARTClass::availableForWrite(void)
+int UARTClass::availableForWrite(void) noexcept
 {
   size_t head = _tx_buffer->_iHead;
   size_t tail = _tx_buffer->_iTail;
@@ -119,7 +119,7 @@ int UARTClass::availableForWrite(void)
   return tail - head - 1;
 }
 
-int UARTClass::peek( void )
+int UARTClass::peek( void ) noexcept
 {
   if ( _rx_buffer->_iHead == _rx_buffer->_iTail )
   {
@@ -129,7 +129,7 @@ int UARTClass::peek( void )
   return _rx_buffer->_aucBuffer[_rx_buffer->_iTail];
 }
 
-int UARTClass::read( void )
+int UARTClass::read( void ) noexcept
 {
   // if the head isn't ahead of the tail, we don't have any characters
   if ( _rx_buffer->_iHead == _rx_buffer->_iTail )
@@ -142,7 +142,7 @@ int UARTClass::read( void )
   return uc;
 }
 
-void UARTClass::flush( void )
+void UARTClass::flush( void ) noexcept
 {
   while (_tx_buffer->_iHead != _tx_buffer->_iTail); //wait for transmit data to be sent
   // Wait for transmission to complete
@@ -150,7 +150,7 @@ void UARTClass::flush( void )
    ;
 }
 
-size_t UARTClass::write( const uint8_t uc_data )
+size_t UARTClass::write( const uint8_t uc_data ) noexcept
 {
   // Is the hardware currently busy?
   if ((_pUart->UART_SR & UART_SR_TXRDY) != UART_SR_TXRDY || _tx_buffer->_iTail != _tx_buffer->_iHead)
@@ -165,7 +165,7 @@ size_t UARTClass::write( const uint8_t uc_data )
     // Make sure TX interrupt is enabled
     _pUart->UART_IER = UART_IER_TXRDY;
   }
-  else 
+  else
   {
      // Bypass buffering and send character directly
      _pUart->UART_THR = uc_data;
@@ -173,7 +173,7 @@ size_t UARTClass::write( const uint8_t uc_data )
   return 1;
 }
 
-size_t UARTClass::write(const uint8_t *buffer, size_t size)
+size_t UARTClass::write(const uint8_t *buffer, size_t size) noexcept
 {
 	size_t ret = size;
 	while (size != 0)
@@ -186,12 +186,12 @@ size_t UARTClass::write(const uint8_t *buffer, size_t size)
 	return ret;
 }
 
-size_t UARTClass::canWrite() const
+size_t UARTClass::canWrite() const noexcept
 {
 	return _tx_buffer->roomLeft();		// we may also be able to write 1 more byte direct to the UART, but this is close enough
 }
 
-void UARTClass::IrqHandler()
+void UARTClass::IrqHandler() noexcept
 {
   const uint32_t status = _pUart->UART_SR;
 
@@ -241,7 +241,7 @@ void UARTClass::IrqHandler()
   }
 }
 
-UARTClass::InterruptCallbackFn UARTClass::SetInterruptCallback(InterruptCallbackFn f)
+UARTClass::InterruptCallbackFn UARTClass::SetInterruptCallback(InterruptCallbackFn f) noexcept
 {
 	InterruptCallbackFn ret = interruptCallback;
 	interruptCallback = f;

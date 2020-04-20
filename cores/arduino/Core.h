@@ -41,8 +41,8 @@ extern "C"{
 #include "asf.h"
 #include "wiring_constants.h"
 
-void yield(void);
-void CoreSysTick(void);
+void yield(void) noexcept;
+void CoreSysTick(void) noexcept;
 
 typedef uint8_t Pin;
 static const Pin NoPin = 0xFF;
@@ -185,7 +185,6 @@ extern const PinDescription g_APinDescription[];
 
 #include "wiring.h"
 #include "wiring_digital.h"
-#include "wiring_shift.h"
 #include "watchdog.h"
 #include "WMath.h"
 #include "Reset.h"

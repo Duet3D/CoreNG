@@ -58,10 +58,10 @@ extern "C" {
 /* @endcond */
 
 /* Function prototype for exception table items (interrupt handler). */
-typedef void (*IntFunc) (void);
+typedef void (*IntFunc) (void) noexcept;
 
 /* Default empty handler */
-void Dummy_Handler(void);
+void Dummy_Handler(void) noexcept;
 
 /* @cond 0 */
 /**INDENT-OFF**/

@@ -24,7 +24,7 @@
 
 // Constructors ////////////////////////////////////////////////////////////////
 
-USARTClass::USARTClass( Usart* pUsart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer* pRx_buffer, RingBuffer* pTx_buffer )
+USARTClass::USARTClass( Usart* pUsart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer* pRx_buffer, RingBuffer* pTx_buffer ) noexcept
   : UARTClass((Uart*)pUsart, dwIrq, dwId, pRx_buffer, pTx_buffer)
 {
   // In case anyone needs USART specific functionality in the future
@@ -33,19 +33,19 @@ USARTClass::USARTClass( Usart* pUsart, IRQn_Type dwIrq, uint32_t dwId, RingBuffe
 
 // Public Methods //////////////////////////////////////////////////////////////
 
-void USARTClass::begin(const uint32_t dwBaudRate)
+void USARTClass::begin(const uint32_t dwBaudRate) noexcept
 {
   begin(dwBaudRate, Mode_8N1);
 }
 
-void USARTClass::begin(const uint32_t dwBaudRate, const UARTModes config)
+void USARTClass::begin(const uint32_t dwBaudRate, const UARTModes config) noexcept
 {
   uint32_t modeReg = static_cast<uint32_t>(config);
   modeReg |= US_MR_USART_MODE_NORMAL | US_MR_USCLKS_MCK | US_MR_CHMODE_NORMAL;
   init(dwBaudRate, modeReg);
 }
 
-void USARTClass::begin(const uint32_t dwBaudRate, const USARTModes config)
+void USARTClass::begin(const uint32_t dwBaudRate, const USARTModes config) noexcept
 {
   uint32_t modeReg = static_cast<uint32_t>(config);
   modeReg |= US_MR_USART_MODE_NORMAL | US_MR_USCLKS_MCK | US_MR_CHMODE_NORMAL;

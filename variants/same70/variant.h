@@ -64,27 +64,27 @@ extern "C"{
  *----------------------------------------------------------------------------*/
 
 // The following must be kept in step with the way we organise the pin table in variant.cpp
-static inline constexpr Pin PortAPin(unsigned int pin)
+static inline constexpr Pin PortAPin(unsigned int pin) noexcept
 {
 	return (Pin)pin;
 }
 
-static inline constexpr Pin PortBPin(unsigned int pin)
+static inline constexpr Pin PortBPin(unsigned int pin) noexcept
 {
 	return (Pin)(pin + 32);
 }
 
-static inline constexpr Pin PortCPin(unsigned int pin)
+static inline constexpr Pin PortCPin(unsigned int pin) noexcept
 {
 	return (Pin)(pin + 64);
 }
 
-static inline constexpr Pin PortDPin(unsigned int pin)
+static inline constexpr Pin PortDPin(unsigned int pin) noexcept
 {
 	return (Pin)(pin + 96);
 }
 
-static inline constexpr Pin PortEPin(unsigned int pin)
+static inline constexpr Pin PortEPin(unsigned int pin) noexcept
 {
 	return (Pin)(pin + 128);
 }
@@ -175,9 +175,9 @@ extern UARTClass Serial;
 extern UARTClass Serial1;
 
 // Pin configuration
-extern void ConfigurePin(const PinDescription& pinDesc);
-extern void ConfigurePin(Pin pin);
-extern bool IsPwmCapable(Pin pin);						// Return true if this pin exists and can do PWM
+extern void ConfigurePin(const PinDescription& pinDesc) noexcept;
+extern void ConfigurePin(Pin pin) noexcept;
+extern bool IsPwmCapable(Pin pin) noexcept;						// Return true if this pin exists and can do PWM
 
 #endif
 

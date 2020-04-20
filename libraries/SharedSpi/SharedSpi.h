@@ -70,7 +70,7 @@ extern "C" {
 /** \brief Initialize the SPI in master mode.
  *
  */
-extern void sspi_master_init(struct sspi_device *device, uint32_t bits);
+extern void sspi_master_init(struct sspi_device *device, uint32_t bits) noexcept;
 
 /**
  * \brief Set up an SPI device.
@@ -80,7 +80,7 @@ extern void sspi_master_init(struct sspi_device *device, uint32_t bits);
  *
  * \param device    Pointer to SPI device struct that should be initialized.
  */
-extern void sspi_master_setup_device(const struct sspi_device *device);
+extern void sspi_master_setup_device(const struct sspi_device *device) noexcept;
 
 /**
  * \brief Select the given device on the SPI bus.
@@ -90,7 +90,7 @@ extern void sspi_master_setup_device(const struct sspi_device *device);
  * \param device SPI device.
  *
  */
-extern void sspi_select_device(const struct sspi_device *device);
+extern void sspi_select_device(const struct sspi_device *device) noexcept;
 
 /**
  * \brief Deselect the given device on the SPI bus.
@@ -101,7 +101,7 @@ extern void sspi_select_device(const struct sspi_device *device);
  *
  * \pre SPI device must be selected with spi_select_device() first and in 8-bit data mode.
  */
-extern void sspi_deselect_device(const struct sspi_device *device);
+extern void sspi_deselect_device(const struct sspi_device *device) noexcept;
 
 /**
  * \brief Send and receive a sequence of bytes from the shared SPI device.
@@ -112,16 +112,16 @@ extern void sspi_deselect_device(const struct sspi_device *device);
  *
  * \pre SPI device must be selected with spi_select_device() first.
  */
-spi_status_t sspi_transceive_packet(const uint8_t *tx_data, uint8_t *rx_data, size_t len);
+spi_status_t sspi_transceive_packet(const uint8_t *tx_data, uint8_t *rx_data, size_t len) noexcept;
 
 // Receive a packet
-static inline spi_status_t sspi_read_packet(uint8_t *buf, size_t len)
+static inline spi_status_t sspi_read_packet(uint8_t *buf, size_t len) noexcept
 {
 	return sspi_transceive_packet(NULL, buf, len);
 }
 
 // Send a packet
-static inline spi_status_t sspi_write_packet(uint8_t *buf, size_t len)
+static inline spi_status_t sspi_write_packet(uint8_t *buf, size_t len) noexcept
 {
 	return sspi_transceive_packet(buf, NULL, len);
 }
@@ -136,7 +136,7 @@ static inline spi_status_t sspi_write_packet(uint8_t *buf, size_t len)
  *
  * \pre SPI device must be selected with spi_select_device() first and in 16-bit data mode.
  */
-spi_status_t sspi_transceive_packet16(const uint16_t *tx_data, uint16_t *rx_data, size_t len);
+spi_status_t sspi_transceive_packet16(const uint16_t *tx_data, uint16_t *rx_data, size_t len) noexcept;
 #endif
 
 #if defined(USE_SAM3X_DMAC)
@@ -144,17 +144,17 @@ spi_status_t sspi_transceive_packet16(const uint16_t *tx_data, uint16_t *rx_data
 #define SPI_TX_IDX 1 // DMAC HW interface id for SPI TX (Table 22-2. DMA Controller)
 #define SPI_RX_IDX 2 // DMAC HW interface id for SPI RX (Table 22-2. DMA Controller)
 
-void sspi_start_transmit_dma(Dmac *p_dmac, uint32_t ul_num, const void *src, uint32_t nb_bytes);
+void sspi_start_transmit_dma(Dmac *p_dmac, uint32_t ul_num, const void *src, uint32_t nb_bytes) noexcept;
 
-void sspi_start_receive_dma(Dmac *p_dmac, uint32_t ul_num, const void *dest, uint32_t nb_bytes);
+void sspi_start_receive_dma(Dmac *p_dmac, uint32_t ul_num, const void *dest, uint32_t nb_bytes) noexcept;
 
-static inline uint32_t sspi_get_peripheral_chip_select_value()
+static inline uint32_t sspi_get_peripheral_chip_select_value() noexcept
 {
 	// return 3 & ((SSPI->SPI_MR & SPI_MR_PCS_Msk) >> SPI_MR_PCS_Pos);
 	return 3 & (SSPI->SPI_MR >> SPI_MR_PCS_Pos);
 }
 
-static inline uint32_t sspi_get_clock_divisor()
+static inline uint32_t sspi_get_clock_divisor() noexcept
 {
 	uint32_t ul_pcs_ch = spi_get_peripheral_chip_select_value(SSPI);
 	if (ul_pcs_ch > 3) return 255;

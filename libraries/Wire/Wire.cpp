@@ -32,7 +32,7 @@
 
 #include <cstring>
 
-void TwoWire::ErrorCounts::Clear()
+void TwoWire::ErrorCounts::Clear() noexcept
 {
 	naks = sendTimeouts = recvTimeouts = finishTimeouts = resets = 0;
 }
@@ -40,7 +40,7 @@ void TwoWire::ErrorCounts::Clear()
 // This is the default wait-for-status function.
 // It wait until either 2 clock ticks have passed (so we have waited for at least 1ms) or one or more of the status bits we are interested in has been set.
 // Reading some status bits clears them, so we return the status.
-/*static*/ uint32_t TwoWire::DefaultWaitForStatusFunc(Twi *twi, uint32_t bitsToWaitFor)
+/*static*/ uint32_t TwoWire::DefaultWaitForStatusFunc(Twi *twi, uint32_t bitsToWaitFor) noexcept
 {
 	const uint32_t startMillis = millis();
 	bool timedOut;
@@ -54,7 +54,7 @@ void TwoWire::ErrorCounts::Clear()
 }
 
 // Wait for a status bit or NAK to be set, returning true if successful and it wasn't NAK
-bool TwoWire::WaitForStatus(uint32_t statusBit, uint32_t& timeoutErrorCounter, WaitForStatusFunc statusWaitFunc)
+bool TwoWire::WaitForStatus(uint32_t statusBit, uint32_t& timeoutErrorCounter, WaitForStatusFunc statusWaitFunc) noexcept
 {
 	const uint32_t sr = statusWaitFunc(twi, statusBit | TWI_SR_NACK);
 	if ((sr & TWI_SR_NACK) != 0)
@@ -70,22 +70,22 @@ bool TwoWire::WaitForStatus(uint32_t statusBit, uint32_t& timeoutErrorCounter, W
 	return false;
 }
 
-inline bool TwoWire::WaitTransferComplete(WaitForStatusFunc statusWaitFunc)
+inline bool TwoWire::WaitTransferComplete(WaitForStatusFunc statusWaitFunc) noexcept
 {
 	return WaitForStatus(TWI_SR_TXCOMP, errorCounts.finishTimeouts, statusWaitFunc);
 }
 
-inline bool TwoWire::WaitByteSent(WaitForStatusFunc statusWaitFunc)
+inline bool TwoWire::WaitByteSent(WaitForStatusFunc statusWaitFunc) noexcept
 {
 	return WaitForStatus(TWI_SR_TXRDY, errorCounts.sendTimeouts, statusWaitFunc);
 }
 
-inline bool TwoWire::WaitByteReceived(WaitForStatusFunc statusWaitFunc)
+inline bool TwoWire::WaitByteReceived(WaitForStatusFunc statusWaitFunc) noexcept
 {
 	return WaitForStatus(TWI_SR_RXRDY, errorCounts.recvTimeouts, statusWaitFunc);
 }
 
-TwoWire::TwoWire(Twi *_twi, void(*_beginCb)(void)) : twi(_twi), onBeginCallback(_beginCb), clockFrequency(100000)
+TwoWire::TwoWire(Twi *_twi, void(*_beginCb)(void) noexcept) noexcept : twi(_twi), onBeginCallback(_beginCb), clockFrequency(100000)
 {
 }
 
@@ -101,7 +101,7 @@ void TwoWire::ReInit()
 }
 
 // Begin in master mode
-void TwoWire::BeginMaster(uint32_t p_clockFrequency)
+void TwoWire::BeginMaster(uint32_t p_clockFrequency) noexcept
 {
 	clockFrequency = p_clockFrequency;
 	if (onBeginCallback != nullptr)
@@ -113,7 +113,7 @@ void TwoWire::BeginMaster(uint32_t p_clockFrequency)
 }
 
 // Write then read data
-size_t TwoWire::Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, WaitForStatusFunc statusWaitFunc)
+size_t TwoWire::Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, WaitForStatusFunc statusWaitFunc) noexcept
 {
 	// If an empty transfer, nothing to do
 	if (numToRead + numToWrite == 0)
@@ -137,7 +137,7 @@ size_t TwoWire::Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, s
 	return bytesTransferred;
 }
 
-size_t TwoWire::InternalTransfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, WaitForStatusFunc statusWaitFunc)
+size_t TwoWire::InternalTransfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, WaitForStatusFunc statusWaitFunc) noexcept
 {
 	// Set up the mode register and address
 	if (address >= 0x80)
@@ -234,7 +234,7 @@ size_t TwoWire::InternalTransfer(uint16_t address, uint8_t *buffer, size_t numTo
 
 }
 
-TwoWire::ErrorCounts TwoWire::GetErrorCounts(bool clear)
+TwoWire::ErrorCounts TwoWire::GetErrorCounts(bool clear) noexcept
 {
 	const irqflags_t flags = cpu_irq_save();
 	const ErrorCounts ret = errorCounts;
@@ -247,7 +247,7 @@ TwoWire::ErrorCounts TwoWire::GetErrorCounts(bool clear)
 }
 
 #if WIRE_INTERFACES_COUNT > 0
-static void Wire_Init(void)
+static void Wire_Init(void) noexcept
 {
 	pmc_enable_periph_clk(WIRE_INTERFACE_ID);
 	ConfigurePin(APINS_WIRE);
@@ -260,7 +260,7 @@ TwoWire Wire = TwoWire(WIRE_INTERFACE, Wire_Init);
 #endif
 
 #if WIRE_INTERFACES_COUNT > 1
-static void Wire1_Init(void)
+static void Wire1_Init(void) noexcept
 {
 	pmc_enable_periph_clk(WIRE1_INTERFACE_ID);
 	ConfigurePin(APINS_WIRE1);

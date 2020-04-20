@@ -43,29 +43,29 @@ public:
 		uint32_t finishTimeouts;
 		uint32_t resets;
 
-		void Clear();
+		void Clear() noexcept;
 	};
 
-	typedef uint32_t (*WaitForStatusFunc)(Twi *twi, uint32_t bitsToWaitFor);
+	typedef uint32_t (*WaitForStatusFunc)(Twi *twi, uint32_t bitsToWaitFor) noexcept;
 
-	TwoWire(Twi *twi, void(*begin_cb)(void));
+	TwoWire(Twi *twi, void(*begin_cb)(void) noexcept) noexcept;
 
-	void BeginMaster(uint32_t p_clockFrequency);
-	size_t Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, WaitForStatusFunc statusWaitFunc = DefaultWaitForStatusFunc);
-	ErrorCounts GetErrorCounts(bool clear);
+	void BeginMaster(uint32_t p_clockFrequency) noexcept;
+	size_t Transfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, WaitForStatusFunc statusWaitFunc = DefaultWaitForStatusFunc) noexcept;
+	ErrorCounts GetErrorCounts(bool clear) noexcept;
 
-	static uint32_t DefaultWaitForStatusFunc(Twi *twi, uint32_t bitsToWaitFor);
+	static uint32_t DefaultWaitForStatusFunc(Twi *twi, uint32_t bitsToWaitFor) noexcept;
 
 private:
-	void ReInit();
-	bool WaitForStatus(uint32_t statusBit, uint32_t& timeoutErrorCounter, WaitForStatusFunc statusWaitFunc);
-	bool WaitTransferComplete(WaitForStatusFunc statusWaitFunc);
-	bool WaitByteSent(WaitForStatusFunc statusWaitFunc);
-	bool WaitByteReceived(WaitForStatusFunc statusWaitFunc);
-	size_t InternalTransfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, WaitForStatusFunc statusWaitFunc);
+	void ReInit() noexcept;
+	bool WaitForStatus(uint32_t statusBit, uint32_t& timeoutErrorCounter, WaitForStatusFunc statusWaitFunc) noexcept;
+	bool WaitTransferComplete(WaitForStatusFunc statusWaitFunc) noexcept;
+	bool WaitByteSent(WaitForStatusFunc statusWaitFunc) noexcept;
+	bool WaitByteReceived(WaitForStatusFunc statusWaitFunc) noexcept;
+	size_t InternalTransfer(uint16_t address, uint8_t *buffer, size_t numToWrite, size_t numToRead, WaitForStatusFunc statusWaitFunc) noexcept;
 
 	Twi *twi;							// TWI instance
-	void (*onBeginCallback)(void);		// called before initialization
+	void (*onBeginCallback)(void) noexcept;		// called before initialization
 	ErrorCounts errorCounts;			// error counts
 	uint32_t clockFrequency;			// the clock frequency we were asked for
 };
