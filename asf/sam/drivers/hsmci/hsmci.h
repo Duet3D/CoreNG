@@ -62,7 +62,7 @@ extern "C" {
  *
  * This enable the clock required and the hardware interface.
  */
-void hsmci_init(void);
+void hsmci_init(void) noexcept;
 
 /** \brief Return the maximum bus width of a slot
  *
@@ -70,13 +70,13 @@ void hsmci_init(void);
  *
  * \return 1, 4 or 8 lines.
  */
-uint8_t hsmci_get_bus_width(uint8_t slot);
+uint8_t hsmci_get_bus_width(uint8_t slot) noexcept;
 
 /** \brief Return the high speed capability of the driver
  *
  * \return true, if the high speed is supported
  */
-bool hsmci_is_high_speed_capable(void);
+bool hsmci_is_high_speed_capable(void) noexcept;
 
 /**
  * \brief Select a slot and initialize it
@@ -86,20 +86,19 @@ bool hsmci_is_high_speed_capable(void);
  * \param bus_width  Bus width to use (1, 4 or 8)
  * \param high_speed true, to enable high speed mode
  */
-void hsmci_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width,
-		bool high_speed);
+void hsmci_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width, bool high_speed) noexcept;
 
 /**
  * \brief Deselect a slot
  *
  * \param slot       Selected slot
  */
-void hsmci_deselect_device(uint8_t slot);
+void hsmci_deselect_device(uint8_t slot) noexcept;
 
 /** \brief Send 74 clock cycles on the line of selected slot
  * Note: It is required after card plug and before card install.
  */
-void hsmci_send_clock(void);
+void hsmci_send_clock(void) noexcept;
 
 /** \brief Send a command on the selected slot
  *
@@ -108,19 +107,19 @@ void hsmci_send_clock(void);
  *
  * \return true if success, otherwise false
  */
-bool hsmci_send_cmd(sdmmc_cmd_def_t cmd, uint32_t arg);
+bool hsmci_send_cmd(sdmmc_cmd_def_t cmd, uint32_t arg) noexcept;
 
 /** \brief Return the 32 bits response of the last command
  *
  * \return 32 bits response
  */
-uint32_t hsmci_get_response(void);
+uint32_t hsmci_get_response(void) noexcept;
 
 /** \brief Return the 128 bits response of the last command
  *
  * \param response   Pointer on the array to fill with the 128 bits response
  */
-void hsmci_get_response_128(uint8_t* response);
+void hsmci_get_response_128(uint8_t* response) noexcept;
 
 /** \brief Send an ADTC command on the selected slot
  * An ADTC (Addressed Data Transfer Commands) command is used
@@ -137,8 +136,7 @@ void hsmci_get_response_128(uint8_t* response);
  *
  * \return true if success, otherwise false
  */
-bool hsmci_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size,
-		uint16_t nb_block, bool access_block);
+bool hsmci_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size, uint16_t nb_block, bool access_block) noexcept;
 
 /** \brief Send a command to stop an ADTC command on the selected slot
  *
@@ -147,7 +145,7 @@ bool hsmci_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size,
  *
  * \return true if success, otherwise false
  */
-bool hsmci_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg);
+bool hsmci_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg) noexcept;
 
 /** \brief Read a word on the line
  *
@@ -155,7 +153,7 @@ bool hsmci_adtc_stop(sdmmc_cmd_def_t cmd, uint32_t arg);
  *
  * \return true if success, otherwise false
  */
-bool hsmci_read_word(uint32_t* value);
+bool hsmci_read_word(uint32_t* value) noexcept;
 
 /** \brief Write a word on the line
  *
@@ -163,7 +161,7 @@ bool hsmci_read_word(uint32_t* value);
  *
  * \return true if success, otherwise false
  */
-bool hsmci_write_word(uint32_t value);
+bool hsmci_write_word(uint32_t value) noexcept;
 
 /** \brief Start a read blocks transfer on the line
  * Note: The driver will use the DMA available to speed up the transfer.
@@ -173,13 +171,13 @@ bool hsmci_write_word(uint32_t value);
  *
  * \return true if started, otherwise false
  */
-bool hsmci_start_read_blocks(void *dest, uint16_t nb_block);
+bool hsmci_start_read_blocks(void *dest, uint16_t nb_block) noexcept;
 
 /** \brief Wait the end of transfer initiated by mci_start_read_blocks()
  *
  * \return true if success, otherwise false
  */
-bool hsmci_wait_end_of_read_blocks(void);
+bool hsmci_wait_end_of_read_blocks(void) noexcept;
 
 /** \brief Start a write blocks transfer on the line
  * Note: The driver will use the DMA available to speed up the transfer.
@@ -189,24 +187,24 @@ bool hsmci_wait_end_of_read_blocks(void);
  *
  * \return true if started, otherwise false
  */
-bool hsmci_start_write_blocks(const void *src, uint16_t nb_block);
+bool hsmci_start_write_blocks(const void *src, uint16_t nb_block) noexcept;
 
 /** \brief Wait the end of transfer initiated by mci_start_write_blocks()
  *
  * \return true if success, otherwise false
  */
-bool hsmci_wait_end_of_write_blocks(void);
+bool hsmci_wait_end_of_write_blocks(void) noexcept;
 
 #if 1  //dc42
 
 // Get the speed of the HSMCI interface for reporting purposes, in bytes/sec
-uint32_t hsmci_get_speed(void);
+uint32_t hsmci_get_speed(void) noexcept;
 
 // Define the type of the HSMCI idle function
-typedef void (*hsmciIdleFunc_t)(uint32_t, uint32_t);
+typedef void (*hsmciIdleFunc_t)(uint32_t, uint32_t) noexcept;
 
 // Set the idle function and return the old one
-hsmciIdleFunc_t hsmci_set_idle_func(hsmciIdleFunc_t);
+hsmciIdleFunc_t hsmci_set_idle_func(hsmciIdleFunc_t) noexcept;
 
 #endif
 
