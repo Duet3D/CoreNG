@@ -79,11 +79,11 @@
  *
  * \return Status.
  */
-extern Ctrl_status sd_mmc_test_unit_ready(uint8_t slot);
+extern Ctrl_status sd_mmc_test_unit_ready(uint8_t slot) noexcept;
 //! Instance Declaration for sd_mmc_test_unit_ready Slot O
-extern Ctrl_status sd_mmc_test_unit_ready_0(void);
+extern Ctrl_status sd_mmc_test_unit_ready_0(void) noexcept;
 //! Instance Declaration for sd_mmc_test_unit_ready Slot 1
-extern Ctrl_status sd_mmc_test_unit_ready_1(void);
+extern Ctrl_status sd_mmc_test_unit_ready_1(void) noexcept;
 
 /*! \brief Returns the address of the last valid sector in the memory.
  *
@@ -92,11 +92,11 @@ extern Ctrl_status sd_mmc_test_unit_ready_1(void);
  *
  * \return Status.
  */
-extern Ctrl_status sd_mmc_read_capacity(uint8_t slot,uint32_t *u32_nb_sector);
+extern Ctrl_status sd_mmc_read_capacity(uint8_t slot,uint32_t *u32_nb_sector) noexcept;
 //! Instance Declaration for sd_mmc_read_capacity Slot O
-extern Ctrl_status sd_mmc_read_capacity_0(uint32_t *u32_nb_sector);
+extern Ctrl_status sd_mmc_read_capacity_0(uint32_t *u32_nb_sector) noexcept;
 //! Instance Declaration for sd_mmc_read_capacity Slot 1
-extern Ctrl_status sd_mmc_read_capacity_1(uint32_t *u32_nb_sector);
+extern Ctrl_status sd_mmc_read_capacity_1(uint32_t *u32_nb_sector) noexcept;
 
 /*! \brief Unload/Load the SD/MMC card selected
  *
@@ -108,11 +108,11 @@ extern Ctrl_status sd_mmc_read_capacity_1(uint32_t *u32_nb_sector);
  *
  * \return \c true if unload/load done success.
  */
-extern bool sd_mmc_unload(uint8_t slot, bool unload);
+extern bool sd_mmc_unload(uint8_t slot, bool unload) noexcept;
 //! Instance Declaration for sd_mmc_unload Slot O
-extern bool sd_mmc_unload_0(bool unload);
+extern bool sd_mmc_unload_0(bool unload) noexcept;
 //! Instance Declaration for sd_mmc_unload Slot 1
-extern bool sd_mmc_unload_1(bool unload);
+extern bool sd_mmc_unload_1(bool unload) noexcept;
 
 /*! \brief Returns the write-protection state of the memory.
  *
@@ -122,22 +122,22 @@ extern bool sd_mmc_unload_1(bool unload);
  * \note Only used by removable memories with hardware-specific write
  *       protection.
  */
-extern bool sd_mmc_wr_protect(uint8_t slot);
+extern bool sd_mmc_wr_protect(uint8_t slot) noexcept;
 //! Instance Declaration for sd_mmc_wr_protect Slot O
-extern bool sd_mmc_wr_protect_0(void);
+extern bool sd_mmc_wr_protect_0(void) noexcept;
 //! Instance Declaration for sd_mmc_wr_protect Slot 1
-extern bool sd_mmc_wr_protect_1(void);
+extern bool sd_mmc_wr_protect_1(void) noexcept;
 
 /*! \brief Tells whether the memory is removable.
  *
  * \param slot SD/MMC Slot Card Selected.
  * \return \c true if the memory is removable, else \c false.
  */
-extern bool sd_mmc_removal(uint8_t slot);
+extern bool sd_mmc_removal(uint8_t slot) noexcept;
 //! Instance Declaration for sd_mmc_removal Slot O
-extern bool sd_mmc_removal_0(void);
+extern bool sd_mmc_removal_0(void) noexcept;
 //! Instance Declaration for sd_mmc_removal Slot 1
-extern bool sd_mmc_removal_1(void);
+extern bool sd_mmc_removal_1(void) noexcept;
 
 //! @}
 
@@ -156,11 +156,11 @@ extern bool sd_mmc_removal_1(void);
  *
  * \return Status.
  */
-extern Ctrl_status sd_mmc_usb_read_10(uint8_t slot,uint32_t addr, uint16_t nb_sector);
+extern Ctrl_status sd_mmc_usb_read_10(uint8_t slot,uint32_t addr, uint16_t nb_sector) noexcept;
 //! Instance Declaration for sd_mmc_usb_read_10 Slot O
-extern Ctrl_status sd_mmc_usb_read_10_0(uint32_t addr, uint16_t nb_sector);
+extern Ctrl_status sd_mmc_usb_read_10_0(uint32_t addr, uint16_t nb_sector) noexcept;
 //! Instance Declaration for sd_mmc_usb_read_10 Slot 1
-extern Ctrl_status sd_mmc_usb_read_10_1(uint32_t addr, uint16_t nb_sector);
+extern Ctrl_status sd_mmc_usb_read_10_1(uint32_t addr, uint16_t nb_sector) noexcept;
 
 /*! \brief Transfers data from USB to the memory.
  *
@@ -170,11 +170,11 @@ extern Ctrl_status sd_mmc_usb_read_10_1(uint32_t addr, uint16_t nb_sector);
  *
  * \return Status.
  */
-extern Ctrl_status sd_mmc_usb_write_10(uint8_t slot,uint32_t addr, uint16_t nb_sector);
+extern Ctrl_status sd_mmc_usb_write_10(uint8_t slot,uint32_t addr, uint16_t nb_sector) noexcept;
 //! Instance Declaration for sd_mmc_usb_write_10 Slot O
-extern Ctrl_status sd_mmc_usb_write_10_0(uint32_t addr, uint16_t nb_sector);
+extern Ctrl_status sd_mmc_usb_write_10_0(uint32_t addr, uint16_t nb_sector) noexcept;
 //! Instance Declaration for sd_mmc_usb_write_10 Slot 1
-extern Ctrl_status sd_mmc_usb_write_10_1(uint32_t addr, uint16_t nb_sector);
+extern Ctrl_status sd_mmc_usb_write_10_1(uint32_t addr, uint16_t nb_sector) noexcept;
 
 //! @}
 
@@ -195,11 +195,11 @@ extern Ctrl_status sd_mmc_usb_write_10_1(uint32_t addr, uint16_t nb_sector);
  *
  * \return Status.
  */
-extern Ctrl_status sd_mmc_mem_2_ram(uint8_t slot, uint32_t addr, void *ram, uint32_t numBlocks);
+extern Ctrl_status sd_mmc_mem_2_ram(uint8_t slot, uint32_t addr, void *ram, uint32_t numBlocks) noexcept;
 //! Instance Declaration for sd_mmc_mem_2_ram Slot O
-extern Ctrl_status sd_mmc_mem_2_ram_0(uint32_t addr, void *ram, uint32_t numBlocks);
+extern Ctrl_status sd_mmc_mem_2_ram_0(uint32_t addr, void *ram, uint32_t numBlocks) noexcept;
 //! Instance Declaration for sd_mmc_mem_2_ram Slot 1
-extern Ctrl_status sd_mmc_mem_2_ram_1(uint32_t addr, void *ram, uint32_t numBlocks);
+extern Ctrl_status sd_mmc_mem_2_ram_1(uint32_t addr, void *ram, uint32_t numBlocks) noexcept;
 
 /*! \brief Copies 1 data sector from RAM to the memory.
  *
@@ -209,11 +209,11 @@ extern Ctrl_status sd_mmc_mem_2_ram_1(uint32_t addr, void *ram, uint32_t numBloc
  *
  * \return Status.
  */
-extern Ctrl_status sd_mmc_ram_2_mem(uint8_t slot, uint32_t addr, const void *ram, uint32_t numBlocks);
+extern Ctrl_status sd_mmc_ram_2_mem(uint8_t slot, uint32_t addr, const void *ram, uint32_t numBlocks) noexcept;
 //! Instance Declaration for sd_mmc_mem_2_ram Slot O
-extern Ctrl_status sd_mmc_ram_2_mem_0(uint32_t addr, const void *ram, uint32_t numBlocks);
+extern Ctrl_status sd_mmc_ram_2_mem_0(uint32_t addr, const void *ram, uint32_t numBlocks) noexcept;
 //! Instance Declaration for sd_mmc_mem_2_ram Slot 1
-extern Ctrl_status sd_mmc_ram_2_mem_1(uint32_t addr, const void *ram, uint32_t numBlocks);
+extern Ctrl_status sd_mmc_ram_2_mem_1(uint32_t addr, const void *ram, uint32_t numBlocks) noexcept;
 
 //! @}
 

@@ -191,7 +191,7 @@ extern bool g_wr_protect;
  *
  * \return \c true if the locker was successfully initialized, else \c false.
  */
-extern bool ctrl_access_init(void);
+extern bool ctrl_access_init(void) noexcept;
 
 #endif  // FREERTOS_USED
 
@@ -199,7 +199,7 @@ extern bool ctrl_access_init(void);
  *
  * \return Number of LUNs in the system.
  */
-extern U8 get_nb_lun(void);
+extern U8 get_nb_lun(void) noexcept;
 
 /*! \brief Returns the current LUN.
  *
@@ -207,7 +207,7 @@ extern U8 get_nb_lun(void);
  *
  * \todo Implement.
  */
-extern U8 get_cur_lun(void);
+extern U8 get_cur_lun(void) noexcept;
 
 /*! \brief Tests the memory state and initializes the memory if required.
  *
@@ -221,7 +221,7 @@ extern U8 get_cur_lun(void);
  *
  * \return Status.
  */
-extern Ctrl_status mem_test_unit_ready(U8 lun);
+extern Ctrl_status mem_test_unit_ready(U8 lun) noexcept;
 
 /*! \brief Returns the address of the last valid sector (512 bytes) in the
  *         memory.
@@ -231,7 +231,7 @@ extern Ctrl_status mem_test_unit_ready(U8 lun);
  *
  * \return Status.
  */
-extern Ctrl_status mem_read_capacity(U8 lun, U32 *u32_nb_sector);
+extern Ctrl_status mem_read_capacity(U8 lun, U32 *u32_nb_sector) noexcept;
 
 /*! \brief Returns the size of the physical sector.
  *
@@ -239,7 +239,7 @@ extern Ctrl_status mem_read_capacity(U8 lun, U32 *u32_nb_sector);
  *
  * \return Sector size (unit: 512 bytes).
  */
-extern U8 mem_sector_size(U8 lun);
+extern U8 mem_sector_size(U8 lun) noexcept;
 
 /*! \brief Unload/load the medium.
  *
@@ -248,7 +248,7 @@ extern U8 mem_sector_size(U8 lun);
  *
  * \return \c true if unload/load success, else \c false.
  */
-extern bool mem_unload(U8 lun, bool unload);
+extern bool mem_unload(U8 lun, bool unload) noexcept;
 
 /*! \brief Returns the write-protection state of the memory.
  *
@@ -259,7 +259,7 @@ extern bool mem_unload(U8 lun, bool unload);
  * \note Only used by removable memories with hardware-specific write
  *       protection.
  */
-extern bool mem_wr_protect(U8 lun);
+extern bool mem_wr_protect(U8 lun) noexcept;
 
 /*! \brief Tells whether the memory is removable.
  *
@@ -267,7 +267,7 @@ extern bool mem_wr_protect(U8 lun);
  *
  * \return \c true if the memory is removable, else \c false.
  */
-extern bool mem_removal(U8 lun);
+extern bool mem_removal(U8 lun) noexcept;
 
 /*! \brief Returns a pointer to the LUN name.
  *
@@ -275,7 +275,7 @@ extern bool mem_removal(U8 lun);
  *
  * \return Pointer to the LUN name string.
  */
-extern const char *mem_name(U8 lun);
+extern const char *mem_name(U8 lun) noexcept;
 
 //! @}
 
@@ -294,7 +294,7 @@ extern const char *mem_name(U8 lun);
  *
  * \return Status.
  */
-extern Ctrl_status memory_2_usb(U8 lun, U32 addr, U16 nb_sector);
+extern Ctrl_status memory_2_usb(U8 lun, U32 addr, U16 nb_sector) noexcept;
 
 /*! \brief Transfers data from USB to the memory.
  *
@@ -304,7 +304,7 @@ extern Ctrl_status memory_2_usb(U8 lun, U32 addr, U16 nb_sector);
  *
  * \return Status.
  */
-extern Ctrl_status usb_2_memory(U8 lun, U32 addr, U16 nb_sector);
+extern Ctrl_status usb_2_memory(U8 lun, U32 addr, U16 nb_sector) noexcept;
 
 //! @}
 
@@ -325,7 +325,7 @@ extern Ctrl_status usb_2_memory(U8 lun, U32 addr, U16 nb_sector);
  *
  * \return Status.
  */
-extern Ctrl_status memory_2_ram(U8 lun, U32 addr, void *ram, uint32_t numBlocks);
+extern Ctrl_status memory_2_ram(U8 lun, U32 addr, void *ram, uint32_t numBlocks) noexcept;
 
 /*! \brief Copies 1 data sector from RAM to the memory.
  *
@@ -335,7 +335,7 @@ extern Ctrl_status memory_2_ram(U8 lun, U32 addr, void *ram, uint32_t numBlocks)
  *
  * \return Status.
  */
-extern Ctrl_status ram_2_memory(U8 lun, U32 addr, const void *ram, uint32_t numBlocks);
+extern Ctrl_status ram_2_memory(U8 lun, U32 addr, const void *ram, uint32_t numBlocks) noexcept;
 
 //! @}
 
@@ -363,7 +363,7 @@ extern Ctrl_status ram_2_memory(U8 lun, U32 addr, const void *ram, uint32_t numB
  *
  * \return Status.
  */
-extern Ctrl_status stream_mem_to_mem(U8 src_lun, U32 src_addr, U8 dest_lun, U32 dest_addr, U16 nb_sector);
+extern Ctrl_status stream_mem_to_mem(U8 src_lun, U32 src_addr, U8 dest_lun, U32 dest_addr, U16 nb_sector) noexcept;
 
   #endif  // ACCESS_MEM_TO_MEM == true
 
@@ -375,7 +375,7 @@ extern Ctrl_status stream_mem_to_mem(U8 src_lun, U32 src_addr, U8 dest_lun, U32 
  *
  * \todo Implement.
  */
-extern Ctrl_status stream_state(U8 id);
+extern Ctrl_status stream_state(U8 id) noexcept;
 
 /*! \brief Stops a streaming data transfer.
  *
@@ -385,7 +385,7 @@ extern Ctrl_status stream_state(U8 id);
  *
  * \todo Implement.
  */
-extern U16 stream_stop(U8 id);
+extern U16 stream_stop(U8 id) noexcept;
 
 //! @}
 

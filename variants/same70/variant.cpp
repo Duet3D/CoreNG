@@ -420,10 +420,7 @@ bool IsPwmCapable(Pin pin)
 
 extern "C" void init( void )
 {
-	// Initialize Serial port U(S)ART pins
-	ConfigurePin(APINS_Serial0);
-	setPullup(APIN_Serial0_RXD, true); 							// Enable pullup for RX0
-
+	// On Duet 3 we don't set the serial aux pins to UART until we get a M575 command in config.g
 	// No need to initialize the USB pins on the SAME70 because they are USB by default
 
 	// Initialize Analog Controller
@@ -449,8 +446,6 @@ extern "C" void init( void )
 #ifndef SAME70XPLD
 	// Set up PB4..PB5 as normal I/O, not JTAG
 	matrix_set_system_io(CCFG_SYSIO_SYSIO4 | CCFG_SYSIO_SYSIO5);
-	// Set up PB4..PB7 as normal I/O, not JTAG/SWDEBUG
-//	matrix_set_system_io(CCFG_SYSIO_SYSIO4 | CCFG_SYSIO_SYSIO5 | CCFG_SYSIO_SYSIO6 | CCFG_SYSIO_SYSIO7);
 #endif
 }
 
