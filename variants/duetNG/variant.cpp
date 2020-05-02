@@ -231,14 +231,24 @@ RingBuffer tx_buffer1;
 RingBuffer rx_buffer2;
 RingBuffer tx_buffer2;
 
-UARTClass Serial(UART0, UART0_IRQn, ID_UART0, &rx_buffer1, &tx_buffer1);
+UARTClass Serial(UART0, UART0_IRQn, ID_UART0, &rx_buffer1, &tx_buffer1,
+					[]() noexcept
+					{
+						ConfigurePin(APINS_Serial0);			// Initialize Serial port U(S)ART pins
+						setPullup(APIN_Serial0_RXD, true); 		// Enable pullup
+					} );
 
 void UART0_Handler(void)
 {
 	Serial.IrqHandler();
 }
 
-UARTClass Serial1(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2);
+UARTClass Serial1(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2,
+					[]() noexcept
+					{
+						ConfigurePin(APINS_Serial1);			// Initialize Serial port U(S)ART pins
+						setPullup(APIN_Serial1_RXD, true); 		// Enable pullup
+					} );
 
 void UART1_Handler(void)
 {
@@ -268,10 +278,6 @@ bool IsPwmCapable(Pin pin)
 
 extern "C" void init( void )
 {
-	// Initialize Serial port U(S)ART pins
-	ConfigurePin(APINS_Serial0);
-	setPullup(APIN_Serial0_RXD, true); 							// Enable pullup for RX0
-
  	// Initialize Analog Controller
 	AnalogInInit();
 

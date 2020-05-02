@@ -102,7 +102,7 @@ class USARTClass : public UARTClass
       Mode_8S2 = US_MR_CHRL_8_BIT | US_MR_PAR_SPACE | US_MR_NBSTOP_2_BIT,
     };
 
-    USARTClass(Usart* pUsart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer* pRx_buffer, RingBuffer* pTx_buffer) noexcept;
+    USARTClass(Usart* pUsart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer* pRx_buffer, RingBuffer* pTx_buffer, OnBeginFunction onBegin) noexcept;
 
     void begin(const uint32_t dwBaudRate) noexcept;
     void begin(const uint32_t dwBaudRate, const USARTModes config) noexcept;

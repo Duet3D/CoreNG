@@ -24,8 +24,8 @@
 
 // Constructors ////////////////////////////////////////////////////////////////
 
-USARTClass::USARTClass( Usart* pUsart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer* pRx_buffer, RingBuffer* pTx_buffer ) noexcept
-  : UARTClass((Uart*)pUsart, dwIrq, dwId, pRx_buffer, pTx_buffer)
+USARTClass::USARTClass( Usart* pUsart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer* pRx_buffer, RingBuffer* pTx_buffer, OnBeginFunction onBegin ) noexcept
+  : UARTClass((Uart*)pUsart, dwIrq, dwId, pRx_buffer, pTx_buffer, onBegin)
 {
   // In case anyone needs USART specific functionality in the future
   _pUsart=pUsart;

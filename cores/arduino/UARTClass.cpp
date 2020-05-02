@@ -25,8 +25,9 @@
 
 // Constructors ////////////////////////////////////////////////////////////////
 
-UARTClass::UARTClass(Uart *pUart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer *pRx_buffer, RingBuffer *pTx_buffer) noexcept
-	: _rx_buffer(pRx_buffer), _tx_buffer(pTx_buffer), _pUart(pUart), _dwIrq(dwIrq), _dwId(dwId),
+UARTClass::UARTClass(Uart *pUart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer *pRx_buffer, RingBuffer *pTx_buffer, OnBeginFunction onBegin) noexcept
+	: onBeginFunc(onBegin),
+	  _rx_buffer(pRx_buffer), _tx_buffer(pTx_buffer), _pUart(pUart), _dwIrq(dwIrq), _dwId(dwId),
 	  numInterruptBytesMatched(0), interruptCallback(nullptr)
 {
 }
@@ -48,6 +49,7 @@ void UARTClass::init(const uint32_t dwBaudRate, const uint32_t modeReg) noexcept
 {
   // Configure PMC
   pmc_enable_periph_clk( _dwId );
+  onBeginFunc();
 
 #if !SAME70
   // Disable PDC channel

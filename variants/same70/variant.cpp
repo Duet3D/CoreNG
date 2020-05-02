@@ -365,14 +365,24 @@ RingBuffer tx_buffer2;
 
 #ifdef SAME70XPLD
 
-UARTClass Serial(UART0, UART0_IRQn, ID_UART0, &rx_buffer1, &tx_buffer1);
+UARTClass Serial(UART0, UART0_IRQn, ID_UART0, &rx_buffer1, &tx_buffer1,
+					[]() noexcept
+					{
+						ConfigurePin(APINS_Serial0);			// Initialize Serial port U(S)ART pins
+						setPullup(APIN_Serial0_RXD, true); 		// Enable pullup
+					} );
 
 void UART0_Handler(void)
 {
 	Serial.IrqHandler();
 }
 
-UARTClass Serial1(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2);
+UARTClass Serial1(UART1, UART1_IRQn, ID_UART1, &rx_buffer2, &tx_buffer2,
+					[]() noexcept
+					{
+						ConfigurePin(APINS_Serial1);			// Initialize Serial port U(S)ART pins
+						setPullup(APIN_Serial1_RXD, true); 		// Enable pullup
+					} );
 
 void UART1_Handler(void)
 {
@@ -381,14 +391,22 @@ void UART1_Handler(void)
 
 #else
 
-UARTClass Serial(UART2, UART2_IRQn, ID_UART2, &rx_buffer1, &tx_buffer1);
+UARTClass Serial(UART2, UART2_IRQn, ID_UART2, &rx_buffer1, &tx_buffer1,
+					[]() noexcept
+					{
+						ConfigurePin(APINS_Serial0);			// Initialize Serial port U(S)ART pins, Duet 3 has permanent pullup resistor.
+					} );
 
 void UART2_Handler(void)
 {
 	Serial.IrqHandler();
 }
 
-UARTClass Serial1(UART4, UART4_IRQn, ID_UART4, &rx_buffer2, &tx_buffer2);
+UARTClass Serial1(UART4, UART4_IRQn, ID_UART4, &rx_buffer2, &tx_buffer2,
+					[]() noexcept
+					{
+						ConfigurePin(APINS_Serial1);			// Initialize Serial port U(S)ART pins, Duet 3 has permanent pullup resistor
+					} );
 
 void UART4_Handler(void)
 {
@@ -420,9 +438,6 @@ bool IsPwmCapable(Pin pin)
 
 extern "C" void init( void )
 {
-	// On Duet 3 we don't set the serial aux pins to UART until we get a M575 command in config.g
-	// No need to initialize the USB pins on the SAME70 because they are USB by default
-
 	// Initialize Analog Controller
 	AnalogInInit();
 

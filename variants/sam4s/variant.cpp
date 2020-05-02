@@ -190,7 +190,12 @@ extern const PinDescription g_APinDescription[]=
 RingBuffer rx_buffer1;
 RingBuffer tx_buffer1;
 
-UARTClass Serial(UART1, UART1_IRQn, ID_UART1, &rx_buffer1, &tx_buffer1);
+UARTClass Serial(UART1, UART1_IRQn, ID_UART1, &rx_buffer1, &tx_buffer1,
+					[]() noexcept
+					{
+						ConfigurePin(APINS_Serial0);			// Initialize Serial port U(S)ART pins
+						setPullup(APIN_Serial0_RXD, true); 		// Enable pullup
+					} );
 
 void UART1_Handler(void)
 {
@@ -222,14 +227,6 @@ bool IsPwmCapable(Pin pin)
 
 extern "C" void init( void )
 {
-#ifndef PCCB
-	// Initialize Serial port U(S)ART pins
-	ConfigurePin(APINS_Serial0);				// PanelDue uses UART1
-	setPullup(APIN_Serial0_RXD, true); 			// Enable pullup for RxD
-#endif
-
-	// No need to initialize the USB pins on the SAM4S because they are USB by default
-
 	// Initialize Analog Controller
 	AnalogInInit();
 

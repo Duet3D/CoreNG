@@ -332,7 +332,12 @@ extern const PinDescription g_APinDescription[]=
 RingBuffer rx_buffer1;
 RingBuffer tx_buffer1;
 
-UARTClass Serial(UART, UART_IRQn, ID_UART, &rx_buffer1, &tx_buffer1);
+UARTClass Serial(UART, UART_IRQn, ID_UART, &rx_buffer1, &tx_buffer1,
+					[]() noexcept
+					{
+						ConfigurePin(APINS_UART);			// Initialize Serial port U(S)ART pins
+						setPullup(APIN_UART_RXD, true); 		// Enable pullup
+					} );
 
 void UART_Handler(void)
 {
@@ -348,14 +353,25 @@ RingBuffer rx_buffer3;
 RingBuffer tx_buffer2;
 RingBuffer tx_buffer3;
 
-USARTClass Serial1(USART0, USART0_IRQn, ID_USART0, &rx_buffer2, &tx_buffer2);
+USARTClass Serial1(USART0, USART0_IRQn, ID_USART0, &rx_buffer2, &tx_buffer2,
+	[]() noexcept
+	{
+		ConfigurePin(APINS_USART0);			// Initialize Serial port U(S)ART pins
+		setPullup(APIN_USART0_RXD, true); 	// Enable pullup
+	} );
+
 
 void USART0_Handler(void)
 {
   Serial1.IrqHandler();
 }
 
-USARTClass Serial2(USART1, USART1_IRQn, ID_USART1, &rx_buffer3, &tx_buffer3);
+USARTClass Serial2(USART1, USART1_IRQn, ID_USART1, &rx_buffer3, &tx_buffer3,
+	[]() noexcept
+	{
+		ConfigurePin(APINS_USART1);			// Initialize Serial port U(S)ART pins
+	} );
+
 
 void USART1_Handler(void)
 {
@@ -385,10 +401,6 @@ bool IsPwmCapable(Pin pin)
 
 extern "C" void init( void )
 {
-	// Initialize Serial port U(S)ART pins
-	ConfigurePin(g_APinDescription[APINS_USART0]);
-	setPullup(APIN_USART0_RXD, true); 							// Enable pullup for RXD
-
 	// Initialize USB pins
 	ConfigurePin(g_APinDescription[APINS_USB]);
 

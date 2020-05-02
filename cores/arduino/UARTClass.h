@@ -39,6 +39,7 @@ class UARTClass : public HardwareSerial
 {
   public:
 	typedef void (*InterruptCallbackFn)(UARTClass*) noexcept;
+	typedef void (*OnBeginFunction)() noexcept;
 
     enum UARTModes {
       Mode_8N1 = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_NO,
@@ -47,7 +48,8 @@ class UARTClass : public HardwareSerial
       Mode_8M1 = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_MARK,
       Mode_8S1 = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_SPACE,
     };
-    UARTClass(Uart* pUart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer* pRx_buffer, RingBuffer* pTx_buffer) noexcept;
+
+    UARTClass(Uart* pUart, IRQn_Type dwIrq, uint32_t dwId, RingBuffer* pRx_buffer, RingBuffer* pTx_buffer, OnBeginFunction onBegin) noexcept;
 
     void begin(const uint32_t dwBaudRate) noexcept;
     void begin(const uint32_t dwBaudRate, const UARTModes config) noexcept;
@@ -74,6 +76,8 @@ class UARTClass : public HardwareSerial
 
   protected:
     void init(const uint32_t dwBaudRate, const uint32_t config) noexcept;
+
+    OnBeginFunction onBeginFunc;
 
     RingBuffer * const _rx_buffer;
     RingBuffer * const _tx_buffer;
