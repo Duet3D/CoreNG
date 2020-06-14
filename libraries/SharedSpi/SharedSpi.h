@@ -53,12 +53,14 @@
  */
 #define SPI_MODE_3  (SPI_CPOL | SPI_CPHA)
 
+typedef uint8_t SpiMode;
+
 //! \brief Polled SPI device definition.
 struct sspi_device {
 	Pin csPin;
 	bool csPolarity;
 	uint8_t bitsPerTransferControl;
-	uint8_t spiMode;
+	SpiMode spiMode;
 	uint32_t clockFrequency;
 };
 
