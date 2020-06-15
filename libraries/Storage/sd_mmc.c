@@ -548,71 +548,56 @@ static bool sdio_op_cond(void)
  */
 static bool sdio_get_max_speed(void)
 {
-	uint32_t addr, addr_cis;
+	uint32_t addr_new, addr_old;
 	uint8_t buf[6];
  	uint32_t unit;
 	uint32_t mul;
-	uint8_t tplfe_max_tran_speed;
+	uint8_t tplfe_max_tran_speed, i;
+	uint8_t addr_cis[4];
 
-	// Read CIS area address in CCCR area
-	addr_cis = 0; // Init all bytes, because the next function fill 3 bytes only
-	if (!sdio_cmd53(SDIO_CMD53_READ_FLAG, SDIO_CIA, SDIO_CCCR_CIS_PTR, 1, 3, true)) {
-		sd_mmc_debug("%s: CMD53 Read CIS Fail\n\r", __func__);
-		return false;
+	/* Read CIS area address in CCCR area */
+	addr_old = SDIO_CCCR_CIS_PTR;
+	for(i = 0; i < 4; i++) {
+		sdio_cmd52(SDIO_CMD52_READ_FLAG, SDIO_CIA, addr_old, 0, &addr_cis[i]);
+		addr_old++;
 	}
-	if (!sd_mmc_card->iface->start_read_blocks((uint8_t *)&addr_cis, 1)) {
-		return false;
-	}
-	if (!sd_mmc_card->iface->wait_end_of_read_blocks()) {
-		return false;
-	}
-	addr_cis = le32_to_cpu(addr_cis);
+	addr_old = addr_cis[0] + (addr_cis[1] << 8) + \
+				(addr_cis[2] << 16) + (addr_cis[3] << 24);
+	addr_new = addr_old;
 
-	// Search Fun0 tuple in the CIA area
-	addr = addr_cis;
 	while (1) {
 		// Read a sample of CIA area
-		if (!sdio_cmd53(SDIO_CMD53_READ_FLAG, SDIO_CIA, addr, 1, 3, true)) {
-			sd_mmc_debug("%s: CMD53 Read CIA Fail\n\r", __func__);
-			return false;
-		}
-		if (!sd_mmc_card->iface->start_read_blocks(buf, 1)) {
-			return false;
-		}
-		if (!sd_mmc_card->iface->wait_end_of_read_blocks()) {
-			return false;
+		for(i=0; i<3; i++) {
+			sdio_cmd52(SDIO_CMD52_READ_FLAG, SDIO_CIA, addr_new, 0, &buf[i]);
+			addr_new++;
 		}
 		if (buf[0] == SDIO_CISTPL_END) {
-			sd_mmc_debug("%s: CMD53 Tuple error\n\r", __func__);
+			sd_mmc_debug("%s: CMD52 Tuple error\n\r", __func__);
 			return false; // Tuple error
 		}
 		if (buf[0] == SDIO_CISTPL_FUNCE && buf[2] == 0x00) {
 			break; // Fun0 tuple found
 		}
 		if (buf[1] == 0) {
-			sd_mmc_debug("%s: CMD53 Tuple error\n\r", __func__);
+			sd_mmc_debug("%s: CMD52 Tuple error\n\r", __func__);
 			return false; // Tuple error
 		}
 
 		// Next address
 		addr += (buf[1] + 2);
 		if (addr > (addr_cis + 256)) {
-			sd_mmc_debug("%s: CMD53 Outoff CIS area\n\r", __func__);
+			sd_mmc_debug("%s: CMD52 Outoff CIS area\n\r", __func__);
 			return false; // Outoff CIS area
 		}
 	}
 
 	// Read all Fun0 tuple fields: fn0_blk_siz & max_tran_speed
-	if (!sdio_cmd53(SDIO_CMD53_READ_FLAG, SDIO_CIA, addr, 1, 6, true)) {
-		sd_mmc_debug("%s: CMD53 Read all Fun0 Fail\n\r", __func__);
-		return false;
+	addr_new -= 3;
+	for(i = 0; i < 6; i++) {
+		sdio_cmd52(SDIO_CMD52_READ_FLAG, SDIO_CIA, addr_new, 0, &buf[i]);
+		addr_new++;
 	}
-	if (!sd_mmc_card->iface->start_read_blocks(buf, 1)) {
-		return false;
-	}
-	if (!sd_mmc_card->iface->wait_end_of_read_blocks()) {
-		return false;
-	}
+
 	tplfe_max_tran_speed = buf[5];
 	if (tplfe_max_tran_speed > 0x32) {
 		/* Error on SDIO register, the high speed is not activated
