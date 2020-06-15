@@ -142,45 +142,6 @@ extern bool sd_mmc_removal_1(void) noexcept;
 //! @}
 
 
-#if ACCESS_USB == true
-
-/*! \name MEM <-> USB Interface
- */
-//! @{
-
-/*! \brief Transfers data from the memory to USB.
- *
- * \param slot SD/MMC Slot Card Selected.
- * \param addr      Address of first memory sector to read.
- * \param nb_sector Number of sectors to transfer.
- *
- * \return Status.
- */
-extern Ctrl_status sd_mmc_usb_read_10(uint8_t slot,uint32_t addr, uint16_t nb_sector) noexcept;
-//! Instance Declaration for sd_mmc_usb_read_10 Slot O
-extern Ctrl_status sd_mmc_usb_read_10_0(uint32_t addr, uint16_t nb_sector) noexcept;
-//! Instance Declaration for sd_mmc_usb_read_10 Slot 1
-extern Ctrl_status sd_mmc_usb_read_10_1(uint32_t addr, uint16_t nb_sector) noexcept;
-
-/*! \brief Transfers data from USB to the memory.
- *
- * \param slot SD/MMC Slot Card Selected.
- * \param addr      Address of first memory sector to write.
- * \param nb_sector Number of sectors to transfer.
- *
- * \return Status.
- */
-extern Ctrl_status sd_mmc_usb_write_10(uint8_t slot,uint32_t addr, uint16_t nb_sector) noexcept;
-//! Instance Declaration for sd_mmc_usb_write_10 Slot O
-extern Ctrl_status sd_mmc_usb_write_10_0(uint32_t addr, uint16_t nb_sector) noexcept;
-//! Instance Declaration for sd_mmc_usb_write_10 Slot 1
-extern Ctrl_status sd_mmc_usb_write_10_1(uint32_t addr, uint16_t nb_sector) noexcept;
-
-//! @}
-
-#endif
-
-
 #if ACCESS_MEM_TO_RAM == true
 
 /*! \name MEM <-> RAM Interface
