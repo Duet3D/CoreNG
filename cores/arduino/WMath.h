@@ -50,6 +50,16 @@ extern uint32_t trueRandom() noexcept;
 
 extern "C++" {
 
+	inline bool Xor(bool a, bool b) noexcept
+	{
+		return (a) ? !b : b;
+	}
+
+	inline bool XNor(bool a, bool b) noexcept
+	{
+		return (a) ? b : !b;
+	}
+
 	extern int32_t random(int32_t) noexcept;
 	extern int32_t random(int32_t, int32_t) noexcept;
 	extern int32_t map(int32_t, int32_t, int32_t, int32_t, int32_t) noexcept;
