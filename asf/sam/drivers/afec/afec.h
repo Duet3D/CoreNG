@@ -40,6 +40,10 @@
 #include "compiler.h"
 #include "status_codes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 /** Definitions for AFEC resolution */
 enum afec_resolution {
@@ -89,7 +93,7 @@ enum afec_trigger {
 #if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 	/*Analog Comparator*/
 	AFEC_TRIG_ANALOG_COMPARATOR = AFEC_MR_TRGSEL_AFEC_TRIG6 | AFEC_MR_TRGEN,
-#endif	
+#endif
 	/* Freerun mode conversion. */
 	AFEC_TRIG_FREERUN = 0xFF,
 };
@@ -718,6 +722,10 @@ static inline enum status_code afec_start_calibration(Afec *const afec)
 	}
 	afec->AFEC_CR = AFEC_CR_AUTOCAL;
 	return STATUS_OK;
+}
+#endif
+
+#ifdef __cplusplus
 }
 #endif
 
