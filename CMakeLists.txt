@@ -5,6 +5,8 @@ add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions>")
 
 if(BOARD STREQUAL "DuetNG")
     set(variant "duetNG")
+elseif(BOARD STREQUAL "DuetM")
+    set(variant "sam4s")
 endif()
 
 set(SRCS
