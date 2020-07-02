@@ -7,6 +7,8 @@ if(BOARD STREQUAL "DuetNG")
     set(variant "duetNG")
 elseif(BOARD STREQUAL "DuetM")
     set(variant "sam4s")
+elseif(BOARD STREQUAL "Duet3_V06")
+    set(variant "same70")
 endif()
 
 set(SRCS
