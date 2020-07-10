@@ -42,4 +42,25 @@ void detachInterrupt(uint32_t pin) noexcept;
 // Return true if we are in an interrupt service routine
 bool inInterrupt() noexcept;
 
+#ifdef __cplusplus
+
+// Atomic section locker, alternative to InterruptCriticalSectionLocker (is safe to call from within an ISR, and may be faster)
+class AtomicCriticalSectionLocker
+{
+public:
+	AtomicCriticalSectionLocker() : flags(cpu_irq_save())
+	{
+	}
+
+	~AtomicCriticalSectionLocker()
+	{
+		cpu_irq_restore(flags);
+	}
+
+private:
+	irqflags_t flags;
+};
+
+#endif
+
 #endif /* _WIRING_INTERRUPTS_ */

@@ -22,15 +22,11 @@
 #include <stdint.h>
 #include <compiler.h>
 
-#if SAM3XA || SAME70
-
 #ifdef __cplusplus
-extern "C" uint32_t trueRandom() noexcept;
+extern "C" uint32_t random32() noexcept;
 #else
-extern uint32_t trueRandom() noexcept;
+extern uint32_t random32() noexcept;
 #endif
-
-#endif	// SAM3XA || SAME70
 
 #ifdef __cplusplus
 
@@ -47,7 +43,6 @@ extern uint32_t trueRandom() noexcept;
 #endif
 
 // We need to use "extern C++" here so that it compiles even if this file was #included inside an "extern C" block
-
 extern "C++" {
 
 	inline bool Xor(bool a, bool b) noexcept
@@ -60,9 +55,12 @@ extern "C++" {
 		return (a) ? b : !b;
 	}
 
-	extern int32_t random(int32_t) noexcept;
+	inline int32_t random(int32_t howbig) noexcept
+	{
+		return random32() % howbig;
+	}
+
 	extern int32_t random(int32_t, int32_t) noexcept;
-	extern int32_t map(int32_t, int32_t, int32_t, int32_t, int32_t) noexcept;
 
 	template<class X> inline constexpr X min(X _a, X _b) noexcept
 	{

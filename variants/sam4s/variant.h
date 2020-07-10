@@ -151,9 +151,12 @@ constexpr Pin APINS_TWI = 70;
 extern UARTClass Serial;
 #endif
 
-extern void ConfigurePin(const PinDescription& pinDesc) noexcept;
-extern void ConfigurePin(Pin pin) noexcept;
-extern bool IsPwmCapable(Pin pin) noexcept;						// Return true if this pin exists and can do PWM
+// We need to use "extern C++" here so that it compiles even if this file was #included inside an "extern C" block
+extern "C++" {
+	void ConfigurePin(const PinDescription& pinDesc) noexcept;
+	void ConfigurePin(Pin pin) noexcept;
+	bool IsPwmCapable(Pin pin) noexcept;						// Return true if this pin exists and can do PWM
+}
 
 #endif
 
