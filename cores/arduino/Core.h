@@ -27,6 +27,7 @@
 #undef result
 
 #include "compiler.h"
+#define SAME5x		0	// projects for SAME5x use CoreN2G instead
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -48,6 +49,7 @@ void CoreSysTick(void) noexcept;
 
 typedef uint8_t Pin;
 static const Pin NoPin = 0xFF;
+typedef uint8_t DmaChannel;
 
 #ifdef __cplusplus
 } // extern "C"
