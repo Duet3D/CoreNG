@@ -54,7 +54,7 @@ enum PinMode
  */
 extern void pinModeDuet(Pin pin, enum PinMode dwMode, uint32_t debounceCutoff) noexcept;
 
-inline void pinMode(Pin pin, enum PinMode dwMode) noexcept
+static inline void pinMode(Pin pin, enum PinMode dwMode) noexcept
 {
 	pinModeDuet(pin, dwMode, 0);
 }
