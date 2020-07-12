@@ -29,6 +29,6 @@ extern void AnalogOutInit() noexcept;
  * \param ulValue, will be constrained to be within 0.0 to 1.0 within this function
  * \param freq (optional)
  */
-extern void AnalogOut(Pin pin, float ulValue, uint16_t freq = 1000) noexcept;
+extern void AnalogOut(Pin pin, float ulValue, PwmFrequency freq = 1000) noexcept;
 
 #endif // ANALOGOUT_H
