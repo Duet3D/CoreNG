@@ -155,9 +155,8 @@ void Cache::Init() noexcept
 #elif SAME5x
 	// No need to do any initialisation
 #elif SAM4E
-	cmcc_config g_cmcc_cfg;
-	cmcc_get_config_defaults(&g_cmcc_cfg);
-	cmcc_init(CMCC, &g_cmcc_cfg);
+	CMCC->CMCC_MCFG = CMCC_DHIT_COUNT_MODE;
+	CMCC->CMCC_MEN |= CMCC_MEN_MENABLE;
 #endif
 }
 
@@ -173,8 +172,8 @@ void Cache::Enable() noexcept
 		cache_invalidate_all();
 		cache_enable();
 #elif SAM4E
-		cmcc_invalidate_all(CMCC);
-		cmcc_enable(CMCC);
+		CMCC->CMCC_MAINT0 = CMCC_MAINT0_INVALL;		// invalidate all lines
+		CMCC->CMCC_CTRL = CMCC_CTRL_CEN;			// enable cache
 #endif
 	}
 }
@@ -190,7 +189,7 @@ void Cache::Disable() noexcept
 #elif SAME5x
 		cache_disable();
 #elif SAM4E
-		cmcc_disable(CMCC);
+		CMCC->CMCC_CTRL = 0;						// disable cache
 #endif
 		enabled = false;
 	}
@@ -237,9 +236,10 @@ void Cache::Invalidate(const volatile void *start, size_t length) noexcept
 #elif SAM4E
 		// The cache is only 2kb on the SAM4E so we just invalidate the whole cache
 		const irqflags_t flags = cpu_irq_save();
-		cmcc_disable(CMCC);
-		cmcc_invalidate_all(CMCC);
-		cmcc_enable(CMCC);
+		CMCC->CMCC_CTRL = 0;						// disable cache
+		__ISB();
+		CMCC->CMCC_MAINT0 = CMCC_MAINT0_INVALL;		// invalidate all lines
+		CMCC->CMCC_CTRL = CMCC_CTRL_CEN;			// enable cache
 		cpu_irq_restore(flags);
 #endif
 	}
