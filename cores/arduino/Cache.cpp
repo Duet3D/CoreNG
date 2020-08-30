@@ -91,46 +91,51 @@ void Cache::Init() noexcept
 			ARM_MPU_RBAR(0, IFLASH_ADDR),
 			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_RO, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WB_WRA, ARM_MPU_CACHEP_WB_WRA, 1u), 0u, ARM_MPU_REGION_SIZE_1MB)
 		},
+		// First 512b of the flash memory is also the flash write page buffer, which we need to write to when writing the user page
+		{
+			ARM_MPU_RBAR(1, IFLASH_ADDR),
+			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WT_NWA, ARM_MPU_CACHEP_WT_NWA, 1u), 0u, ARM_MPU_REGION_SIZE_512B)
+		},
 		// First 256kb RAM, read-write, cacheable, execute disabled. Parts of this are overridden later.
 		{
-			ARM_MPU_RBAR(1, IRAM_ADDR),
+			ARM_MPU_RBAR(2, IRAM_ADDR),
 			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WB_WRA, ARM_MPU_CACHEP_WB_WRA, 1u), 0u, ARM_MPU_REGION_SIZE_256KB)
 		},
 		// Final 128kb RAM, read-write, cacheable, execute disabled
 		{
-			ARM_MPU_RBAR(2, IRAM_ADDR + 0x00040000),
+			ARM_MPU_RBAR(3, IRAM_ADDR + 0x00040000),
 			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WB_WRA, ARM_MPU_CACHEP_WB_WRA, 1u), 0u, ARM_MPU_REGION_SIZE_128KB)
 		},
 		// Non-cachable RAM. This must be before normal RAM because it includes CAN buffers which must be within first 64kb.
 		// Read write, execute disabled, non-cacheable
 		{
-			ARM_MPU_RBAR(3, IRAM_ADDR),
+			ARM_MPU_RBAR(4, IRAM_ADDR),
 			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_ORDERED, 0, ARM_MPU_REGION_SIZE_64KB)
 		},
 		// RAMFUNC memory. Read-only (the code has already been written to it), execution allowed. The initialised data memory follows, so it must be RW.
 		// 256 bytes is enough at present (check the linker memory map if adding more RAMFUNCs).
 		{
-			ARM_MPU_RBAR(4, IRAM_ADDR + 0x00010000),
+			ARM_MPU_RBAR(5, IRAM_ADDR + 0x00010000),
 			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WB_WRA, ARM_MPU_CACHEP_WB_WRA, 1u), 0u, ARM_MPU_REGION_SIZE_256B)
 		},
 		// Peripherals
 		{
-			ARM_MPU_RBAR(5, 0x40000000),
+			ARM_MPU_RBAR(6, 0x40000000),
 			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_DEVICE(1u), 0u, ARM_MPU_REGION_SIZE_16MB)
 		},
 		// USBHS
 		{
-			ARM_MPU_RBAR(6, 0xA0100000),
+			ARM_MPU_RBAR(7, 0xA0100000),
 			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_DEVICE(1u), 0u, ARM_MPU_REGION_SIZE_1MB)
 		},
 		// ROM
 		{
-			ARM_MPU_RBAR(7, IROM_ADDR),
+			ARM_MPU_RBAR(8, IROM_ADDR),
 			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_RO, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WB_WRA, ARM_MPU_CACHEP_WB_WRA, 1u), 0u, ARM_MPU_REGION_SIZE_4MB)
 		},
 		// ARM Private Peripheral Bus
 		{
-			ARM_MPU_RBAR(8, 0xE0000000),
+			ARM_MPU_RBAR(9, 0xE0000000),
 			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_ORDERED, 0u, ARM_MPU_REGION_SIZE_1MB)
 		}
 	};
