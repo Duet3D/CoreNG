@@ -313,9 +313,7 @@ uint32_t efc_get_result(Efc *p_efc)
  */
 __no_inline
 RAMFUNC
-uint32_t efc_perform_read_sequence(Efc *p_efc,
-		uint32_t ul_cmd_st, uint32_t ul_cmd_sp,
-		uint32_t *p_ul_buf, uint32_t ul_size)
+uint32_t efc_perform_read_sequence(Efc *p_efc, uint32_t ul_cmd_st, uint32_t ul_cmd_sp, uint32_t *p_ul_buf, uint32_t ul_size)
 {
 	volatile uint32_t ul_status;
 	uint32_t ul_cnt;
@@ -324,27 +322,29 @@ uint32_t efc_perform_read_sequence(Efc *p_efc,
 	uint32_t *p_ul_data =
 			(uint32_t *) ((p_efc == EFC0) ?
 			READ_BUFF_ADDR0 : READ_BUFF_ADDR1);
-#elif (SAM3S || SAM4S || SAM3N || SAM3U || SAM4E || SAM4N || SAM4C || SAMG || \
-	   SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
+#elif (SAM3S || SAM4S || SAM3N || SAM3U || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
 	uint32_t *p_ul_data = (uint32_t *) READ_BUFF_ADDR;
 #else
 	return EFC_RC_NOT_SUPPORT;
 #endif
 
+#if 1	//dc42
+	// Bug fix: must disable interrupts while executing the EFC read command
+	irqflags_t flags = cpu_irq_save();
+	// Skip the test for a null buffer, we'll never call it with null
+#else
 	if (p_ul_buf == NULL) {
 		return EFC_RC_INVALID;
 	}
+#endif
 
 	p_efc->EEFC_FMR |= (0x1u << 16);
 
 	/* Send the Start Read command */
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || \
-	 SAMV71 || SAMV70 || SAMS70 || SAME70)
-	p_efc->EEFC_FCR = EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(0)
-			| EEFC_FCR_FCMD(ul_cmd_st);
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
+	p_efc->EEFC_FCR = EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(0) | EEFC_FCR_FCMD(ul_cmd_st);
 #else
-	p_efc->EEFC_FCR = EEFC_FCR_FKEY(FWP_KEY) | EEFC_FCR_FARG(0)
-			| EEFC_FCR_FCMD(ul_cmd_st);
+	p_efc->EEFC_FCR = EEFC_FCR_FKEY(FWP_KEY) | EEFC_FCR_FARG(0) | EEFC_FCR_FCMD(ul_cmd_st);
 #endif
 	/* Wait for the FRDY bit in the Flash Programming Status Register
 	 * (EEFC_FSR) falls.
@@ -362,8 +362,7 @@ uint32_t efc_perform_read_sequence(Efc *p_efc,
 
 	/* To stop the read mode */
 	p_efc->EEFC_FCR =
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || \
-	 SAMV71 || SAMV70 || SAMS70 || SAME70)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
 			EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(0) |
 			EEFC_FCR_FCMD(ul_cmd_sp);
 #else
@@ -378,6 +377,11 @@ uint32_t efc_perform_read_sequence(Efc *p_efc,
 	} while ((ul_status & EEFC_FSR_FRDY) != EEFC_FSR_FRDY);
 
 	p_efc->EEFC_FMR &= ~(0x1u << 16);
+
+#if 1	//dc42
+	// Restore interrupt enable state
+	cpu_irq_restore(flags);
+#endif
 
 	return EFC_RC_OK;
 }

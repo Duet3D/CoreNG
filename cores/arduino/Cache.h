@@ -14,7 +14,7 @@ namespace Cache
 {
 	void Init() noexcept;
 	void Enable() noexcept;
-	void Disable() noexcept;
+	bool Disable() noexcept;			// disable the cache, return true if it was enabled
 	void Flush(const volatile void *start, size_t length) noexcept;
 	void Invalidate(const volatile void *start, size_t length) noexcept;
 
