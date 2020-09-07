@@ -972,10 +972,20 @@ uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size)
 	uint32_t uid_buf[4];
 	uint32_t ul_idx;
 
-	if (FLASH_RC_OK != efc_perform_read_sequence(EFC, EFC_FCMD_STUI,
-			EFC_FCMD_SPUI, uid_buf, 4)) {
+#if 1	//dc42
+	// Bug fix: must disable interrupts while executing the EFC read command
+	const irqflags_t flags = cpu_irq_save();
+	const uint32_t rc = efc_perform_read_sequence(EFC, EFC_FCMD_STUI, EFC_FCMD_SPUI, uid_buf, 4);
+	cpu_irq_restore(flags);
+	if (rc != FLASH_RC_OK)
+	{
+		return rc;
+	}
+#else
+	if (FLASH_RC_OK != efc_perform_read_sequence(EFC, EFC_FCMD_STUI, EFC_FCMD_SPUI, uid_buf, 4)) {
 		return FLASH_RC_ERROR;
 	}
+#endif
 
 	if (ul_size > 4) {
 		/* Only 4 dword to store unique ID */
@@ -989,8 +999,7 @@ uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size)
 	return FLASH_RC_OK;
 }
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || \
-	 SAMV71 || SAMV70 || SAMS70 || SAME70)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
 /**
  * \brief Read the flash user signature.
  *
@@ -1006,6 +1015,13 @@ uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size)
 		ul_size = FLASH_USER_SIG_SIZE / sizeof(uint32_t);
 	}
 
+#if 1	//dc42
+	// Bug fix: must disable interrupts while executing the EFC read command
+	const irqflags_t flags = cpu_irq_save();
+	const uint32_t rc = efc_perform_read_sequence(EFC, EFC_FCMD_STUS, EFC_FCMD_SPUS, p_data, ul_size);
+	cpu_irq_restore(flags);
+	return rc;
+#else
 	/* Send the read user signature commands */
 	if (FLASH_RC_OK != efc_perform_read_sequence(EFC, EFC_FCMD_STUS,
 			EFC_FCMD_SPUS, p_data, ul_size)) {
@@ -1013,6 +1029,7 @@ uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size)
 	}
 
 	return FLASH_RC_OK;
+#endif
 }
 
 /**
@@ -1034,7 +1051,7 @@ uint32_t flash_write_user_signature(const void *p_buffer, uint32_t ul_size)
 	}
 
 	/* Copy Buffer data */
-	memcpy((uint8_t *) gs_ul_page_buffer, p_buffer, 
+	memcpy((uint8_t *) gs_ul_page_buffer, p_buffer,
 			ul_size * sizeof(uint32_t));
 
 	/* Write page buffer.
@@ -1042,7 +1059,7 @@ uint32_t flash_write_user_signature(const void *p_buffer, uint32_t ul_size)
 	* unpredictable data corruption.
 	*/
 	p_dest = (uint32_t *)IFLASH_ADDR;
-	for (ul_idx = 0; ul_idx < (IFLASH_PAGE_SIZE / sizeof(uint32_t)); 
+	for (ul_idx = 0; ul_idx < (IFLASH_PAGE_SIZE / sizeof(uint32_t));
 			ul_idx++) {
 		*p_dest++ = gs_ul_page_buffer[ul_idx];
 	}

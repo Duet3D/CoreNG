@@ -37,7 +37,7 @@ extern "C" void CacheFlushBeforeDMASend(const volatile void *start, size_t lengt
 // These processors have no cache
 inline void Cache::Init() noexcept { __DSB(); }
 inline void Cache::Enable() noexcept { }
-inline void Cache::Disable() noexcept { }
+inline bool Cache::Disable() noexcept { return false; }
 inline void Cache::Flush(const volatile void *start, size_t length) noexcept { __DSB(); }
 inline void Cache::Invalidate(const volatile void *start, size_t length) noexcept { __DSB(); }
 

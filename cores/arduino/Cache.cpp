@@ -140,6 +140,8 @@ void Cache::Init() noexcept
 		}
 	};
 
+	static_assert(ARRAY_SIZE(regionTable) <= 16);		// SAME70 supports 16 regions
+
 	// Ensure MPU is disabled
 	ARM_MPU_Disable();
 
@@ -189,9 +191,8 @@ bool Cache::Disable() noexcept
 	if (enabled)
 	{
 #if SAME70
-		SCB_CleanDCache();
 		SCB_DisableICache();
-		SCB_DisableDCache();
+		SCB_DisableDCache();						// this cleans it as well as disabling it
 #elif SAME5x
 		cache_disable();
 #elif SAM4E

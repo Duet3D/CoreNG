@@ -2285,7 +2285,11 @@ __STATIC_INLINE void SCB_EnableDCache (void)
     uint32_t sets;
     uint32_t ways;
 
+#if 1	// dc
+    SCB->CSSELR = 1U;	/* Level 1 data cache */
+#else
     SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
+#endif
     __DSB();
 
     ccsidr = SCB->CCSIDR;
@@ -2323,7 +2327,11 @@ __STATIC_INLINE void SCB_DisableDCache (void)
     uint32_t sets;
     uint32_t ways;
 
-    SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
+#if 1	// dc
+    SCB->CSSELR = 1U;	/* Level 1 data cache */
+#else
+   SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
+#endif
     __DSB();
 
     SCB->CCR &= ~(uint32_t)SCB_CCR_DC_Msk;  /* disable D-Cache */
@@ -2361,7 +2369,11 @@ __STATIC_INLINE void SCB_InvalidateDCache (void)
     uint32_t sets;
     uint32_t ways;
 
+#if 1	// dc
+    SCB->CSSELR = 1U;	/* Level 1 data cache */
+#else
     SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
+#endif
     __DSB();
 
     ccsidr = SCB->CCSIDR;
@@ -2396,7 +2408,11 @@ __STATIC_INLINE void SCB_CleanDCache (void)
     uint32_t sets;
     uint32_t ways;
 
+#if 1	// dc
+    SCB->CSSELR = 1U;	/* Level 1 data cache */
+#else
      SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
+#endif
    __DSB();
 
     ccsidr = SCB->CCSIDR;
@@ -2431,7 +2447,11 @@ __STATIC_INLINE void SCB_CleanInvalidateDCache (void)
     uint32_t sets;
     uint32_t ways;
 
+#if 1	// dc
+    SCB->CSSELR = 1U;	/* Level 1 data cache */
+#else
     SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
+#endif
     __DSB();
 
     ccsidr = SCB->CCSIDR;
