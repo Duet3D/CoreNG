@@ -54,6 +54,8 @@ extern uint64_t millis64( void ) noexcept ;
 // This has been renamed from delay to coreDelay so that RTOS-based applications can use a different definition of delay()
 extern void coreDelay( uint32_t dwMs ) noexcept ;
 
+extern uint32_t SystemCoreClock;
+
 /**
  * \brief Pauses the program for the amount of time (in microseconds) specified as parameter.
  *

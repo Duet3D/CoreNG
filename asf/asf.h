@@ -20,8 +20,4 @@
 #include "sam/drivers/rswdt/rswdt.h"
 #endif
 
-#if SAM4E || SAM4S || SAME70
-#include "sam/services/flash_efc/flash_efc.h"
-#endif
-
 #endif /* ASF_H_ */
