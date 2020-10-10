@@ -39,11 +39,7 @@
 
 #include "compiler.h"
 
-#if 1	//dc42
-#include "../../../../libraries/Storage/sd_mmc_protocol.h"
-#else
 #include "sd_mmc_protocol.h"
-#endif
 
 #ifdef __cplusplus
 extern "C" {

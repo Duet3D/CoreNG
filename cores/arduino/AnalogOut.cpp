@@ -125,7 +125,7 @@ uint32_t maxPwmLoopCount = 0;
 
 // AnalogWrite to a PWM pin
 // Return true if successful, false if we need to fall back to digitalWrite
-static bool AnalogWritePwm(const PinDescription& pinDesc, float ulValue, uint16_t freq)
+static bool AnalogWritePwm(const PinDescription& pinDesc, float ulValue, PwmFrequency freq)
 pre(0.0 <= ulValue; ulValue <= 1.0)
 pre((pinDesc.ulPinAttribute & PIN_ATTR_PWM) != 0)
 {
@@ -308,7 +308,7 @@ static inline void TC_WriteCCR(Tc *tc, uint32_t chan, uint32_t v)
 // Return true if successful, false if we need to fall back to digitalWrite
 // WARNING: this will screw up big time if you try to use both the A and B outputs of the same timer at different frequencies.
 // The Duet boards use only A outputs, so this is OK.
-static bool AnalogWriteTc(const PinDescription& pinDesc, float ulValue, uint16_t freq)
+static bool AnalogWriteTc(const PinDescription& pinDesc, float ulValue, PwmFrequency freq)
 pre(0.0 <= ulValue; ulValue <= 1.0)
 pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)
 {
@@ -406,7 +406,7 @@ pre((pinDesc.ulPinAttribute & PIN_ATTR_TIMER) != 0)
 // Analog write to DAC, PWM, TC or plain output pin
 // Setting the frequency of a TC or PWM pin to zero resets it so that the next call to AnalogOut with a non-zero frequency
 // will re-initialise it. The pinMode function relies on this.
-void AnalogOut(Pin pin, float ulValue, uint16_t freq)
+void AnalogOut(Pin pin, float ulValue, PwmFrequency freq)
 {
 	if (pin > MaxPinNumber || std::isnan(ulValue))
 	{

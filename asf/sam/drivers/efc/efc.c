@@ -76,12 +76,10 @@ extern "C" {
 #define FWP_KEY    0x5Au
 
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
-#define EEFC_FCR_FCMD(value) \
-	((EEFC_FCR_FCMD_Msk & ((value) << EEFC_FCR_FCMD_Pos)))
+#define EEFC_FCR_FCMD(value)	((EEFC_FCR_FCMD_Msk & ((value) << EEFC_FCR_FCMD_Pos)))
 #define EEFC_ERROR_FLAGS  (EEFC_FSR_FLOCKE | EEFC_FSR_FCMDE | EEFC_FSR_FLERR)
 #elif (SAMV71 || SAMV70 || SAMS70 || SAME70)
-#define EEFC_ERROR_FLAGS  (EEFC_FSR_FLOCKE | EEFC_FSR_FCMDE | EEFC_FSR_FLERR \
-	| EEFC_FSR_UECCELSB | EEFC_FSR_MECCELSB | EEFC_FSR_UECCEMSB | EEFC_FSR_MECCEMSB)
+#define EEFC_ERROR_FLAGS  (EEFC_FSR_FLOCKE | EEFC_FSR_FCMDE | EEFC_FSR_FLERR | EEFC_FSR_UECCELSB | EEFC_FSR_MECCELSB | EEFC_FSR_UECCEMSB | EEFC_FSR_MECCEMSB)
 #else
 #define EEFC_ERROR_FLAGS  (EEFC_FSR_FLOCKE | EEFC_FSR_FCMDE)
 #endif
@@ -108,8 +106,7 @@ extern uint32_t efc_perform_fcr(Efc *p_efc, uint32_t ul_fcr);
  */
 uint32_t efc_init(Efc *p_efc, uint32_t ul_access_mode, uint32_t ul_fws)
 {
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || \
-	 SAMV71 || SAMV70 || SAMS70 || SAME70)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
 	efc_write_fmr(p_efc, ul_access_mode | EEFC_FMR_FWS(ul_fws) | EEFC_FMR_CLOE);
 #else
 	efc_write_fmr(p_efc, ul_access_mode | EEFC_FMR_FWS(ul_fws));
@@ -117,8 +114,8 @@ uint32_t efc_init(Efc *p_efc, uint32_t ul_access_mode, uint32_t ul_fws)
 	return EFC_RC_OK;
 }
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || \
-	 SAMV71 || SAMV70 || SAMS70 || SAME70)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
+
 /**
  * \brief Enable code loop optimization.
  *
@@ -140,9 +137,8 @@ void efc_disable_cloe(Efc *p_efc)
 	uint32_t ul_fmr = p_efc->EEFC_FMR;
 	efc_write_fmr(p_efc, ul_fmr & (~EEFC_FMR_CLOE));
 }
+
 #endif
-
-
 
 /**
  * \brief Enable the flash ready interrupt.
@@ -151,8 +147,7 @@ void efc_disable_cloe(Efc *p_efc)
  */
 void efc_enable_frdy_interrupt(Efc *p_efc)
 {
-	uint32_t ul_fmr = p_efc->EEFC_FMR;
-
+	const uint32_t ul_fmr = p_efc->EEFC_FMR;
 	efc_write_fmr(p_efc, ul_fmr | EEFC_FMR_FRDY);
 }
 
@@ -163,8 +158,7 @@ void efc_enable_frdy_interrupt(Efc *p_efc)
  */
 void efc_disable_frdy_interrupt(Efc *p_efc)
 {
-	uint32_t ul_fmr = p_efc->EEFC_FMR;
-
+	const uint32_t ul_fmr = p_efc->EEFC_FMR;
 	efc_write_fmr(p_efc, ul_fmr & (~EEFC_FMR_FRDY));
 }
 
@@ -197,8 +191,7 @@ void efc_disable_write_protection(Efc *p_efc)
  */
 void efc_set_flash_access_mode(Efc *p_efc, uint32_t ul_mode)
 {
-	uint32_t ul_fmr = p_efc->EEFC_FMR & (~EEFC_FMR_FAM);
-
+	const uint32_t ul_fmr = p_efc->EEFC_FMR & (~EEFC_FMR_FAM);
 	efc_write_fmr(p_efc, ul_fmr | ul_mode);
 }
 
@@ -223,8 +216,7 @@ uint32_t efc_get_flash_access_mode(Efc *p_efc)
  */
 void efc_set_wait_state(Efc *p_efc, uint32_t ul_fws)
 {
-	uint32_t ul_fmr = p_efc->EEFC_FMR & (~EEFC_FMR_FWS_Msk);
-
+	const uint32_t ul_fmr = p_efc->EEFC_FMR & (~EEFC_FMR_FWS_Msk);
 	efc_write_fmr(p_efc, ul_fmr | EEFC_FMR_FWS(ul_fws));
 }
 
@@ -253,22 +245,16 @@ uint32_t efc_get_wait_state(Efc *p_efc)
  *
  * \return 0 if successful, otherwise returns an error code.
  */
-uint32_t efc_perform_command(Efc *p_efc, uint32_t ul_command,
-		uint32_t ul_argument)
+uint32_t efc_perform_command(Efc *p_efc, uint32_t ul_command, uint32_t ul_argument)
 {
-	uint32_t result;
-	irqflags_t flags;
-
 	/* Unique ID commands are not supported. */
 	if (ul_command == EFC_FCMD_STUI || ul_command == EFC_FCMD_SPUI) {
 		return EFC_RC_NOT_SUPPORT;
 	}
 
-	flags = cpu_irq_save();
+	const irqflags_t flags = cpu_irq_save();
 	/* Use RAM Function. */
-	result = efc_perform_fcr(p_efc,
-			EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(ul_argument) |
-			EEFC_FCR_FCMD(ul_command));
+	const uint32_t result = efc_perform_fcr(p_efc, EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(ul_argument) | EEFC_FCR_FCMD(ul_command));
 	cpu_irq_restore(flags);
 	return result;
 }
@@ -300,8 +286,7 @@ uint32_t efc_get_result(Efc *p_efc)
 }
 
 /**
- * \brief Perform read sequence. Supported sequences are read Unique ID and
- * read User Signature
+ * \brief Perform read sequence. Supported sequences are read Unique ID and read User Signature
  *
  * \param p_efc Pointer to an EFC instance.
  * \param ul_cmd_st Start command to perform.
@@ -313,19 +298,11 @@ uint32_t efc_get_result(Efc *p_efc)
  */
 __no_inline
 RAMFUNC
-uint32_t efc_perform_read_sequence(Efc *p_efc,
-		uint32_t ul_cmd_st, uint32_t ul_cmd_sp,
-		uint32_t *p_ul_buf, uint32_t ul_size)
+uint32_t efc_perform_read_sequence(Efc *p_efc, uint32_t ul_cmd_st, uint32_t ul_cmd_sp, uint32_t *p_ul_buf, uint32_t ul_size)
 {
-	volatile uint32_t ul_status;
-	uint32_t ul_cnt;
-
 #if (SAM3U4 || SAM3XA || SAM4SD16 || SAM4SD32 || SAM4C32 || SAM4CMS32|| SAM4CMP32)
-	uint32_t *p_ul_data =
-			(uint32_t *) ((p_efc == EFC0) ?
-			READ_BUFF_ADDR0 : READ_BUFF_ADDR1);
-#elif (SAM3S || SAM4S || SAM3N || SAM3U || SAM4E || SAM4N || SAM4C || SAMG || \
-	   SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
+	uint32_t *p_ul_data = (uint32_t *) ((p_efc == EFC0) ? READ_BUFF_ADDR0 : READ_BUFF_ADDR1);
+#elif (SAM3S || SAM4S || SAM3N || SAM3U || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
 	uint32_t *p_ul_data = (uint32_t *) READ_BUFF_ADDR;
 #else
 	return EFC_RC_NOT_SUPPORT;
@@ -335,49 +312,39 @@ uint32_t efc_perform_read_sequence(Efc *p_efc,
 		return EFC_RC_INVALID;
 	}
 
-	p_efc->EEFC_FMR |= (0x1u << 16);
+	p_efc->EEFC_FMR |= (0x1u << 16);		// disable sequential code optimisation (DC: no idea why it does this)
 
 	/* Send the Start Read command */
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || \
-	 SAMV71 || SAMV70 || SAMS70 || SAME70)
-	p_efc->EEFC_FCR = EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(0)
-			| EEFC_FCR_FCMD(ul_cmd_st);
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
+	p_efc->EEFC_FCR = EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(0) | EEFC_FCR_FCMD(ul_cmd_st);
 #else
-	p_efc->EEFC_FCR = EEFC_FCR_FKEY(FWP_KEY) | EEFC_FCR_FARG(0)
-			| EEFC_FCR_FCMD(ul_cmd_st);
+	p_efc->EEFC_FCR = EEFC_FCR_FKEY(FWP_KEY) | EEFC_FCR_FARG(0) | EEFC_FCR_FCMD(ul_cmd_st);
 #endif
-	/* Wait for the FRDY bit in the Flash Programming Status Register
-	 * (EEFC_FSR) falls.
-	 */
+	/* Wait for the FRDY bit in the Flash Programming Status Register (EEFC_FSR) falls */
+	uint32_t ul_status;
 	do {
 		ul_status = p_efc->EEFC_FSR;
 	} while ((ul_status & EEFC_FSR_FRDY) == EEFC_FSR_FRDY);
 
-	/* The data is located in the first address of the Flash
-	 * memory mapping.
-	 */
+	/* The data is located in the first address of the Flash memory mapping */
+	uint32_t ul_cnt;
 	for (ul_cnt = 0; ul_cnt < ul_size; ul_cnt++) {
 		p_ul_buf[ul_cnt] = p_ul_data[ul_cnt];
 	}
 
 	/* To stop the read mode */
 	p_efc->EEFC_FCR =
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || \
-	 SAMV71 || SAMV70 || SAMS70 || SAME70)
-			EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(0) |
-			EEFC_FCR_FCMD(ul_cmd_sp);
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
+			EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(0) | EEFC_FCR_FCMD(ul_cmd_sp);
 #else
-			EEFC_FCR_FKEY(FWP_KEY) | EEFC_FCR_FARG(0) |
-			EEFC_FCR_FCMD(ul_cmd_sp);
+			EEFC_FCR_FKEY(FWP_KEY) | EEFC_FCR_FARG(0) | EEFC_FCR_FCMD(ul_cmd_sp);
 #endif
-	/* Wait for the FRDY bit in the Flash Programming Status Register (EEFC_FSR)
-	 * rises.
-	 */
+	/* Wait for the FRDY bit in the Flash Programming Status Register (EEFC_FSR) rises */
 	do {
 		ul_status = p_efc->EEFC_FSR;
 	} while ((ul_status & EEFC_FSR_FRDY) != EEFC_FSR_FRDY);
 
-	p_efc->EEFC_FMR &= ~(0x1u << 16);
+	p_efc->EEFC_FMR &= ~(0x1u << 16);		// re-enable sequential code optimisation (DC: assumed we want it)
 
 	return EFC_RC_OK;
 }
@@ -407,9 +374,8 @@ __no_inline
 RAMFUNC
 uint32_t efc_perform_fcr(Efc *p_efc, uint32_t ul_fcr)
 {
-	volatile uint32_t ul_status;
-
 	p_efc->EEFC_FCR = ul_fcr;
+	uint32_t ul_status;
 	do {
 		ul_status = p_efc->EEFC_FSR;
 	} while ((ul_status & EEFC_FSR_FRDY) != EEFC_FSR_FRDY);

@@ -189,9 +189,12 @@ extern UARTClass Serial;
 extern USARTClass Serial1;
 extern USARTClass Serial2;
 
-extern void ConfigurePin(const PinDescription& pinDesc);
-extern void ConfigurePin(Pin pin);
-extern bool IsPwmCapable(Pin pin);						// Return true if this pin exists and can do PWM
+// We need to use "extern C++" here so that it compiles even if this file was #included inside an "extern C" block
+extern "C++" {
+	void ConfigurePin(const PinDescription& pinDesc);
+	void ConfigurePin(Pin pin);
+	bool IsPwmCapable(Pin pin);						// Return true if this pin exists and can do PWM
+}
 
 #endif
 

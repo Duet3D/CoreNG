@@ -21,10 +21,13 @@
 #define Core_h
 
 #include "ecv.h"		// macros for Escher C/C++ Verifier design-by-contract annotations
+#undef array
 #undef yield			// eCv definition clashes with function 'yield' in wiring.c (can use _ecv_yield instead within annotations)
 #undef value			// needed because we include <optional> in some projects
+#undef result
 
 #include "compiler.h"
+#define SAME5x		0	// projects for SAME5x use CoreN2G instead
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -46,6 +49,9 @@ void CoreSysTick(void) noexcept;
 
 typedef uint8_t Pin;
 static const Pin NoPin = 0xFF;
+typedef uint8_t DmaChannel;
+typedef uint16_t PwmFrequency;		// type used to represent a PWM frequency. 0 sometimes means "default".
+typedef uint32_t NvicPriority;
 
 #ifdef __cplusplus
 } // extern "C"

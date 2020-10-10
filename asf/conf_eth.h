@@ -58,7 +58,7 @@ extern "C" {
 
 #if defined(__SAME70Q21__) || defined(__SAME70Q20B__) || defined(__SAME70Q21B__)
 
-# include "gmac.h"
+# include "gmac/gmac.h"
 
 /**
  * LWIP_NETIF_TX_SINGLE_PBUF: if this is set to 1, lwIP tries to put all data

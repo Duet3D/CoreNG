@@ -10,24 +10,6 @@
 
 #include "sam/utils/compiler.h"
 
-#ifndef NO_STATUS_CODES
-
-#if SAM4E || SAME70
-#include "sam/drivers/afec/afec.h"
-#else
-#include "sam/drivers/adc/adc.h"
-#endif
-
-#include "sam/drivers/dacc/dacc.h"
-
-#if SAM4E || SAM3XA
-#include "sam/drivers/dmac/dmac.h"
-#elif SAME70
-#include "sam/drivers/xdmac/xdmac.h"
-#endif
-
-#endif
-
 #include "sam/drivers/pio/pio.h"
 #include "sam/drivers/pmc/pmc.h"
 #include "sam/drivers/pwm/pwm.h"
@@ -36,10 +18,6 @@
 
 #if SAM4E || SAME70
 #include "sam/drivers/rswdt/rswdt.h"
-#endif
-
-#if SAM4E || SAM4S || SAME70
-#include "sam/services/flash_efc/flash_efc.h"
 #endif
 
 #endif /* ASF_H_ */

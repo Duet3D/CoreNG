@@ -8,7 +8,7 @@
 
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   See the GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public
@@ -23,27 +23,15 @@
 #include "WMath.h"
 
 #if SAM3XA || SAME70
-
 // SAM3X and SAME70 have a true random number generator
-#include "trng/trng.h"
-
-extern "C" uint32_t trueRandom()
-{
-	while (! (TRNG->TRNG_ISR & TRNG_ISR_DATRDY)) {}
-	return (uint32_t)TRNG->TRNG_ODATA;
-}
-
+# include "trng/trng.h"
 #endif
 
-extern int32_t random(int32_t howbig)
+extern "C" uint32_t random32()
 {
-	if (howbig <= 0)
-	{
-		return 0;
-	}
-
 #if SAM3XA || SAME70
-	return trueRandom() % (uint32_t)howbig;
+	while (!(TRNG->TRNG_ISR & TRNG_ISR_DATRDY)) {}
+	return (uint32_t)TRNG->TRNG_ODATA;
 #else
 	static bool isInitialised = false;
 
@@ -53,9 +41,8 @@ extern int32_t random(int32_t howbig)
 		isInitialised = true;
 	}
 
-	return rand() % (uint32_t)howbig;
+	return rand();
 #endif
-
 }
 
 extern int32_t random(int32_t howsmall, int32_t howbig)
@@ -66,11 +53,6 @@ extern int32_t random(int32_t howsmall, int32_t howbig)
 	}
 
 	return random(howbig - howsmall) + howsmall;
-}
-
-extern int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max)
-{
-	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
 // End
