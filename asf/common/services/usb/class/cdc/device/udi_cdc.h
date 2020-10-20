@@ -378,6 +378,12 @@ void udi_cdc_signal_parity_error(void);
  */
 void udi_cdc_signal_overrun(void);
 
+#if 1
+
+// DC: disable the non-multi versions of these calls, they just pass the call on to the multi version with port=0 and that just slows execution
+
+#else
+
 /**
  * \brief Gets the number of byte received
  *
@@ -455,6 +461,8 @@ int udi_cdc_putc(int value);
  */
 iram_size_t udi_cdc_write_buf(const void* buf, iram_size_t size);
 //@}
+
+#endif
 
 /**
  * \name Interface for application with multi CDC interfaces support

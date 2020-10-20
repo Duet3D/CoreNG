@@ -39,7 +39,7 @@ void SerialCDC::end() noexcept
 
 int SerialCDC::available() noexcept
 {
-	return (isConnected) ? udi_cdc_get_nb_received_data() : 0;
+	return (isConnected) ? udi_cdc_multi_get_nb_received_data(0) : 0;
 }
 
 int SerialCDC::peek() noexcept
@@ -49,24 +49,24 @@ int SerialCDC::peek() noexcept
 
 int SerialCDC::read() noexcept
 {
-	return (udi_cdc_is_rx_ready()) ? udi_cdc_getc() : -1;
+	return (udi_cdc_multi_is_rx_ready(0)) ? udi_cdc_multi_getc(0) : -1;
 }
 
 size_t SerialCDC::readBytes(char *buffer, size_t length) noexcept
 {
-	return (udi_cdc_is_rx_ready()) ? udi_cdc_read_buf(buffer, length) : 0;
+	return (udi_cdc_multi_is_rx_ready(0)) ? udi_cdc_multi_read_buf(0, buffer, length) : 0;
 }
 
 void SerialCDC::flush(void) noexcept
 {
-	while (isConnected && udi_cdc_get_free_tx_buffer() < txBufsize) {}
+	while (isConnected && udi_cdc_multi_get_free_tx_buffer(0) < txBufsize) {}
 }
 
 size_t SerialCDC::write(uint8_t c) noexcept
 {
 	if (isConnected)
 	{
-		udi_cdc_putc(c);
+		udi_cdc_multi_putc(0, c);
 	}
 	return 1;
 }
@@ -76,7 +76,7 @@ size_t SerialCDC::write(const uint8_t *buffer, size_t size) noexcept
 {
 	if (isConnected && size != 0)
 	{
-		const size_t remaining = udi_cdc_write_buf(buffer, size);
+		const size_t remaining = udi_cdc_multi_write_buf(0, buffer, size);
 		return size - remaining;
 	}
 	return size;
@@ -84,7 +84,7 @@ size_t SerialCDC::write(const uint8_t *buffer, size_t size) noexcept
 
 size_t SerialCDC::canWrite() const noexcept
 {
-	return (isConnected) ? udi_cdc_get_free_tx_buffer() : 0;
+	return (isConnected) ? udi_cdc_multi_get_free_tx_buffer(0) : 0;
 }
 
 bool SerialCDC::IsConnected() const noexcept
@@ -107,7 +107,7 @@ void SerialCDC::cdcTxEmptyNotify() noexcept
 	// If we haven't yet found out how large the transmit buffer is, find out now
 	if (txBufsize == 1)
 	{
-		txBufsize = udi_cdc_get_free_tx_buffer();
+		txBufsize = udi_cdc_multi_get_free_tx_buffer(0);
 	}
 }
 
