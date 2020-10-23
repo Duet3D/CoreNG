@@ -1,60 +1,133 @@
-/*
-  Copyright (c) 2011 Arduino.  All right reserved.
+/**
+ * @file syscalls.h
+ * This file defines replacement system calls functions for the standard library
+ * The client application project must #include it in exactly one .cpp file
+ *
+ * It cannot be a .cpp file in this project because if we do that, functions from the standard library get used instead of these functions.
+ *
+ * The including file may declare "#define SystemStackSize xxxx" before including this, otherwise a default will be used
+ */
 
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
+#include <sys/stat.h>
+#include <errno.h>
 
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  See the GNU Lesser General Public License for more details.
+#undef errno
 
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+int errno;
+
+#ifndef SystemStackSize
+# define SystemStackSize	(1024)
+#endif
+
+extern char _end;									// defined by the linker script
+extern char _estack;
+
+void OutOfMemoryHandler() noexcept;					// this must be provided by the client application
+
+char *heapTop = (char*)&_end;
+const char *heapLimit = (char*)&_estack - SystemStackSize;
 
 /**
-  * \file syscalls.h
-  *
-  * Implementation of newlib syscall.
-  *
-  */
+ * \brief Replacement of C library of _sbrk
+ */
+extern "C" void * _sbrk(ptrdiff_t incr) noexcept
+{
+	char *newHeap = heapTop + incr;
+	if (newHeap <= heapLimit)
+	{
+		void *prev_heap = heapTop;
+		heapTop = newHeap;
+		return prev_heap;
+	}
 
-/*----------------------------------------------------------------------------
- *        Headers
- *----------------------------------------------------------------------------*/
-#include <stdio.h>
-#include <stdarg.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+	OutOfMemoryHandler();
 
-/*----------------------------------------------------------------------------
- *        Exported functions
- *----------------------------------------------------------------------------*/
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern caddr_t _sbrk( int incr ) noexcept ;
-
-extern int link( char *cOld, char *cNew ) noexcept ;
-
-extern int _close( int file ) noexcept ;
-
-extern int _fstat( int file, struct stat *st ) noexcept ;
-
-extern int _isatty( int file ) noexcept ;
-
-extern int _lseek( int file, int ptr, int dir ) noexcept ;
-
-extern int _read(int file, char *ptr, int len) noexcept ;
-
-extern int _write( int file, char *ptr, int len ) noexcept ;
-
-#ifdef __cplusplus
+	// The out of memory handle usually terminates, but in case it doesn't, try to return failure. Unfortunately, this doesn't seem to work with newlib.
+	errno = ENOMEM;
+	return reinterpret_cast<void*>(-1);
 }
-#endif
 
+/**
+ * \brief Replacement of C library of link
+ */
+extern "C" int link(char *old, char *_new) noexcept
+{
+	(void)old, (void)_new;
+	return -1;
+}
+
+/**
+ * \brief Replacement of C library of _close
+ */
+extern "C" int _close(int file) noexcept
+{
+	(void)file;
+	return -1;
+}
+
+/**
+ * \brief Replacement of C library of _fstat
+ */
+extern "C" int _fstat(int file, struct stat *st) noexcept
+{
+	(void)file;
+	st->st_mode = S_IFCHR;
+
+	return 0;
+}
+
+/**
+ * \brief Replacement of C library of _isatty
+ */
+extern "C" int _isatty(int file) noexcept
+{
+	(void)file;
+	return 1;
+}
+
+/**
+ * \brief Replacement of C library of _lseek
+ */
+extern "C" int _lseek(int file, int ptr, int dir) noexcept
+{
+	(void)file, (void)ptr, (void)dir;
+	return 0;
+}
+
+/**
+ * \brief Replacement of C library of _exit
+ */
+extern "C" void _exit(int status) noexcept
+{
+	for (;;) { }
+}
+
+/**
+ * \brief Replacement of C library of _kill
+ */
+extern "C" void _kill(int pid, int sig) noexcept
+{
+	return;
+}
+
+/**
+ * \brief Replacement of C library of _getpid
+ */
+extern "C" int _getpid() noexcept
+{
+	return -1;
+}
+
+extern "C" int _read(int file, char *ptr, int len) noexcept
+{
+	(void)file, (void)ptr, (void)len;
+    return 0;
+}
+
+extern "C" int _write(int file, char *ptr, int len) noexcept
+{
+	(void)file, (void)ptr;
+	return len;
+}
+
+// End
