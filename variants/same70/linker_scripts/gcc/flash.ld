@@ -52,8 +52,8 @@ SEARCH_DIR(.)
 MEMORY
 {
   rom (rx)  : ORIGIN = 0x00400000, LENGTH = 0x00100000
-  ram_not_cached (rw) : ORIGIN = 0x20400000, LENGTH = 0x00010000
-  ram (rwx) : ORIGIN = 0x20410000, LENGTH = 0x00050000
+  ram_not_cached (rw) : ORIGIN = 0x20400000, LENGTH = 0x00008000
+  ram (rwx) : ORIGIN = 0x20408000, LENGTH = 0x00058000
 }
 
 /* Section Definitions */
