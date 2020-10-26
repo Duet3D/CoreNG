@@ -42,6 +42,8 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+#undef __SOFTFP__				// should not be defined anyway, but Eclipse thinks it is
+
 #include "same70.h"
 #include "system_same70.h"
 #include "wdt/wdt.h"

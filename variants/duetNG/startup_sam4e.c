@@ -44,11 +44,12 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+#undef __SOFTFP__				// should not be defined anyway, but Eclipse thinks it is
+
 #include "sam4e.h"
 #include "exceptions.h"
 #include "system_sam4e.h"
 
-// Eclipse doesn't get the state of __FPU_USED right
 #if __FPU_USED /* CMSIS defined value to indicate usage of FPU */
 # include "fpu/fpu.h"
 #else
