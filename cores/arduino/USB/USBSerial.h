@@ -27,7 +27,6 @@ public:
 	void end(void) noexcept;
 
 	int available() noexcept override;
-	int peek() noexcept override;
 	int read() noexcept override;
 	size_t readBytes(char *buffer, size_t length) noexcept override;
 	void flush() noexcept override;

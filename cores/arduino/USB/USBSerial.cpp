@@ -42,11 +42,6 @@ int SerialCDC::available() noexcept
 	return (isConnected) ? udi_cdc_multi_get_nb_received_data(0) : 0;
 }
 
-int SerialCDC::peek() noexcept
-{
-	return -1;				// not supported
-}
-
 int SerialCDC::read() noexcept
 {
 	return (udi_cdc_multi_is_rx_ready(0)) ? udi_cdc_multi_getc(0) : -1;
@@ -54,7 +49,7 @@ int SerialCDC::read() noexcept
 
 size_t SerialCDC::readBytes(char *buffer, size_t length) noexcept
 {
-	return (udi_cdc_multi_is_rx_ready(0)) ? udi_cdc_multi_read_buf(0, buffer, length) : 0;
+	return (isConnected) ? udi_cdc_multi_read_no_polling(0, buffer, length) : 0;
 }
 
 void SerialCDC::flush(void) noexcept

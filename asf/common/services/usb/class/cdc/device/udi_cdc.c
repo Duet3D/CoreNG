@@ -3,45 +3,35 @@
  *
  * \brief USB Device Communication Device Class (CDC) interface.
  *
- * Copyright (c) 2009-2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2018 Microchip Technology Inc. and its subsidiaries.
  *
  * \asf_license_start
  *
  * \page License
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * Subject to your compliance with these terms, you may use Microchip
+ * software and any derivatives exclusively with Microchip products.
+ * It is your responsibility to comply with third party license terms applicable
+ * to your use of third party software (including open source software) that
+ * may accompany Microchip software.
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES,
+ * WHETHER EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE,
+ * INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY,
+ * AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT WILL MICROCHIP BE
+ * LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, INCIDENTAL OR CONSEQUENTIAL
+ * LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND WHATSOEVER RELATED TO THE
+ * SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS BEEN ADVISED OF THE
+ * POSSIBILITY OR THE DAMAGES ARE FORESEEABLE.  TO THE FULLEST EXTENT
+ * ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN ANY WAY
+ * RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+ * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  *
  * \asf_license_stop
  *
  */
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * Support and FAQ: visit <a href="https://www.microchip.com/support/">Microchip Support</a>
  */
 
 #include "conf_usb.h"
@@ -486,8 +476,6 @@ static uint8_t udi_cdc_setup_to_port(void)
 static void udi_cdc_line_coding_received(void)
 {
 	uint8_t port = udi_cdc_setup_to_port();
-	UNUSED(port);
-
 	UDI_CDC_SET_CODING_EXT(port, (&udi_cdc_line_coding[port]));
 }
 
@@ -589,36 +577,37 @@ static void udi_cdc_serial_state_msg_sent(udd_ep_status_t status, iram_size_t n,
 
 static bool udi_cdc_rx_start(uint8_t port)
 {
-	irqflags_t flags;
-	uint8_t buf_sel_trans;
-	udd_ep_id_t ep;
-
 #if UDI_CDC_PORT_NB == 1 // To optimize code
 	port = 0;
 #endif
 
-	flags = cpu_irq_save();
-	buf_sel_trans = udi_cdc_rx_buf_sel[port];
-	if (udi_cdc_rx_trans_ongoing[port] ||
-		(udi_cdc_rx_pos[port] < udi_cdc_rx_buf_nb[port][buf_sel_trans])) {
-		// Transfer already on-going or current buffer no empty
+	const irqflags_t flags = cpu_irq_save();
+	const uint8_t buf_sel_trans = udi_cdc_rx_buf_sel[port];
+	if (udi_cdc_rx_trans_ongoing[port] || (udi_cdc_rx_pos[port] < udi_cdc_rx_buf_nb[port][buf_sel_trans]))
+	{
+		// Transfer already on-going or current buffer not empty
 		cpu_irq_restore(flags);
 		return false;
 	}
 
 	// Change current buffer
 	udi_cdc_rx_pos[port] = 0;
-	udi_cdc_rx_buf_sel[port] = (buf_sel_trans==0)?1:0;
+	udi_cdc_rx_buf_sel[port] = buf_sel_trans ^ 1u;
 
 	// Start transfer on RX
 	udi_cdc_rx_trans_ongoing[port] = true;
 	cpu_irq_restore(flags);
 
-	if (udi_cdc_multi_is_rx_ready(port)) {
+	if (udi_cdc_multi_is_rx_ready(port))
+	{
 		UDI_CDC_RX_NOTIFY(port);
 	}
+
 	// Send the buffer with enable of short packet
-	switch (port) {
+	udd_ep_id_t ep;
+
+	switch (port)
+	{
 #define UDI_CDC_PORT_TO_DATA_EP_OUT(index, unused) \
 	case index: \
 		ep = UDI_CDC_DATA_EP_OUT_##index; \
@@ -639,10 +628,10 @@ static bool udi_cdc_rx_start(uint8_t port)
 
 static void udi_cdc_data_received(udd_ep_status_t status, iram_size_t n, udd_ep_id_t ep)
 {
-	uint8_t buf_sel_trans;
 	uint8_t port;
 
-	switch (ep) {
+	switch (ep)
+	{
 #define UDI_CDC_DATA_EP_OUT_TO_PORT(index, unused) \
 	case UDI_CDC_DATA_EP_OUT_##index: \
 		port = index; \
@@ -654,22 +643,27 @@ static void udi_cdc_data_received(udd_ep_status_t status, iram_size_t n, udd_ep_
 		break;
 	}
 
-	if (UDD_EP_TRANSFER_OK != status) {
+	if (UDD_EP_TRANSFER_OK != status)
+	{
 		// Abort reception
 		return;
 	}
-	buf_sel_trans = (udi_cdc_rx_buf_sel[port]==0)?1:0;
-	if (!n) {
+
+	const uint8_t buf_sel_trans = udi_cdc_rx_buf_sel[port] ^ 1u;
+	if (n == 0)
+	{
 		udd_ep_run( ep,
 				true,
 				udi_cdc_rx_buf[port][buf_sel_trans],
 				UDI_CDC_RX_BUFFERS,
 				udi_cdc_data_received);
-		return;
 	}
-	udi_cdc_rx_buf_nb[port][buf_sel_trans] = n;
-	udi_cdc_rx_trans_ongoing[port] = false;
-	udi_cdc_rx_start(port);
+	else
+	{
+		udi_cdc_rx_buf_nb[port][buf_sel_trans] = n;
+		udi_cdc_rx_trans_ongoing[port] = false;
+		udi_cdc_rx_start(port);
+	}
 }
 
 
@@ -678,7 +672,8 @@ static void udi_cdc_data_sent(udd_ep_status_t status, iram_size_t n, udd_ep_id_t
 	uint8_t port;
 	UNUSED(n);
 
-	switch (ep) {
+	switch (ep)
+	{
 #define UDI_CDC_DATA_EP_IN_TO_PORT(index, unused) \
 	case UDI_CDC_DATA_EP_IN_##index: \
 		port = index; \
@@ -698,7 +693,8 @@ static void udi_cdc_data_sent(udd_ep_status_t status, iram_size_t n, udd_ep_id_t
 	udi_cdc_tx_both_buf_to_send[port] = false;
 	udi_cdc_tx_trans_ongoing[port] = false;
 
-	if (n != 0) {
+	if (n != 0)
+	{
 		UDI_CDC_TX_EMPTY_NOTIFY(port);
 	}
 	udi_cdc_tx_send(port);
@@ -843,34 +839,34 @@ void udi_cdc_multi_signal_overrun(uint8_t port)
 
 iram_size_t udi_cdc_multi_get_nb_received_data(uint8_t port)
 {
-	irqflags_t flags;
-	uint16_t pos;
-	iram_size_t nb_received;
-
 #if UDI_CDC_PORT_NB == 1 // To optimize code
 	port = 0;
 #endif
-	flags = cpu_irq_save();
-	pos = udi_cdc_rx_pos[port];
-	nb_received = udi_cdc_rx_buf_nb[port][udi_cdc_rx_buf_sel[port]] - pos;
+	const irqflags_t flags = cpu_irq_save();
+	const uint16_t pos = udi_cdc_rx_pos[port];
+	const iram_size_t nb_received = udi_cdc_rx_buf_nb[port][udi_cdc_rx_buf_sel[port]] - pos;
 	cpu_irq_restore(flags);
 	return nb_received;
 }
 
+#if 0	// DC see header file
 iram_size_t udi_cdc_get_nb_received_data(void)
 {
 	return udi_cdc_multi_get_nb_received_data(0);
 }
+#endif
 
 bool udi_cdc_multi_is_rx_ready(uint8_t port)
 {
 	return (udi_cdc_multi_get_nb_received_data(port) > 0);
 }
 
+#if 0	// DC see header file
 bool udi_cdc_is_rx_ready(void)
 {
 	return udi_cdc_multi_is_rx_ready(0);
 }
+#endif
 
 int udi_cdc_multi_getc(uint8_t port)
 {
@@ -916,10 +912,12 @@ udi_cdc_getc_process_one_byte:
 	return rx_data;
 }
 
+#if 0	// DC see header file
 int udi_cdc_getc(void)
 {
 	return udi_cdc_multi_getc(0);
 }
+#endif
 
 iram_size_t udi_cdc_multi_read_buf(uint8_t port, void* buf, iram_size_t size)
 {
@@ -965,47 +963,43 @@ udi_cdc_read_buf_loop_wait:
 	return 0;
 }
 
-static iram_size_t udi_cdc_multi_read_no_polling(uint8_t port, void* buf, iram_size_t size)
+iram_size_t udi_cdc_multi_read_no_polling(uint8_t port, void* buf, iram_size_t size)
 {
-	uint8_t *ptr_buf = (uint8_t *)buf;
-	iram_size_t nb_avail_data;
-	uint16_t pos;
-	uint8_t buf_sel;
-	irqflags_t flags;
-
 #if UDI_CDC_PORT_NB == 1 // To optimize code
 	port = 0;
 #endif
 
-	//Data interface not started... exit
-	if (!udi_cdc_data_running) {
+	// Data interface not started... exit
+	if (!udi_cdc_data_running)
+	{
 		return 0;
 	}
 
-	//Get number of available data
-	// Check available data
-	flags = cpu_irq_save(); // to protect udi_cdc_rx_pos & udi_cdc_rx_buf_sel
-	pos = udi_cdc_rx_pos[port];
-	buf_sel = udi_cdc_rx_buf_sel[port];
-	nb_avail_data = udi_cdc_rx_buf_nb[port][buf_sel] - pos;
+	// Get number of available data
+	const irqflags_t flags = cpu_irq_save(); // to protect udi_cdc_rx_pos & udi_cdc_rx_buf_sel
+	const uint16_t pos = udi_cdc_rx_pos[port];
+	const uint8_t buf_sel = udi_cdc_rx_buf_sel[port];
+	const iram_size_t nb_avail_data = udi_cdc_rx_buf_nb[port][buf_sel] - pos;
 	cpu_irq_restore(flags);
-	//If the buffer contains less than the requested number of data,
-	//adjust read size
-	if(nb_avail_data<size) {
+	// If the buffer contains less than the requested number of data, adjust read size
+	if (nb_avail_data < size)
+	{
 		size = nb_avail_data;
 	}
-	if(size>0) {
-		memcpy(ptr_buf, &udi_cdc_rx_buf[port][buf_sel][pos], size);
-		flags = cpu_irq_save(); // to protect udi_cdc_rx_pos
-		udi_cdc_rx_pos[port] += size;
-		cpu_irq_restore(flags);
+	if (size != 0)
+	{
+		memcpy(buf, &udi_cdc_rx_buf[port][buf_sel][pos], size);
+		udi_cdc_rx_pos[port] = pos + size;
 
-		ptr_buf += size;
-		udi_cdc_rx_start(port);
+		if (size == nb_avail_data)			// if we took all the data that was in the current buffer
+		{
+			udi_cdc_rx_start(port);
+		}
 	}
-	return(nb_avail_data);
+	return size;
 }
 
+#if 0	// DC see header file
 iram_size_t udi_cdc_read_no_polling(void* buf, iram_size_t size)
 {
 	return udi_cdc_multi_read_no_polling(0, buf, size);
@@ -1015,6 +1009,7 @@ iram_size_t udi_cdc_read_buf(void* buf, iram_size_t size)
 {
 	return udi_cdc_multi_read_buf(0, buf, size);
 }
+#endif
 
 iram_size_t udi_cdc_multi_get_free_tx_buffer(uint8_t port)
 {
@@ -1045,20 +1040,24 @@ iram_size_t udi_cdc_multi_get_free_tx_buffer(uint8_t port)
 	return retval;
 }
 
+#if 0	// DC see header file
 iram_size_t udi_cdc_get_free_tx_buffer(void)
 {
 	return udi_cdc_multi_get_free_tx_buffer(0);
 }
+#endif
 
 bool udi_cdc_multi_is_tx_ready(uint8_t port)
 {
 	return (udi_cdc_multi_get_free_tx_buffer(port) != 0);
 }
 
+#if 0	// DC see header file
 bool udi_cdc_is_tx_ready(void)
 {
 	return udi_cdc_multi_is_tx_ready(0);
 }
+#endif
 
 int udi_cdc_multi_putc(uint8_t port, int value)
 {
@@ -1096,10 +1095,12 @@ udi_cdc_putc_process_one_byte:
 	return true;
 }
 
+#if 0	// DC see header file
 int udi_cdc_putc(int value)
 {
 	return udi_cdc_multi_putc(0, value);
 }
+#endif
 
 iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t size)
 {
@@ -1153,9 +1154,11 @@ udi_cdc_write_buf_loop_wait:
 	return 0;
 }
 
+#if 0	// DC see header file
 iram_size_t udi_cdc_write_buf(const void* buf, iram_size_t size)
 {
 	return udi_cdc_multi_write_buf(0, buf, size);
 }
+#endif
 
 //@}
