@@ -5,7 +5,6 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483" moduleId="org.eclipse.cdt.core.settings" name="SAM3X8E">
 				<externalSettings>
 					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/CoreNG"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/CoreNG/SAM3X8E"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="CoreNG" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
@@ -114,7 +113,6 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050" moduleId="org.eclipse.cdt.core.settings" name="SAM4E8E">
 				<externalSettings>
 					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/CoreNG"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/CoreNG/SAM4E8E"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="CoreNG" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
@@ -224,7 +222,6 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.707159577" moduleId="org.eclipse.cdt.core.settings" name="RADDS">
 				<externalSettings>
 					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/CoreNG"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/CoreNG/RADDS"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="CoreNG" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
@@ -335,7 +332,6 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235" moduleId="org.eclipse.cdt.core.settings" name="SAM4S">
 				<externalSettings>
 					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/CoreNG"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/CoreNG/SAM4S"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="CoreNG" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
@@ -445,7 +441,6 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.906601308" moduleId="org.eclipse.cdt.core.settings" name="SAME70">
 				<externalSettings>
 					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/CoreNG"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/CoreNG/SAME70"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="CoreNG" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
@@ -556,7 +551,6 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.lib.release.897729483.161018050.1509247235.1790499141.139430533" moduleId="org.eclipse.cdt.core.settings" name="SAM4S_PCCB">
 				<externalSettings>
 					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/CoreNG"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/CoreNG/SAM4S_PCCB"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="CoreNG" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
