@@ -48,13 +48,6 @@
 extern "C"{
 #endif // __cplusplus
 
-/**
- * Libc porting layers
- */
-#if defined (  __GNUC__  ) /* GCC CS3 */
-#    include <syscalls.h> /** RedHat Newlib minimal stub */
-#endif
-
 /*----------------------------------------------------------------------------
  *        Pins
  *----------------------------------------------------------------------------*/

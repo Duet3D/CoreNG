@@ -40,20 +40,13 @@
 #include "Core.h"
 
 #ifdef __cplusplus
-#include "UARTClass.h"
-#include "USARTClass.h"
+# include "UARTClass.h"
+# include "USARTClass.h"
 #endif
 
 #ifdef __cplusplus
 extern "C"{
 #endif // __cplusplus
-
-/**
- * Libc porting layers
- */
-#if defined (  __GNUC__  ) /* GCC CS3 */
-#    include <syscalls.h> /** RedHat Newlib minimal stub */
-#endif
 
 #ifdef __cplusplus
 }
