@@ -5,8 +5,8 @@
  *      Author: David
  */
 
-#ifndef SRC_HARDWARE_CACHE_H_
-#define SRC_HARDWARE_CACHE_H_
+#ifndef SRC_CACHE_H_
+#define SRC_CACHE_H_
 
 #include <Core.h>
 
@@ -22,7 +22,7 @@ namespace Cache
 	inline void InvalidateAfterDMAReceive(const volatile void *start, size_t length) noexcept { Invalidate(start, length); }
 	inline void FlushBeforeDMASend(const volatile void *start, size_t length) noexcept { Flush(start, length); }
 
-#if SAM4E
+#if SAM4E || SAME5x
 	uint32_t GetHitCount() noexcept;
 #endif
 };
@@ -43,9 +43,9 @@ inline void Cache::Invalidate(const volatile void *start, size_t length) noexcep
 
 #elif SAM4E || SAME5x
 
-// The SAM4E cache is write-through, so no need to flush it
+// The SAM4E and SAME5x cache is write-through, so no need to flush it
 inline void Cache::Flush(const volatile void *start, size_t length) noexcept { __DSB(); }
 
 #endif
 
-#endif /* SRC_HARDWARE_CACHE_H_ */
+#endif /* SRC_CACHE_H_ */
