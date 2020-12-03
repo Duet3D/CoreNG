@@ -41,6 +41,16 @@ class UARTClass : public HardwareSerial
 	typedef void (*InterruptCallbackFn)(UARTClass*) noexcept;
 	typedef void (*OnBeginFunction)() noexcept;
 
+	union Errors
+	{
+		uint32_t all;
+		uint32_t uartOverrun : 11,
+				 framing : 11,
+				 bufferOverrun : 10;
+
+		Errors() noexcept { all = 0; }
+	};
+
     enum UARTModes {
       Mode_8N1 = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_NO,
       Mode_8E1 = US_MR_CHRL_8_BIT | US_MR_NBSTOP_1_BIT | UART_MR_PAR_EVEN,
@@ -74,6 +84,9 @@ class UARTClass : public HardwareSerial
 
     InterruptCallbackFn SetInterruptCallback(InterruptCallbackFn f) noexcept;
 
+	// Get and clear the errors
+	Errors GetAndClearErrors() noexcept;
+
   protected:
     void init(const uint32_t dwBaudRate, const uint32_t config) noexcept;
 
@@ -87,6 +100,7 @@ class UARTClass : public HardwareSerial
     const uint32_t _dwId;
     size_t numInterruptBytesMatched;
     InterruptCallbackFn interruptCallback;
+    Errors errors;
 
     static constexpr uint8_t interruptSeq[2] = { 0xF0, 0x0F };
 };

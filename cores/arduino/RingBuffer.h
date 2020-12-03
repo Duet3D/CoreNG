@@ -37,12 +37,13 @@ class RingBuffer
 
   public:
     RingBuffer() noexcept;
-    void store_char(uint8_t c) noexcept;
+    bool store_char(uint8_t c) noexcept;
     size_t storeBlock(const uint8_t *data, size_t len) noexcept;
     size_t roomLeft() const noexcept;
 };
 
-inline void RingBuffer::store_char(uint8_t c) noexcept
+// Store a character returning true if successful
+inline bool RingBuffer::store_char(uint8_t c) noexcept
 {
   size_t i = (_iHead + 1) % SERIAL_BUFFER_SIZE;
 
@@ -54,10 +55,12 @@ inline void RingBuffer::store_char(uint8_t c) noexcept
   {
     _aucBuffer[_iHead] = c;
     _iHead = i;
+    return true;
   }
   else
   {
 	  _aucBuffer[(_iHead - 1) % SERIAL_BUFFER_SIZE] = 0x7F;		// replace the previous character by DEL to signal an overflow error
+	  return false;
   }
 }
 
