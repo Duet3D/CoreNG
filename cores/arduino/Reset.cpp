@@ -21,7 +21,7 @@
 
 #include "wdt/wdt.h"
 #include "rstc/rstc.h"
-#include "sam/services/flash_efc/flash_efc.h"
+#include "Flash.h"
 
 #ifdef __cplusplus
 extern "C" {

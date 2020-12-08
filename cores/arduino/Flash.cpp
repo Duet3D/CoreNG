@@ -46,8 +46,8 @@
 
 #include <string.h>
 #include <assert.h>
-#include "flash_efc.h"
-#include "sysclk.h"
+#include "Flash.h"
+//#include "sysclk.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -65,8 +65,7 @@ extern "C" {
  * @{
  */
 
-#if (SAM4E || SAM4N || SAM4S || SAM4C || SAMG || SAM4CP || SAM4CM || \
-	 SAMV71 || SAMV70 || SAMS70 || SAME70)
+#if (SAM4E || SAM4N || SAM4S || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
 /* User signature size */
 # define FLASH_USER_SIG_SIZE   (512)
 #endif
@@ -233,8 +232,7 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
  * \param us_offset Byte offset inside page.
  * \param pul_addr Computed address (optional).
  */
-static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset,
-		uint32_t *pul_addr)
+static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset, uint32_t *pul_addr)
 {
 	uint32_t ul_addr;
 
@@ -284,8 +282,7 @@ static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset,
  * \param pul_actual_start Actual start address of lock range.
  * \param pul_actual_end Actual end address of lock range.
  */
-static void compute_lock_range(uint32_t ul_start, uint32_t ul_end,
-		uint32_t *pul_actual_start, uint32_t *pul_actual_end)
+static void compute_lock_range(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end)
 {
 	uint32_t ul_actual_start, ul_actual_end;
 
@@ -340,67 +337,6 @@ uint32_t flash_set_wait_state(uint32_t ul_address, uint32_t ul_fws)
 }
 
 /**
- * \brief Set flash wait state.
- *
- * \param ul_address Flash bank start address.
- * \param ul_fws The number of wait states in cycle (no shift).
- *
- * \return 0 if successful; otherwise returns an error code.
- */
-uint32_t flash_set_wait_state_adaptively(uint32_t ul_address)
-{
-	Efc *p_efc;
-	uint32_t clock = sysclk_get_cpu_hz();
-
-	translate_address(&p_efc, ul_address, NULL, NULL);
-
-	/* Set FWS for embedded Flash access according to operating frequency */
-	if (clock < CHIP_FREQ_FWS_0) {
-		efc_set_wait_state(p_efc, 0);
-	} else if (clock < CHIP_FREQ_FWS_1) {
-		efc_set_wait_state(p_efc, 1);
-	} else if (clock < CHIP_FREQ_FWS_2) {
-		efc_set_wait_state(p_efc, 2);
-#if (SAM3XA || SAM3U)
-	} else if (clock < CHIP_FREQ_FWS_3) {
-		efc_set_wait_state(p_efc, 3);
-	} else {
-		efc_set_wait_state(p_efc, 4);
-	}
-#elif (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM || \
-	 SAMV71 || SAMV70 || SAMS70 || SAME70)
-	} else if (clock < CHIP_FREQ_FWS_3) {
-		efc_set_wait_state(p_efc, 3);
-	} else if (clock < CHIP_FREQ_FWS_4) {
-		efc_set_wait_state(p_efc, 4);
-	} else {
-		efc_set_wait_state(p_efc, 5);
-	}
-#else
-	} else {
-		efc_set_wait_state(p_efc, 3);
-	}
-#endif
-
-	return FLASH_RC_OK;
-}
-
-/**
- * \brief Get flash wait state.
- *
- * \param ul_address Flash bank start address.
- *
- * \return The number of wait states in cycle (no shift).
- */
-uint32_t flash_get_wait_state(uint32_t ul_address)
-{
-	Efc *p_efc;
-
-	translate_address(&p_efc, ul_address, NULL, NULL);
-	return efc_get_wait_state(p_efc);
-}
-
-/**
  * \brief Get flash descriptor.
  *
  * \param ul_address Flash bank start address.
@@ -409,8 +345,7 @@ uint32_t flash_get_wait_state(uint32_t ul_address)
  *
  * \return The actual descriptor length.
  */
-uint32_t flash_get_descriptor(uint32_t ul_address,
-		uint32_t *pul_flash_descriptor, uint32_t ul_size)
+uint32_t flash_get_descriptor(uint32_t ul_address, uint32_t *pul_flash_descriptor, uint32_t ul_size)
 {
 	Efc *p_efc;
 	uint32_t ul_tmp;
@@ -505,34 +440,7 @@ uint32_t flash_erase_all(uint32_t ul_address)
 	return FLASH_RC_OK;
 }
 
-#if (SAM3S8 || SAM3SD8)
-/**
- * \brief Erase the flash by plane.
- *
- * \param ul_address Flash plane start address.
- *
- * \note Erase plane command needs a page number parameter which belongs to
- * the plane to be erased.
- *
- * \return 0 if successful; otherwise returns an error code.
- */
-uint32_t flash_erase_plane(uint32_t ul_address)
-{
-	Efc *p_efc;
-	uint16_t us_page;
-
-	translate_address(&p_efc, ul_address, &us_page, NULL);
-
-	if (EFC_RC_OK != efc_perform_command(p_efc, EFC_FCMD_EPL, us_page)) {
-		return FLASH_RC_ERROR;
-	}
-
-	return FLASH_RC_OK;
-}
-#endif
-
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || \
-	 SAMV71 || SAMV70 || SAMS70 || SAME70)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
 /**
  * \brief Erase the specified pages of flash.
  *
@@ -604,8 +512,7 @@ uint32_t flash_erase_sector(uint32_t ul_address)
  *
  * \return 0 if successful, otherwise returns an error code.
  */
-uint32_t flash_write(uint32_t ul_address, const void *p_buffer,
-		uint32_t ul_size, uint32_t ul_erase_flag)
+uint32_t flash_write(uint32_t ul_address, const void *p_buffer, uint32_t ul_size, uint32_t ul_erase_flag)
 {
 	Efc *p_efc;
 	uint32_t ul_fws_temp;
@@ -697,8 +604,7 @@ uint32_t flash_write(uint32_t ul_address, const void *p_buffer,
  *
  * \return 0 if successful, otherwise returns an error code.
  */
-uint32_t flash_lock(uint32_t ul_start, uint32_t ul_end,
-		uint32_t *pul_actual_start, uint32_t *pul_actual_end)
+uint32_t flash_lock(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end)
 {
 	Efc *p_efc;
 	uint32_t ul_actual_start, ul_actual_end;
@@ -746,8 +652,7 @@ uint32_t flash_lock(uint32_t ul_start, uint32_t ul_end,
  *
  * \return 0 if successful, otherwise returns an error code.
  */
-uint32_t flash_unlock(uint32_t ul_start, uint32_t ul_end,
-		uint32_t *pul_actual_start, uint32_t *pul_actual_end)
+uint32_t flash_unlock(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end)
 {
 	Efc *p_efc;
 	uint32_t ul_actual_start, ul_actual_end;
@@ -938,28 +843,6 @@ uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm)
 }
 
 /**
- * \brief Set security bit.
- *
- * \return 0 if successful; otherwise returns an error code.
- */
-uint32_t flash_enable_security_bit(void)
-{
-	return flash_set_gpnvm(0);
-}
-
-/**
- * \brief Check if the security bit is set or not.
- *
- * \retval 1 If the security bit is currently set.
- * \retval 0 If the security bit is currently cleared.
- * otherwise returns an error code.
- */
-uint32_t flash_is_security_bit_enabled(void)
-{
-	return flash_is_gpnvm_set(0);
-}
-
-/**
  * \brief Read the flash unique ID.
  *
  * \param pul_data Pointer to a data buffer to store 128-bit unique ID.
@@ -972,8 +855,7 @@ uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size)
 	uint32_t uid_buf[4];
 	uint32_t ul_idx;
 
-#if 1	//dc42
-	// Bug fix: must disable interrupts while executing the EFC read command
+	// dc42 bBug fix: must disable interrupts while executing the EFC read command
 	const irqflags_t flags = cpu_irq_save();
 	const uint32_t rc = efc_perform_read_sequence(EFC, EFC_FCMD_STUI, EFC_FCMD_SPUI, uid_buf, 4);
 	cpu_irq_restore(flags);
@@ -981,11 +863,6 @@ uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size)
 	{
 		return rc;
 	}
-#else
-	if (FLASH_RC_OK != efc_perform_read_sequence(EFC, EFC_FCMD_STUI, EFC_FCMD_SPUI, uid_buf, 4)) {
-		return FLASH_RC_ERROR;
-	}
-#endif
 
 	if (ul_size > 4) {
 		/* Only 4 dword to store unique ID */
@@ -1015,21 +892,11 @@ uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size)
 		ul_size = FLASH_USER_SIG_SIZE / sizeof(uint32_t);
 	}
 
-#if 1	//dc42
-	// Bug fix: must disable interrupts while executing the EFC read command
+	// dc42 bug fix: must disable interrupts while executing the EFC read command
 	const irqflags_t flags = cpu_irq_save();
 	const uint32_t rc = efc_perform_read_sequence(EFC, EFC_FCMD_STUS, EFC_FCMD_SPUS, p_data, ul_size);
 	cpu_irq_restore(flags);
 	return rc;
-#else
-	/* Send the read user signature commands */
-	if (FLASH_RC_OK != efc_perform_read_sequence(EFC, EFC_FCMD_STUS,
-			EFC_FCMD_SPUS, p_data, ul_size)) {
-		return FLASH_RC_ERROR;
-	}
-
-	return FLASH_RC_OK;
-#endif
 }
 
 /**
