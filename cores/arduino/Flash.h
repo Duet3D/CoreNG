@@ -118,7 +118,7 @@ uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size);
 
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
 uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size);
-uint32_t flash_write_user_signature(const void *p_buffer, uint32_t ul_size);
+uint32_t flash_write_user_signature(const uint32_t *p_buffer);
 uint32_t flash_erase_user_signature(void);
 #endif
 

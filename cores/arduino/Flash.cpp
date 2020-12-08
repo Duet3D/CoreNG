@@ -44,8 +44,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include <string.h>
-#include <assert.h>
+#include "Core.h"
 #include "Flash.h"
 //#include "sysclk.h"
 
@@ -146,9 +145,6 @@ extern "C" {
 #define IFLASH_ADDR  IFLASH_CNC_ADDR
 #endif
 #endif
-
-/* Flash page buffer for alignment */
-static uint32_t gs_ul_page_buffer[IFLASH_PAGE_SIZE / sizeof(uint32_t)];
 
 /**
  * \brief Translate the given flash address to page and offset values.
@@ -524,7 +520,10 @@ uint32_t flash_write(uint32_t ul_address, const void *p_buffer, uint32_t ul_size
 	uint32_t ul_error;
 	uint32_t ul_idx;
 	uint32_t *p_aligned_dest;
-	uint8_t *puc_page_buffer = (uint8_t *) gs_ul_page_buffer;
+
+	/* Flash page buffer for alignment */
+	static uint32_t gs_ul_page_buffer[IFLASH_PAGE_SIZE / sizeof(uint32_t)];
+	uint8_t * const puc_page_buffer = (uint8_t *) gs_ul_page_buffer;
 
 	translate_address(&p_efc, ul_address, &us_page, &us_offset);
 
@@ -902,34 +901,18 @@ uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size)
 /**
  * \brief Write the flash user signature.
  *
- * \param p_data Pointer to a data buffer to store info for the user signature.
+ * \param p_data Pointer to a 512-byte 32-bit aligned data buffer to store info for the user signature.
  * \param ul_size Data buffer size in 32 bit words.
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_write_user_signature(const void *p_buffer, uint32_t ul_size)
+uint32_t flash_write_user_signature(const uint32_t *p_buffer)
 {
-	uint32_t ul_idx;
-	uint32_t *p_dest;
-
-	/* The user signature should be no longer than 512 bytes */
-	if (ul_size > (IFLASH_PAGE_SIZE / sizeof(uint32_t))) {
-		return FLASH_RC_INVALID;
-	}
-
-	/* Copy Buffer data */
-	memcpy((uint8_t *) gs_ul_page_buffer, p_buffer,
-			ul_size * sizeof(uint32_t));
-
 	/* Write page buffer.
 	* Writing 8-bit and 16-bit data is not allowed and may lead to
 	* unpredictable data corruption.
 	*/
-	p_dest = (uint32_t *)IFLASH_ADDR;
-	for (ul_idx = 0; ul_idx < (IFLASH_PAGE_SIZE / sizeof(uint32_t));
-			ul_idx++) {
-		*p_dest++ = gs_ul_page_buffer[ul_idx];
-	}
+	memcpyu32((uint32_t *)IFLASH_ADDR, p_buffer, IFLASH_PAGE_SIZE / sizeof(uint32_t));
 
 	/* Send the write signature command */
 	if (FLASH_RC_OK != efc_perform_command(EFC, EFC_FCMD_WUS, 0)) {
