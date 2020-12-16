@@ -2285,14 +2285,6 @@ __STATIC_INLINE void SCB_EnableDCache (void)
     uint32_t sets;
     uint32_t ways;
 
-#if 1	// dc
-    // According to https://developer.arm.com/documentation/ddi0489/b/system-control/register-descriptions/cache-size-selection-register?lang=en
-    // we need to set SCB->CSSELR to 1 to select the data cache, which makes the following code wrong.
-    // But according to https://documentation-service.arm.com/static/5ea95fba9931941038df3bbe?token=
-    // we need to set it to 0, which makes this code correct.
-    // When I changed it to 1 the code used to crash ~8 times in quick succession during startup before a successful start,
-    // so I conclude that 0 is correct.
-#endif
     SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
     __DSB();
 
@@ -2331,11 +2323,7 @@ __STATIC_INLINE void SCB_DisableDCache (void)
     uint32_t sets;
     uint32_t ways;
 
-#if 1	// dc
-    SCB->CSSELR = 1U;	/* Level 1 data cache */
-#else
    SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
-#endif
     __DSB();
 
     SCB->CCR &= ~(uint32_t)SCB_CCR_DC_Msk;  /* disable D-Cache */
@@ -2373,11 +2361,7 @@ __STATIC_INLINE void SCB_InvalidateDCache (void)
     uint32_t sets;
     uint32_t ways;
 
-#if 1	// dc
-    SCB->CSSELR = 1U;	/* Level 1 data cache */
-#else
     SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
-#endif
     __DSB();
 
     ccsidr = SCB->CCSIDR;
@@ -2412,11 +2396,7 @@ __STATIC_INLINE void SCB_CleanDCache (void)
     uint32_t sets;
     uint32_t ways;
 
-#if 1	// dc
-    SCB->CSSELR = 1U;	/* Level 1 data cache */
-#else
      SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
-#endif
    __DSB();
 
     ccsidr = SCB->CCSIDR;
@@ -2451,11 +2431,7 @@ __STATIC_INLINE void SCB_CleanInvalidateDCache (void)
     uint32_t sets;
     uint32_t ways;
 
-#if 1	// dc
-    SCB->CSSELR = 1U;	/* Level 1 data cache */
-#else
     SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
-#endif
     __DSB();
 
     ccsidr = SCB->CCSIDR;

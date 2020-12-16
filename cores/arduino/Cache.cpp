@@ -121,34 +121,33 @@ void Cache::Init() noexcept
 		// Flash memory: read-only, execute allowed, cacheable
 		{
 			ARM_MPU_RBAR(0, IFLASH_ADDR),
-			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_RO, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WB_WRA, ARM_MPU_CACHEP_WB_WRA, 1u), 0u, ARM_MPU_REGION_SIZE_1MB)
+			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_RO, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WB_WRA, ARM_MPU_CACHEP_WB_WRA, 0u), 0u, ARM_MPU_REGION_SIZE_1MB)
 		},
 		// First 512b of the flash memory is also the flash write page buffer, which we need to write to when writing the user page
 		{
 			ARM_MPU_RBAR(1, IFLASH_ADDR),
-			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WT_NWA, ARM_MPU_CACHEP_WT_NWA, 1u), 0u, ARM_MPU_REGION_SIZE_512B)
+			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WT_NWA, ARM_MPU_CACHEP_WT_NWA, 0u), 0u, ARM_MPU_REGION_SIZE_512B)
 		},
-		// First 256kb RAM, read-write, cacheable, execute disabled. Parts of this are overridden later.
+		// First 128kb RAM, read-write, shared, execute disabled
 		{
 			ARM_MPU_RBAR(2, IRAM_ADDR),
-			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(CACHE_MODE, CACHE_MODE, 1u), 0u, ARM_MPU_REGION_SIZE_256KB)
+			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_NOCACHE, ARM_MPU_CACHEP_NOCACHE, 1u), 0u, ARM_MPU_REGION_SIZE_128KB)
 		},
 		// Final 128kb RAM, read-write, cacheable, execute disabled
 		{
-			ARM_MPU_RBAR(3, IRAM_ADDR + 0x00040000),
-			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(CACHE_MODE, CACHE_MODE, 1u), 0u, ARM_MPU_REGION_SIZE_128KB)
+			ARM_MPU_RBAR(3, IRAM_ADDR + 0x00020000),
+			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(CACHE_MODE, CACHE_MODE, 0u), 0u, ARM_MPU_REGION_SIZE_128KB)
 		},
-		// Non-cachable RAM. This must be before normal RAM because it includes CAN buffers which must be within first 64kb.
-		// Read write, execute disabled, non-cacheable
+		// Final 128kb RAM, read-write, cacheable, execute disabled
 		{
-			ARM_MPU_RBAR(4, IRAM_ADDR),
-			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_ORDERED, 0, ARM_MPU_REGION_SIZE_32KB)
+			ARM_MPU_RBAR(4, IRAM_ADDR + 0x00040000),
+			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(CACHE_MODE, CACHE_MODE, 0u), 0u, ARM_MPU_REGION_SIZE_128KB)
 		},
 		// RAMFUNC memory. Read-only (the code has already been written to it), execution allowed. The initialised data memory follows, so it must be RW.
 		// 256 bytes is enough at present (check the linker memory map if adding more RAMFUNCs).
 		{
-			ARM_MPU_RBAR(5, IRAM_ADDR + 0x00008000),
-			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(CACHE_MODE, CACHE_MODE, 1u), 0u, ARM_MPU_REGION_SIZE_256B)
+			ARM_MPU_RBAR(5, IRAM_ADDR + 0x00020000),
+			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(CACHE_MODE, CACHE_MODE, 0u), 0u, ARM_MPU_REGION_SIZE_256B)
 		},
 		// Peripherals
 		{
@@ -163,7 +162,7 @@ void Cache::Init() noexcept
 		// ROM
 		{
 			ARM_MPU_RBAR(8, IROM_ADDR),
-			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_RO, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WT_NWA, ARM_MPU_CACHEP_WT_NWA, 1u), 0u, ARM_MPU_REGION_SIZE_4MB)
+			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_RO, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WT_NWA, ARM_MPU_CACHEP_WT_NWA, 0u), 0u, ARM_MPU_REGION_SIZE_4MB)
 		},
 		// ARM Private Peripheral Bus
 		{

@@ -52,8 +52,8 @@ SEARCH_DIR(.)
 MEMORY
 {
   rom (rx)  : ORIGIN = 0x00400000, LENGTH = 0x00100000
-  ram_not_cached (rw) : ORIGIN = 0x20400000, LENGTH = 0x00008000
-  ram (rwx) : ORIGIN = 0x20408000, LENGTH = 0x00058000
+  ram_not_cached (rw) : ORIGIN = 0x20400000, LENGTH = 0x00020000
+  ram (rwx) : ORIGIN = 0x20420000, LENGTH = 0x00040000
 }
 
 /* Section Definitions */
@@ -127,6 +127,7 @@ SECTIONS
 	{
         . = ALIGN(4);
         _szero_nocache = .;
+		*(.CanMessage .CanMessage.*)
 		*(.ram_nocache .ram_nocache.*)
         . = ALIGN(4);
         _ezero_nocache = .;
