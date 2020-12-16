@@ -102,17 +102,16 @@ inline void cache_enable() noexcept
 
 void Cache::Init() noexcept
 {
-#if SAME70
 
-# if USE_MPU
+#if SAME70 && USE_MPU
 
-#  if 0
+# if 0
 // For debugging
-#   define CACHE_MODE	ARM_MPU_CACHEP_WT_NWA
-#  else
+#  define CACHE_MODE	ARM_MPU_CACHEP_WT_NWA
+# else
 // Normal operation
-#   define CACHE_MODE	ARM_MPU_CACHEP_WB_WRA
-#  endif
+#  define CACHE_MODE	ARM_MPU_CACHEP_WB_WRA
+# endif
 
 	// Set up the MPU so that we can have a non-cacheable RAM region, and so that we can trap accesses to non-existent memory
 	// Where regions overlap, the region with the highest region number takes priority
@@ -128,45 +127,50 @@ void Cache::Init() noexcept
 			ARM_MPU_RBAR(1, IFLASH_ADDR),
 			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WT_NWA, ARM_MPU_CACHEP_WT_NWA, 0u), 0u, ARM_MPU_REGION_SIZE_512B)
 		},
-		// First 128kb RAM, read-write, shared, execute disabled
+		// First 256kb RAM, read-write, cacheable, execute disabled (parts of this are overridden later)
 		{
 			ARM_MPU_RBAR(2, IRAM_ADDR),
-			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_NOCACHE, ARM_MPU_CACHEP_NOCACHE, 1u), 0u, ARM_MPU_REGION_SIZE_128KB)
+			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(CACHE_MODE, CACHE_MODE, 0u), 0u, ARM_MPU_REGION_SIZE_256KB)
 		},
-		// Final 128kb RAM, read-write, cacheable, execute disabled
+		// First 64kb RAM, read-write, shared, execute disabled
 		{
-			ARM_MPU_RBAR(3, IRAM_ADDR + 0x00020000),
-			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(CACHE_MODE, CACHE_MODE, 0u), 0u, ARM_MPU_REGION_SIZE_128KB)
+			ARM_MPU_RBAR(3, IRAM_ADDR),
+			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_NOCACHE, ARM_MPU_CACHEP_NOCACHE, 1u), 0u, ARM_MPU_REGION_SIZE_64KB)
 		},
-		// Final 128kb RAM, read-write, cacheable, execute disabled
+		// Next 32kb RAM, read-write, shared, execute disabled
 		{
-			ARM_MPU_RBAR(4, IRAM_ADDR + 0x00040000),
-			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(CACHE_MODE, CACHE_MODE, 0u), 0u, ARM_MPU_REGION_SIZE_128KB)
+			ARM_MPU_RBAR(4, IRAM_ADDR + 0x00010000),
+			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_NOCACHE, ARM_MPU_CACHEP_NOCACHE, 1u), 0u, ARM_MPU_REGION_SIZE_32KB)
 		},
 		// RAMFUNC memory. Read-only (the code has already been written to it), execution allowed. The initialised data memory follows, so it must be RW.
 		// 256 bytes is enough at present (check the linker memory map if adding more RAMFUNCs).
 		{
-			ARM_MPU_RBAR(5, IRAM_ADDR + 0x00020000),
+			ARM_MPU_RBAR(5, IRAM_ADDR + 0x00018000),
 			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(CACHE_MODE, CACHE_MODE, 0u), 0u, ARM_MPU_REGION_SIZE_256B)
+		},
+		// Final 128kb RAM, read-write, cacheable, execute disabled
+		{
+			ARM_MPU_RBAR(6, IRAM_ADDR + 0x00040000),
+			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_NORMAL(CACHE_MODE, CACHE_MODE, 0u), 0u, ARM_MPU_REGION_SIZE_128KB)
 		},
 		// Peripherals
 		{
-			ARM_MPU_RBAR(6, 0x40000000),
+			ARM_MPU_RBAR(7, 0x40000000),
 			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_DEVICE(1u), 0u, ARM_MPU_REGION_SIZE_16MB)
 		},
 		// USBHS
 		{
-			ARM_MPU_RBAR(7, 0xA0100000),
+			ARM_MPU_RBAR(8, 0xA0100000),
 			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_DEVICE(1u), 0u, ARM_MPU_REGION_SIZE_1MB)
 		},
 		// ROM
 		{
-			ARM_MPU_RBAR(8, IROM_ADDR),
+			ARM_MPU_RBAR(9, IROM_ADDR),
 			ARM_MPU_RASR_EX(0u, ARM_MPU_AP_RO, ARM_MPU_ACCESS_NORMAL(ARM_MPU_CACHEP_WT_NWA, ARM_MPU_CACHEP_WT_NWA, 0u), 0u, ARM_MPU_REGION_SIZE_4MB)
 		},
 		// ARM Private Peripheral Bus
 		{
-			ARM_MPU_RBAR(9, 0xE0000000),
+			ARM_MPU_RBAR(10, 0xE0000000),
 			ARM_MPU_RASR_EX(1u, ARM_MPU_AP_FULL, ARM_MPU_ACCESS_ORDERED, 0u, ARM_MPU_REGION_SIZE_1MB)
 		}
 	};
@@ -188,8 +192,6 @@ void Cache::Init() noexcept
 
 	// Enable the MPU, disabling the default map but allowing exception handlers to use it
 	ARM_MPU_Enable(0x01);
-# endif
-
 #elif SAME5x
 	CMCC->MCFG.reg = CMCC_MCFG_MODE_DHIT_COUNT;		// data hit mode
 	CMCC->MEN.bit.MENABLE = 1;
