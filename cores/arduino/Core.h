@@ -59,7 +59,7 @@ typedef uint32_t NvicPriority;
 
 #ifdef __cplusplus
 
-extern const char * const sysStackLimit;
+extern const char *sysStackLimit;
 
 // Definitions for PWM channels
 enum EPWMChannel : int8_t

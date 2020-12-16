@@ -24,8 +24,7 @@ extern char _estack;
 
 void OutOfMemoryHandler() noexcept;					// this must be provided by the client application
 
-extern const char * const sysStackLimit;
-const char * const sysStackLimit = &_estack - SystemStackSize;
+const char *sysStackLimit = &_estack - SystemStackSize;
 
 char *heapTop = (char*)&_end;
 const char *heapLimit = (char*)&_estack - SystemStackSize;
