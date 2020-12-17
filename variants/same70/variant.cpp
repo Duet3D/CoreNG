@@ -345,11 +345,11 @@ extern const PinDescription g_APinDescription[] =
   { PIOD, PIO_PD25C_URXD2|PIO_PD26C_UTXD2, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER },
 #endif
 
-  // 138 UART1 or 4 all pins
+  // 138 UART1 or USART2 all pins
 #ifdef SAME70XPLD
   { PIOA, PIO_PA5C_URXD1|PIO_PA6C_UTXD1,   ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER },
 #else
-  { PIOD, PIO_PD18C_URXD4|PIO_PD19C_UTXD4, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER }
+  { PIOD, PIO_PD15B_RXD2|PIO_PD16B_TXD2,   ID_PIOD, PIO_PERIPH_B, PIO_DEFAULT, (PIN_ATTR_DIGITAL|PIN_ATTR_COMBO), NO_ADC, NOT_ON_PWM, NOT_ON_TIMER }
 #endif
 };
 
@@ -402,13 +402,13 @@ void UART2_Handler(void)
 	Serial.IrqHandler();
 }
 
-UARTClass Serial1(UART4, UART4_IRQn, ID_UART4, &rx_buffer2, &tx_buffer2,
+USARTClass Serial1(USART2, USART2_IRQn, ID_USART2, &rx_buffer2, &tx_buffer2,
 					[]() noexcept
 					{
 						ConfigurePin(APINS_Serial1);			// Initialize Serial port U(S)ART pins, Duet 3 has permanent pullup resistor
 					} );
 
-void UART4_Handler(void)
+void USART2_Handler(void)
 {
 	Serial1.IrqHandler();
 }

@@ -154,7 +154,7 @@ constexpr Pin APIN_CAN1_TX = PortDPin(12);
 
 // Serial interface objects
 extern UARTClass Serial;
-extern UARTClass Serial1;
+extern USARTClass Serial1;
 
 // We need to use "extern C++" here so that it compiles even if this file was #included inside an "extern C" block
 extern "C++" {
