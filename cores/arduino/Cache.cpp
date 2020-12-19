@@ -266,6 +266,7 @@ void Cache::Invalidate(const volatile void *start, size_t length) noexcept
 		if (start < (void*)&_nocache_ram_start || start >= (void*)&_nocache_ram_end)
 		{
 			// Caution! if any part of the cache line is dirty, the written data will be lost!
+			//TODO make this an abort instead of trying to invalidate the cache
 			const uint32_t startAddr = reinterpret_cast<uint32_t>(start);
 			SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(startAddr & ~3), length + (startAddr & 3));
 		}
