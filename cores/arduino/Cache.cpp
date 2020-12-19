@@ -17,8 +17,6 @@
 extern uint32_t _nocache_ram_start;
 extern uint32_t _nocache_ram_end;
 
-static volatile bool cacheEnabled = false;
-
 # if USE_MPU
 #  include <mpu_armv7.h>
 
@@ -204,14 +202,15 @@ void Cache::Init() noexcept
 void Cache::Enable() noexcept
 {
 #if SAME70
-	const irqflags_t flags = cpu_irq_save();			// keep cache_enabled consistent
-	if (!cacheEnabled)
+	if ((SCB->CCR & SCB_CCR_IC_Msk) == 0)			// if instruction cache is not enabled
 	{
-		cacheEnabled = true;
 		SCB_EnableICache();
+	}
+
+	if ((SCB->CCR & SCB_CCR_DC_Msk) == 0)			// if data cache is not enabled
+	{
 		SCB_EnableDCache();
 	}
-	cpu_irq_restore(flags);
 #else
 	cache_enable();
 #endif
@@ -221,17 +220,19 @@ void Cache::Enable() noexcept
 bool Cache::Disable() noexcept
 {
 #if SAME70
-	// If we don't disable interrupts before calling SCB_DisableDCache then we get crashes when we get an interrupt after we have disabled the cache but not yet flushed it fully.
-	// Disable interrupts at the start to ensure that cache_enabled remains valid
-	const irqflags_t flags = cpu_irq_save();
-	const bool wasEnabled = cacheEnabled;
-	if (wasEnabled)
+	if ((SCB->CCR & SCB_CCR_IC_Msk) != 0)			// if instruction cache is enabled
 	{
 		SCB_DisableICache();
-		SCB_DisableDCache();						// this cleans it as well as disabling it
-		cacheEnabled = false;
 	}
-	cpu_irq_restore(flags);
+
+	const bool wasEnabled = (SCB->CCR & SCB_CCR_DC_Msk) != 0;
+	if (wasEnabled)									// if data cache is enabled
+	{
+		// Warning: this code is fragile! There must be no memory writes while flushing the data cache, hence we must disable interrupts.
+		const irqflags_t flags = cpu_irq_save();
+		SCB_DisableDCache();						// this cleans it as well as disabling it
+		cpu_irq_restore(flags);
+	}
 #else
 	const bool wasEnabled = is_cache_enabled();
 	cache_disable();
@@ -243,7 +244,7 @@ bool Cache::Disable() noexcept
 
 void Cache::Flush(const volatile void *start, size_t length) noexcept
 {
-	if (cacheEnabled)
+	if ((SCB->CCR & SCB_CCR_DC_Msk) != 0)			// if data cache is enabled
 	{
 		// We assume that the DMA buffer is entirely inside or entirely outside the non-cached RAM area
 		if (start < (void*)&_nocache_ram_start || start >= (void*)&_nocache_ram_end)
@@ -259,7 +260,7 @@ void Cache::Flush(const volatile void *start, size_t length) noexcept
 void Cache::Invalidate(const volatile void *start, size_t length) noexcept
 {
 #if SAME70
-	if (cacheEnabled)
+	if ((SCB->CCR & SCB_CCR_DC_Msk) != 0)			// if data cache is enabled
 	{
 		// We assume that the DMA buffer is entirely inside or entirely outside the non-cached RAM area
 		if (start < (void*)&_nocache_ram_start || start >= (void*)&_nocache_ram_end)
