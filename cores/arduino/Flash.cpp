@@ -845,34 +845,16 @@ uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm)
  * \brief Read the flash unique ID.
  *
  * \param pul_data Pointer to a data buffer to store 128-bit unique ID.
- * \param ul_size Data buffer size in DWORD.
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size)
+uint32_t flash_read_unique_id(uint32_t *pul_data)
 {
-	uint32_t uid_buf[4];
-	uint32_t ul_idx;
-
-	// dc42 bBug fix: must disable interrupts while executing the EFC read command
+	// dc42 Bug fix: must disable interrupts while executing the EFC read command
 	const irqflags_t flags = cpu_irq_save();
-	const uint32_t rc = efc_perform_read_sequence(EFC, EFC_FCMD_STUI, EFC_FCMD_SPUI, uid_buf, 4);
+	const uint32_t rc = efc_perform_read_sequence(EFC, EFC_FCMD_STUI, EFC_FCMD_SPUI, pul_data, 4);
 	cpu_irq_restore(flags);
-	if (rc != FLASH_RC_OK)
-	{
-		return rc;
-	}
-
-	if (ul_size > 4) {
-		/* Only 4 dword to store unique ID */
-		ul_size = 4;
-	}
-
-	for (ul_idx = 0; ul_idx < ul_size; ul_idx++) {
-		pul_data[ul_idx] = uid_buf[ul_idx];
-	}
-
-	return FLASH_RC_OK;
+	return rc;
 }
 
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)

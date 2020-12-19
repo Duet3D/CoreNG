@@ -204,15 +204,14 @@ void Cache::Init() noexcept
 void Cache::Enable() noexcept
 {
 #if SAME70
-	// Disabling interrupts there causes it to crash
-//	const irqflags_t flags = cpu_irq_save();
+	const irqflags_t flags = cpu_irq_save();			// keep cache_enabled consistent
 	if (!cacheEnabled)
 	{
 		cacheEnabled = true;
 		SCB_EnableICache();
 		SCB_EnableDCache();
 	}
-//	cpu_irq_restore(flags);
+	cpu_irq_restore(flags);
 #else
 	cache_enable();
 #endif
