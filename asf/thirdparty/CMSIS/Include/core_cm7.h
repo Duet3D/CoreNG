@@ -2323,7 +2323,7 @@ __STATIC_INLINE void SCB_DisableDCache (void)
     uint32_t sets;
     uint32_t ways;
 
-   SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
+    SCB->CSSELR = 0U; /*(0U << 1U) | 0U;*/  /* Level 1 data cache */
     __DSB();
 
     SCB->CCR &= ~(uint32_t)SCB_CCR_DC_Msk;  /* disable D-Cache */

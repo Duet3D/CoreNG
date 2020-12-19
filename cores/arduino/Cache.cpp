@@ -17,7 +17,7 @@
 extern uint32_t _nocache_ram_start;
 extern uint32_t _nocache_ram_end;
 
-static bool cacheEnabled = false;
+static volatile bool cacheEnabled = false;
 
 # if USE_MPU
 #  include <mpu_armv7.h>
@@ -204,12 +204,15 @@ void Cache::Init() noexcept
 void Cache::Enable() noexcept
 {
 #if SAME70
+	// Disabling interrupts there causes it to crash
+//	const irqflags_t flags = cpu_irq_save();
 	if (!cacheEnabled)
 	{
 		cacheEnabled = true;
 		SCB_EnableICache();
 		SCB_EnableDCache();
 	}
+//	cpu_irq_restore(flags);
 #else
 	cache_enable();
 #endif
@@ -219,6 +222,9 @@ void Cache::Enable() noexcept
 bool Cache::Disable() noexcept
 {
 #if SAME70
+	// If we don't disable interrupts before calling SCB_DisableDCache then we get crashes when we get an interrupt after we have disabled the cache but not yet flushed it fully.
+	// Disable interrupts at the start to ensure that cache_enabled remains valid
+	const irqflags_t flags = cpu_irq_save();
 	const bool wasEnabled = cacheEnabled;
 	if (wasEnabled)
 	{
@@ -226,6 +232,7 @@ bool Cache::Disable() noexcept
 		SCB_DisableDCache();						// this cleans it as well as disabling it
 		cacheEnabled = false;
 	}
+	cpu_irq_restore(flags);
 #else
 	const bool wasEnabled = is_cache_enabled();
 	cache_disable();
