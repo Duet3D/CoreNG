@@ -114,12 +114,13 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end);
 uint32_t flash_set_gpnvm(uint32_t ul_gpnvm);
 uint32_t flash_clear_gpnvm(uint32_t ul_gpnvm);
 uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm);
-uint32_t flash_read_unique_id(uint32_t *pul_data);		// read 4 dwords of unique ID
+uint32_t flash_read_gpnvm_bits() noexcept;
+uint32_t flash_read_unique_id(uint32_t *pul_data) noexcept;		// read 4 dwords of unique ID
 
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
-uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size);
-uint32_t flash_write_user_signature(const uint32_t *p_buffer);
-uint32_t flash_erase_user_signature(void);
+uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size) noexcept;
+uint32_t flash_write_user_signature(const uint32_t *p_buffer) noexcept;
+uint32_t flash_erase_user_signature(void) noexcept;
 #endif
 
 /// @cond 0

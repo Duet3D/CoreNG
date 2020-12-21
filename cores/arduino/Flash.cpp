@@ -812,6 +812,17 @@ uint32_t flash_clear_gpnvm(uint32_t ul_gpnvm)
 	return FLASH_RC_ERROR;
 }
 
+// Read all nine GPNVM bits. Return 0xFFFFFFFF if failed, else the GPNVM bits in bits 0 to 8.
+uint32_t flash_read_gpnvm_bits() noexcept
+{
+	if (EFC_RC_OK != efc_perform_command(EFC, EFC_FCMD_GGPB, 0))
+	{
+		return 0xFFFFFFFF;
+	}
+
+	return efc_get_result(EFC) & ((1ul << 9) - 1ul);
+}
+
 /**
  * \brief Check if the given GPNVM bit is set or not.
  *
@@ -848,7 +859,7 @@ uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm)
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_read_unique_id(uint32_t *pul_data)
+uint32_t flash_read_unique_id(uint32_t *pul_data) noexcept
 {
 	// dc42 Bug fix: must disable interrupts while executing the EFC read command
 	const irqflags_t flags = cpu_irq_save();
@@ -866,7 +877,7 @@ uint32_t flash_read_unique_id(uint32_t *pul_data)
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size)
+uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size) noexcept
 {
 	if (ul_size > (FLASH_USER_SIG_SIZE / sizeof(uint32_t))) {
 		/* Only 512 byte to store user signature */
@@ -888,7 +899,7 @@ uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size)
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_write_user_signature(const uint32_t *p_buffer)
+uint32_t flash_write_user_signature(const uint32_t *p_buffer) noexcept
 {
 	/* Write page buffer.
 	* Writing 8-bit and 16-bit data is not allowed and may lead to
@@ -909,7 +920,7 @@ uint32_t flash_write_user_signature(const uint32_t *p_buffer)
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_erase_user_signature(void)
+uint32_t flash_erase_user_signature(void) noexcept
 {
 	/* Perform the erase user signature command */
 	return efc_perform_command(EFC, EFC_FCMD_EUS, 0);

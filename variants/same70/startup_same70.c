@@ -47,6 +47,8 @@
 #include "same70.h"
 #include "system_same70.h"
 #include "wdt/wdt.h"
+#include "Flash.h"
+#include "Reset.h"
 
 #if __FPU_USED /* CMSIS defined value to indicate usage of FPU */
 #include "fpu/fpu.h"
@@ -317,19 +319,22 @@ const DeviceVectors exception_table = {
         .pfnRSWDT_Handler  = (void*) RSWDT_Handler   /* 63 Reinforced Secure Watchdog Timer */
 };
 
+// This must be marked noinline so that R0 is loaded with the required value for SP
+__attribute((noinline)) void SetStackPointer(uint32_t *topOfStack)
+{
+	__asm volatile("msr msp, r0");
+}
+
 /**
  * \brief This is the code that gets called on processor reset.
  * To initialize the device, and call the main() routine.
  */
 __attribute__((noreturn)) void Reset_Handler(void)
 {
-	// Clear the nocache RAM segment
-	for (uint32_t *pDest = &_szero_nocache; pDest < &_ezero_nocache;)
-	{
-		*pDest++ = 0;
-	}
+	// If TCM is allocated then SP may point beyond the end of RAM, so move it
+	SetStackPointer(&_ezero_nocache);
 
-	/* Initialize the relocate segment */
+	// Initialize the relocate segment
 	{
 		const uint32_t *pSrc = &_etext;
 		uint32_t *pDest = &_srelocate;
@@ -341,6 +346,30 @@ __attribute__((noreturn)) void Reset_Handler(void)
 				*pDest++ = *pSrc++;
 			}
 		}
+	}
+
+	// Check that no TCM is allocated before we relocate the stack to the top of memory. This uses a RAMFUNC, so we must initialise the relocate segment before here.
+	// The temporary stack we are on is in the non-cached memory segment, so don't clear that segment until after we have relocated the stack.
+	if (flash_read_gpnvm_bits() & ((1ul << 7) | (1ul << 8)))
+	{
+		// TCM is allocated - we are probably downgrading from later firmware that uses TCM. Disable TCM and reboot.
+		flash_clear_gpnvm(7);
+		flash_clear_gpnvm(8);
+		// On some microchip processors, we need a delay between writing to flash and resetting
+		for (unsigned int i = 0; i < 10000; ++i)
+		{
+			__asm volatile("nop");
+		}
+		Reset();
+	}
+
+	// Now it's safe to reset the stack pointer to the top of memory
+	SetStackPointer(&_estack);
+
+	// Clear the nocache RAM segment
+	for (uint32_t *pDest = &_szero_nocache; pDest < &_ezero_nocache;)
+	{
+		*pDest++ = 0;
 	}
 
 	/* Clear the zero segment */
