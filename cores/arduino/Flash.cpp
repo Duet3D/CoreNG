@@ -156,8 +156,7 @@ extern "C" {
  * \param pus_page The first page accessed.
  * \param pus_offset Byte offset in the first page.
  */
-static void translate_address(Efc **pp_efc, uint32_t ul_addr,
-		uint16_t *pus_page, uint16_t *pus_offset)
+static void translate_address(Efc **pp_efc, uint32_t ul_addr, uint16_t *pus_page, uint16_t *pus_offset) noexcept
 {
 	Efc *p_efc;
 	uint16_t us_page;
@@ -228,7 +227,7 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
  * \param us_offset Byte offset inside page.
  * \param pul_addr Computed address (optional).
  */
-static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset, uint32_t *pul_addr)
+static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset, uint32_t *pul_addr) noexcept
 {
 	uint32_t ul_addr;
 
@@ -278,7 +277,7 @@ static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset, ui
  * \param pul_actual_start Actual start address of lock range.
  * \param pul_actual_end Actual end address of lock range.
  */
-static void compute_lock_range(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end)
+static void compute_lock_range(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end) noexcept
 {
 	uint32_t ul_actual_start, ul_actual_end;
 
@@ -303,7 +302,7 @@ static void compute_lock_range(uint32_t ul_start, uint32_t ul_end, uint32_t *pul
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_init(uint32_t ul_mode, uint32_t ul_fws)
+uint32_t flash_init(uint32_t ul_mode, uint32_t ul_fws) noexcept
 {
 	efc_init(EFC, ul_mode, ul_fws);
 
@@ -322,7 +321,7 @@ uint32_t flash_init(uint32_t ul_mode, uint32_t ul_fws)
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_set_wait_state(uint32_t ul_address, uint32_t ul_fws)
+uint32_t flash_set_wait_state(uint32_t ul_address, uint32_t ul_fws) noexcept
 {
 	Efc *p_efc;
 
@@ -341,7 +340,7 @@ uint32_t flash_set_wait_state(uint32_t ul_address, uint32_t ul_fws)
  *
  * \return The actual descriptor length.
  */
-uint32_t flash_get_descriptor(uint32_t ul_address, uint32_t *pul_flash_descriptor, uint32_t ul_size)
+uint32_t flash_get_descriptor(uint32_t ul_address, uint32_t *pul_flash_descriptor, uint32_t ul_size) noexcept
 {
 	Efc *p_efc;
 	uint32_t ul_tmp;
@@ -377,7 +376,7 @@ uint32_t flash_get_descriptor(uint32_t ul_address, uint32_t *pul_flash_descripto
  *
  * \return The flash total page count.
  */
-uint32_t flash_get_page_count(const uint32_t *pul_flash_descriptor)
+uint32_t flash_get_page_count(const uint32_t *pul_flash_descriptor) noexcept
 {
 	return (pul_flash_descriptor[1] / pul_flash_descriptor[2]);
 }
@@ -392,7 +391,7 @@ uint32_t flash_get_page_count(const uint32_t *pul_flash_descriptor)
  *
  * \return The flash page count per region (plane).
  */
-uint32_t flash_get_page_count_per_region(const uint32_t *pul_flash_descriptor)
+uint32_t flash_get_page_count_per_region(const uint32_t *pul_flash_descriptor) noexcept
 {
 	return (pul_flash_descriptor[4] / pul_flash_descriptor[2]);
 }
@@ -407,7 +406,7 @@ uint32_t flash_get_page_count_per_region(const uint32_t *pul_flash_descriptor)
  *
  * \return The flash region (plane) count.
  */
-uint32_t flash_get_region_count(const uint32_t *pul_flash_descriptor)
+uint32_t flash_get_region_count(const uint32_t *pul_flash_descriptor) noexcept
 {
 	return (pul_flash_descriptor[3]);
 }
@@ -423,7 +422,7 @@ uint32_t flash_get_region_count(const uint32_t *pul_flash_descriptor)
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_erase_all(uint32_t ul_address)
+uint32_t flash_erase_all(uint32_t ul_address) noexcept
 {
 	Efc *p_efc;
 
@@ -444,7 +443,7 @@ uint32_t flash_erase_all(uint32_t ul_address)
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_erase_page(uint32_t ul_address, uint8_t uc_page_num)
+uint32_t flash_erase_page(uint32_t ul_address, uint8_t uc_page_num) noexcept
 {
 	Efc *p_efc;
 	uint16_t us_page;
@@ -477,7 +476,7 @@ uint32_t flash_erase_page(uint32_t ul_address, uint8_t uc_page_num)
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_erase_sector(uint32_t ul_address)
+uint32_t flash_erase_sector(uint32_t ul_address) noexcept
 {
 	Efc *p_efc;
 	uint16_t us_page;
@@ -508,7 +507,7 @@ uint32_t flash_erase_sector(uint32_t ul_address)
  *
  * \return 0 if successful, otherwise returns an error code.
  */
-uint32_t flash_write(uint32_t ul_address, const void *p_buffer, uint32_t ul_size, uint32_t ul_erase_flag)
+uint32_t flash_write(uint32_t ul_address, const void *p_buffer, uint32_t ul_size, uint32_t ul_erase_flag) noexcept
 {
 	Efc *p_efc;
 	uint32_t ul_fws_temp;
@@ -603,7 +602,7 @@ uint32_t flash_write(uint32_t ul_address, const void *p_buffer, uint32_t ul_size
  *
  * \return 0 if successful, otherwise returns an error code.
  */
-uint32_t flash_lock(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end)
+uint32_t flash_lock(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end) noexcept
 {
 	Efc *p_efc;
 	uint32_t ul_actual_start, ul_actual_end;
@@ -651,7 +650,7 @@ uint32_t flash_lock(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_sta
  *
  * \return 0 if successful, otherwise returns an error code.
  */
-uint32_t flash_unlock(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end)
+uint32_t flash_unlock(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end) noexcept
 {
 	Efc *p_efc;
 	uint32_t ul_actual_start, ul_actual_end;
@@ -694,7 +693,7 @@ uint32_t flash_unlock(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_s
  *
  * \return The number of locked regions inside the given address range.
  */
-uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
+uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end) noexcept
 {
 	Efc *p_efc;
 	uint16_t us_start_page, us_end_page;
@@ -771,7 +770,7 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_set_gpnvm(uint32_t ul_gpnvm)
+uint32_t flash_set_gpnvm(uint32_t ul_gpnvm) noexcept
 {
 	if (ul_gpnvm >= GPNVM_NUM_MAX) {
 		return FLASH_RC_INVALID;
@@ -795,7 +794,7 @@ uint32_t flash_set_gpnvm(uint32_t ul_gpnvm)
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_clear_gpnvm(uint32_t ul_gpnvm)
+uint32_t flash_clear_gpnvm(uint32_t ul_gpnvm) noexcept
 {
 	if (ul_gpnvm >= GPNVM_NUM_MAX) {
 		return FLASH_RC_INVALID;
@@ -832,7 +831,7 @@ uint32_t flash_read_gpnvm_bits() noexcept
  * \retval 0 If the given GPNVM bit is currently cleared.
  * otherwise returns an error code.
  */
-uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm)
+uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm) noexcept
 {
 	uint32_t ul_gpnvm_bits;
 

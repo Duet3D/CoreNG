@@ -319,7 +319,7 @@ const DeviceVectors exception_table = {
         .pfnRSWDT_Handler  = (void*) RSWDT_Handler   /* 63 Reinforced Secure Watchdog Timer */
 };
 
-// This must be marked noinline so that R0 is loaded with the required value for SP
+// This must be marked noinline so that R0 is loaded with the required value for SP. Return is via LR so it's OK to return with a different SP.
 __attribute((noinline)) void SetStackPointer(uint32_t *topOfStack)
 {
 	__asm volatile("msr msp, r0");
@@ -329,7 +329,7 @@ __attribute((noinline)) void SetStackPointer(uint32_t *topOfStack)
  * \brief This is the code that gets called on processor reset.
  * To initialize the device, and call the main() routine.
  */
-__attribute__((noreturn)) void Reset_Handler(void)
+__attribute__((noreturn, naked)) void Reset_Handler(void)
 {
 	// If TCM is allocated then SP may point beyond the end of RAM, so move it
 	SetStackPointer(&_ezero_nocache);
@@ -346,6 +346,12 @@ __attribute__((noreturn)) void Reset_Handler(void)
 				*pDest++ = *pSrc++;
 			}
 		}
+	}
+
+	/* Clear the zero segment */
+	for (uint32_t *pDest = &_szero; pDest < &_ezero;)
+	{
+		*pDest++ = 0;
 	}
 
 	// Check that no TCM is allocated before we relocate the stack to the top of memory. This uses a RAMFUNC, so we must initialise the relocate segment before here.
@@ -372,13 +378,7 @@ __attribute__((noreturn)) void Reset_Handler(void)
 		*pDest++ = 0;
 	}
 
-	/* Clear the zero segment */
-	for (uint32_t *pDest = &_szero; pDest < &_ezero;)
-	{
-		*pDest++ = 0;
-	}
-
-	/* Set the vector table base address */
+	// Set the vector table base address
 	const uint32_t * const pSrc = (uint32_t *) & _sfixed;
 	SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 
@@ -401,6 +401,7 @@ __attribute__((noreturn)) void Reset_Handler(void)
  */
 void Dummy_Handler(void)
 {
-	while (1) {
-	}
+	while (1) { }
 }
+
+// End

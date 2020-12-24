@@ -94,26 +94,26 @@ typedef enum flash_farg_page_num {
 #define FLASH_ACCESS_MODE_64     EFC_ACCESS_MODE_64
 //! @}
 
-uint32_t flash_init(uint32_t ul_mode, uint32_t ul_fws);
-uint32_t flash_set_wait_state(uint32_t ul_address, uint32_t ul_fws);
-uint32_t flash_get_descriptor(uint32_t ul_address, uint32_t *pul_flash_descriptor,	uint32_t ul_size);
-uint32_t flash_get_page_count(const uint32_t *pul_flash_descriptor);
-uint32_t flash_get_page_count_per_region(const uint32_t *pul_flash_descriptor);
-uint32_t flash_get_region_count(const uint32_t *pul_flash_descriptor);
-uint32_t flash_erase_all(uint32_t ul_address);
+uint32_t flash_init(uint32_t ul_mode, uint32_t ul_fws) noexcept;
+uint32_t flash_set_wait_state(uint32_t ul_address, uint32_t ul_fws) noexcept;
+uint32_t flash_get_descriptor(uint32_t ul_address, uint32_t *pul_flash_descriptor,	uint32_t ul_size) noexcept;
+uint32_t flash_get_page_count(const uint32_t *pul_flash_descriptor) noexcept;
+uint32_t flash_get_page_count_per_region(const uint32_t *pul_flash_descriptor) noexcept;
+uint32_t flash_get_region_count(const uint32_t *pul_flash_descriptor) noexcept;
+uint32_t flash_erase_all(uint32_t ul_address) noexcept;
 
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAMS70 || SAME70)
-uint32_t flash_erase_page(uint32_t ul_address, uint8_t uc_page_num);
-uint32_t flash_erase_sector(uint32_t ul_address);
+uint32_t flash_erase_page(uint32_t ul_address, uint8_t uc_page_num) noexcept;
+uint32_t flash_erase_sector(uint32_t ul_address) noexcept;
 #endif
 
-uint32_t flash_write(uint32_t ul_address, const void *p_buffer, uint32_t ul_size, uint32_t ul_erase_flag);
-uint32_t flash_lock(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end);
-uint32_t flash_unlock(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end);
-uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end);
-uint32_t flash_set_gpnvm(uint32_t ul_gpnvm);
-uint32_t flash_clear_gpnvm(uint32_t ul_gpnvm);
-uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm);
+uint32_t flash_write(uint32_t ul_address, const void *p_buffer, uint32_t ul_size, uint32_t ul_erase_flag) noexcept;
+uint32_t flash_lock(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end) noexcept;
+uint32_t flash_unlock(uint32_t ul_start, uint32_t ul_end, uint32_t *pul_actual_start, uint32_t *pul_actual_end) noexcept;
+uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end) noexcept;
+uint32_t flash_set_gpnvm(uint32_t ul_gpnvm) noexcept;
+uint32_t flash_clear_gpnvm(uint32_t ul_gpnvm) noexcept;
+uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm) noexcept;
 uint32_t flash_read_gpnvm_bits() noexcept;
 uint32_t flash_read_unique_id(uint32_t *pul_data) noexcept;		// read 4 dwords of unique ID
 

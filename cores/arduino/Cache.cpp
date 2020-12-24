@@ -242,15 +242,16 @@ bool Cache::Disable() noexcept
 
 #if SAME70
 
+extern "C" [[noreturn]] void vAssertCalled(uint32_t line, const char *file) noexcept;
+
 void Cache::Flush(const volatile void *start, size_t length) noexcept
 {
 	if ((SCB->CCR & SCB_CCR_DC_Msk) != 0)			// if data cache is enabled
 	{
-		// We assume that the DMA buffer is entirely inside or entirely outside the non-cached RAM area
-		if (start < (void*)&_nocache_ram_start || start >= (void*)&_nocache_ram_end)
+		// The DMA buffer should be entirely inside the non-cached RAM area
+		if ((const char *)start < (const char *)&_nocache_ram_start || (const char *)start + length >= (const char *)&_nocache_ram_end)
 		{
-			const uint32_t startAddr = reinterpret_cast<uint32_t>(start);
-			SCB_CleanDCache_by_Addr(reinterpret_cast<uint32_t*>(startAddr & ~3), length + (startAddr & 3));
+			vAssertCalled(__LINE__, __FILE__);
 		}
 	}
 }
@@ -262,13 +263,10 @@ void Cache::Invalidate(const volatile void *start, size_t length) noexcept
 #if SAME70
 	if ((SCB->CCR & SCB_CCR_DC_Msk) != 0)			// if data cache is enabled
 	{
-		// We assume that the DMA buffer is entirely inside or entirely outside the non-cached RAM area
-		if (start < (void*)&_nocache_ram_start || start >= (void*)&_nocache_ram_end)
+		// The DMA buffer should be entirely inside the non-cached RAM area
+		if ((const char *)start < (const char *)&_nocache_ram_start || (const char *)start + length >= (const char *)&_nocache_ram_end)
 		{
-			// Caution! if any part of the cache line is dirty, the written data will be lost!
-			//TODO make this an abort instead of trying to invalidate the cache
-			const uint32_t startAddr = reinterpret_cast<uint32_t>(start);
-			SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(startAddr & ~3), length + (startAddr & 3));
+			vAssertCalled(__LINE__, __FILE__);
 		}
 	}
 #else
