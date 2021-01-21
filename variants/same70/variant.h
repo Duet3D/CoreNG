@@ -118,8 +118,8 @@ constexpr Pin APIN_Serial0_RXD = PortDPin(25);
 constexpr Pin APIN_Serial0_TXD = PortDPin(26);
 
 // Serial1
-constexpr Pin APIN_Serial1_RXD = PortDPin(18);
-constexpr Pin APIN_Serial1_TXD = PortDPin(19);
+constexpr Pin APIN_Serial1_RXD = PortDPin(15);
+constexpr Pin APIN_Serial1_TXD = PortDPin(16);
 
 // Shared SPI (USART 1 on Duet 3)
 constexpr Pin APIN_USART_SSPI_SCK = PortBPin(13);
