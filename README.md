@@ -1,4 +1,7 @@
 # CoreNG
+
+***This repository is obsolete. As from version 3.3 all build configurations of RepRapFirmware use CoreN2G.***
+
 New hardware abstraction layer for RepRapFirmware based on ASF 3.x (originally 3.31, currently 3.45).
 
 This is a new hardware abstraction layer for RepRapFirmware. It replaces the CoreDuet project in releases 1.11 and later of my fork of RepRapFirmware. It is based on Atmel Software Framework version 3.x and vestiges of the Arduino Due core.
